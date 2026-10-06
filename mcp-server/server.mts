@@ -11,8 +11,8 @@ const root = path.resolve(import.meta.dirname, "..");
 config({ path: [path.join(root, ".env.local"), path.join(root, ".env")], quiet: true });
 
 const BASE_URL = process.env.LLM_BASE_URL ?? "https://128.171.10.80:9443/v1";
-// Free models don't draw down the course budget.
-const DEFAULT_MODEL = process.env.LLM_DEFAULT_MODEL ?? "gpt-oss-120b";
+// Cheap paid model ($0.10/$0.40 per 1M tokens); override with LLM_DEFAULT_MODEL.
+const DEFAULT_MODEL = process.env.LLM_DEFAULT_MODEL ?? "gpt-4.1-nano";
 
 if (!process.env.LLM_API_KEY) {
   console.error("LLM_API_KEY is not set. Add it to .env.local (never commit it).");
@@ -58,7 +58,7 @@ function createServer() {
       title: "Chat completion",
       description:
         `Send a prompt to a model on the course LLM gateway and return its reply. ` +
-        `Defaults to the free model "${DEFAULT_MODEL}"; paid models spend the course budget.`,
+        `Defaults to "${DEFAULT_MODEL}". Every model except the free ones spends the course budget.`,
       inputSchema: z.object({
         prompt: z.string().describe("The user message to send."),
         system: z.string().optional().describe("Optional system prompt."),
