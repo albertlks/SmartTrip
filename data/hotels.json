@@ -1,0 +1,10 @@
+[
+  { "id": "h001", "destination": "SEA", "name": "Harbor View Hotel",   "tier": "luxury", "pricePerNight": 240, "rating": 4.6, "milesToDowntown": 0.3, "notes": "waterfront" },
+  { "id": "h002", "destination": "SEA", "name": "Pike Place Inn",      "tier": "mid",    "pricePerNight": 135, "rating": 4.2, "milesToDowntown": 0.5, "notes": "central" },
+  { "id": "h003", "destination": "SEA", "name": "Capitol Hill Hostel", "tier": "budget", "pricePerNight": 55,  "rating": 3.8, "milesToDowntown": 1.5, "notes": "shared dorm rooms" },
+  { "id": "h004", "destination": "SEA", "name": "Emerald Suites",      "tier": "upscale","pricePerNight": 190, "rating": 4.5, "milesToDowntown": 0.8, "notes": "free breakfast" },
+  { "id": "h005", "destination": "SEA", "name": "Airport Express Inn", "tier": "budget", "pricePerNight": 85,  "rating": 3.6, "milesToDowntown": 13,  "notes": "light rail to downtown, 40 min" },
+  { "id": "h006", "destination": "SEA", "name": "Lakeside Motel",      "tier": "budget", "pricePerNight": 105, "rating": 3.9, "milesToDowntown": 4,   "notes": "needs a car or bus" },
+  { "id": "h007", "destination": "SEA", "name": "Downtown Grand",      "tier": "upscale","pricePerNight": 165, "rating": 4.4, "milesToDowntown": 0.2, "notes": "walkable to everything" },
+  { "id": "h008", "destination": "SEA", "name": "Fremont Boutique",    "tier": "mid",    "pricePerNight": 120, "rating": 4.3, "milesToDowntown": 3,   "notes": "quiet neighborhood" }
+]

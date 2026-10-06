@@ -1,0 +1,10 @@
+[
+  { "id": "f001", "origin": "HNL", "destination": "SEA", "airline": "Alaska",   "pricePerPerson": 520, "stops": 0, "durationHours": 6.0,  "notes": "nonstop, morning departure" },
+  { "id": "f002", "origin": "HNL", "destination": "SEA", "airline": "Hawaiian", "pricePerPerson": 410, "stops": 1, "durationHours": 9.5,  "notes": "red-eye" },
+  { "id": "f003", "origin": "HNL", "destination": "SEA", "airline": "Delta",    "pricePerPerson": 385, "stops": 1, "durationHours": 8.0,  "notes": "daytime, 1 stop" },
+  { "id": "f004", "origin": "HNL", "destination": "SEA", "airline": "United",   "pricePerPerson": 340, "stops": 2, "durationHours": 14.0, "notes": "2 stops, long layovers" },
+  { "id": "f005", "origin": "HNL", "destination": "SEA", "airline": "Alaska",   "pricePerPerson": 610, "stops": 0, "durationHours": 6.0,  "notes": "nonstop, evening, flexible fare" },
+  { "id": "f006", "origin": "HNL", "destination": "SEA", "airline": "Southwest","pricePerPerson": 455, "stops": 1, "durationHours": 8.5,  "notes": "2 free checked bags" },
+  { "id": "f007", "origin": "HNL", "destination": "SEA", "airline": "Delta",    "pricePerPerson": 310, "stops": 2, "durationHours": 15.5, "notes": "cheapest, overnight layover" },
+  { "id": "f008", "origin": "HNL", "destination": "SEA", "airline": "Hawaiian", "pricePerPerson": 560, "stops": 0, "durationHours": 6.0,  "notes": "nonstop, includes meal" }
+]
