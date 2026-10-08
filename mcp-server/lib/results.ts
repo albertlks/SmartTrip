@@ -2,12 +2,10 @@ import type { CallToolResult } from "@modelcontextprotocol/server";
 
 export const roundMoney = (n: number) => Math.round(n * 100) / 100;
 
-/** Compact JSON as text content: results are re-sent to the model every loop iteration. */
 export function jsonResult(data: unknown): CallToolResult {
   return { content: [{ type: "text", text: JSON.stringify(data) }] };
 }
 
-/** An error the agent can read and act on: say what was wrong and what is valid. */
 export function toolError(message: string): CallToolResult {
   return { content: [{ type: "text", text: message }], isError: true };
 }

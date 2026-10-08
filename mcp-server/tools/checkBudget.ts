@@ -10,7 +10,6 @@ export const checkBudgetInput = z.object({
     .describe("Flight cost in USD. Pass the `price` from a searchFlights result."),
 });
 
-/** Pure budget math, exported separately so it can be tested without MCP. */
 export function checkBudget(input: z.output<typeof checkBudgetInput>) {
   const total = roundMoney(input.flightCost);
   return {

@@ -12,7 +12,6 @@ config({ path: [path.join(root, ".env.local"), path.join(root, ".env")], quiet: 
 const BASE_URL = process.env.LLM_BASE_URL ?? "https://128.171.10.80:9443/v1";
 const DEFAULT_MODEL = process.env.LLM_DEFAULT_MODEL ?? "gpt-4.1-nano";
 
-// Only list_models needs the key; the trip tools run on local mock data.
 const client = process.env.LLM_API_KEY
   ? new OpenAI({ baseURL: BASE_URL, apiKey: process.env.LLM_API_KEY })
   : null;

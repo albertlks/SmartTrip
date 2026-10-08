@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-// Mock data lives in the repo-root data/ folder.
 const DATA_DIR = path.resolve(import.meta.dirname, "../../data");
 
 export type Flight = {
@@ -30,7 +29,6 @@ async function loadJson<T>(file: string): Promise<T> {
 
 export const loadFlights = () => loadJson<Flight[]>("flights.json");
 
-/** Distinct "ORIGIN->DEST" routes, used to tell the agent what it can search. */
 export function availableRoutes(flights: Flight[]): string[] {
   return [...new Set(flights.map((f) => `${f.origin}->${f.destination}`))].sort();
 }

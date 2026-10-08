@@ -1,4 +1,3 @@
-// Smoke test: spawns the server over stdio and calls each tool.
 // Run with: npx tsx mcp-server/test-client.ts
 import path from "node:path";
 import { Client } from "@modelcontextprotocol/client";
@@ -18,7 +17,7 @@ const calls: [string, Record<string, unknown>][] = [
   ["searchFlights", { origin: "hnl", destination: "SEA", departDate: "2026-11-14", returnDate: "2026-11-20" }],
   ["checkBudget", { budget: 500, flightCost: 310 }],
   ["checkBudget", { budget: 500, flightCost: 520 }],
-  // Invalid inputs: each should come back as a clear, actionable error.
+  // Invalid inputs
   ["searchFlights", { origin: "HNL", destination: "SEA", departDate: "2026-11-20", returnDate: "2026-11-14" }],
   ["searchFlights", { origin: "SEA", destination: "LAX", departDate: "2026-11-14", returnDate: "2026-11-20" }],
   ["checkBudget", { budget: 0, flightCost: -5 }],

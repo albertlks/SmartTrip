@@ -1,8 +1,4 @@
-// Trip planner: gives an LLM your budget and notes, lets it query the mock data
-// through the MCP tools, and prints the trip it picks.
-//
 // Usage: npm run plan -- <budget> "<notes>"
-//   npm run plan -- 1500 "HNL to Seattle Nov 14-20, want to walk everywhere, 1 stop is fine"
 import path from "node:path";
 import { config } from "dotenv";
 import OpenAI from "openai";
@@ -12,7 +8,6 @@ import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 const root = path.resolve(import.meta.dirname, "..");
 config({ path: [path.join(root, ".env.local"), path.join(root, ".env")], quiet: true });
 
-// OpenRouter is used when its key is set; otherwise the course gateway.
 const PROVIDER = process.env.OPENROUTER_API_KEY
   ? {
       name: "OpenRouter",
@@ -20,7 +15,6 @@ const PROVIDER = process.env.OPENROUTER_API_KEY
       apiKey: process.env.OPENROUTER_API_KEY,
       keyVar: "OPENROUTER_API_KEY",
       model: process.env.OPENROUTER_MODEL ?? "openai/gpt-4.1-nano",
-      // Optional OpenRouter attribution headers.
       headers: { "X-Title": "SmartTrip" },
     }
   : {
@@ -28,7 +22,6 @@ const PROVIDER = process.env.OPENROUTER_API_KEY
       baseURL: process.env.LLM_BASE_URL ?? "https://128.171.10.80:9443/v1",
       apiKey: process.env.LLM_API_KEY,
       keyVar: "LLM_API_KEY",
-      // Free on the gateway, and handled the demo correctly where gpt-4.1-nano didn't.
       model: process.env.LLM_DEFAULT_MODEL ?? "gpt-oss-120b",
       headers: {},
     };
@@ -73,7 +66,6 @@ function parseArgs() {
   return { budget, notes };
 }
 
-/** One readable line per tool result, so the audience can follow the agent's reasoning. */
 function summarize(text: string, isError: boolean): string {
   if (isError) return `error: ${text}`;
   try {
@@ -86,7 +78,6 @@ function summarize(text: string, isError: boolean): string {
       return data.withinBudget ? `fits: total $${data.total}` : `over budget by $${data.overage} (total $${data.total})`;
     }
   } catch {
-    // Not JSON: fall through and show it as is.
   }
   return text.slice(0, 120);
 }
@@ -111,7 +102,6 @@ async function main() {
   );
 
   try {
-    // MCP tool definitions map directly onto OpenAI function tools.
     const { tools } = await mcp.listTools();
     const llmTools: OpenAI.Chat.ChatCompletionTool[] = tools
       .filter((t) => TRIP_TOOLS.has(t.name))
