@@ -3,7 +3,8 @@ import { config } from "dotenv";
 import OpenAI from "openai";
 import { McpServer } from "@modelcontextprotocol/server";
 import { serveStdio } from "@modelcontextprotocol/server/stdio";
-import * as z from "zod";
+import { registerCheckBudget } from "./tools/checkBudget";
+import { registerSearchFlights } from "./tools/searchFlights";
 
 const root = path.resolve(import.meta.dirname, "..");
 config({ path: [path.join(root, ".env.local"), path.join(root, ".env")], quiet: true });
@@ -11,12 +12,9 @@ config({ path: [path.join(root, ".env.local"), path.join(root, ".env")], quiet: 
 const BASE_URL = process.env.LLM_BASE_URL ?? "https://128.171.10.80:9443/v1";
 const DEFAULT_MODEL = process.env.LLM_DEFAULT_MODEL ?? "gpt-4.1-nano";
 
-if (!process.env.LLM_API_KEY) {
-  console.error("LLM_API_KEY is not set. Add it to .env.local (never commit it).");
-  process.exit(1);
-}
-
-const client = new OpenAI({ baseURL: BASE_URL, apiKey: process.env.LLM_API_KEY });
+const client = process.env.LLM_API_KEY
+  ? new OpenAI({ baseURL: BASE_URL, apiKey: process.env.LLM_API_KEY })
+  : null;
 
 function errorResult(err: unknown) {
   let text = err instanceof Error ? err.message : String(err);
@@ -39,6 +37,7 @@ function createServer() {
       annotations: { readOnlyHint: true },
     },
     async () => {
+      if (!client) return errorResult(new Error("LLM_API_KEY is not set. Add it to .env.local (never commit it)."));
       try {
         const ids: string[] = [];
         for await (const model of client.models.list()) ids.push(model.id);
@@ -48,6 +47,9 @@ function createServer() {
       }
     },
   );
+
+  registerCheckBudget(server);
+  registerSearchFlights(server);
   return server;
 }
 
