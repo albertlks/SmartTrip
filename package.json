@@ -7,12 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "mcp": "tsx mcp-server/server.ts"
-=======
     "mcp": "tsx mcp-server/server.ts",
     "plan": "tsx agent/planTrip.ts",
     "demo": "tsx agent/planTrip.ts 500 \"Flying from Honolulu to Seattle Nov 14-20. I'd prefer nonstop, and definitely no 2 stops.\""
->>>>>>> issue-003
   },
   "dependencies": {
     "@modelcontextprotocol/client": "^2.3.1",
