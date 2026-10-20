@@ -9,7 +9,10 @@
     "lint": "eslint",
     "mcp": "tsx mcp-server/server.ts",
     "plan": "tsx agent/planTrip.ts",
-    "demo": "tsx agent/planTrip.ts 500 \"Flying from Honolulu to Seattle Nov 14-20. I'd prefer nonstop, and definitely no 2 stops.\""
+    "demo": "tsx agent/planTrip.ts 500 \"Flying from Honolulu to Seattle Nov 14-20. I'd prefer nonstop, and definitely no 2 stops.\"",
+    "demo2": "tsx agent/planTrip.ts 500 \"Honolulu to Portland, Oregon Nov 14-20. I really want a nonstop.\"",
+    "demo3": "tsx agent/planTrip.ts 300 \"Honolulu to Seattle Nov 14-20. Any flight is fine, I just need to get there.\"",
+    "demo4": "tsx agent/planTrip.ts 600 \"Honolulu to Los Angeles Nov 14-20, cheapest nonstop please.\""
   },
   "dependencies": {
     "@modelcontextprotocol/client": "^2.3.1",

@@ -15,6 +15,7 @@ console.log("tools:", tools.map((t) => t.name).join(", "));
 
 const calls: [string, Record<string, unknown>][] = [
   ["searchFlights", { origin: "hnl", destination: "SEA", departDate: "2026-11-14", returnDate: "2026-11-20" }],
+  ["searchFlights", { origin: "HNL", destination: "PDX", departDate: "2026-11-14", returnDate: "2026-11-20" }],
   ["checkBudget", { budget: 500, flightCost: 310 }],
   ["checkBudget", { budget: 500, flightCost: 520 }],
   // Invalid inputs

@@ -6,5 +6,11 @@
   { "id": "f005", "origin": "HNL", "destination": "SEA", "airline": "Alaska",   "pricePerPerson": 610, "stops": 0, "durationHours": 6.0,  "notes": "nonstop, evening, flexible fare" },
   { "id": "f006", "origin": "HNL", "destination": "SEA", "airline": "Southwest","pricePerPerson": 455, "stops": 1, "durationHours": 8.5,  "notes": "2 free checked bags" },
   { "id": "f007", "origin": "HNL", "destination": "SEA", "airline": "Delta",    "pricePerPerson": 310, "stops": 2, "durationHours": 15.5, "notes": "cheapest, overnight layover" },
-  { "id": "f008", "origin": "HNL", "destination": "SEA", "airline": "Hawaiian", "pricePerPerson": 560, "stops": 0, "durationHours": 6.0,  "notes": "nonstop, includes meal" }
+  { "id": "f008", "origin": "HNL", "destination": "SEA", "airline": "Hawaiian", "pricePerPerson": 560, "stops": 0, "durationHours": 6.0,  "notes": "nonstop, includes meal" },
+  { "id": "f009", "origin": "HNL", "destination": "PDX", "airline": "Alaska",   "pricePerPerson": 495, "stops": 0, "durationHours": 5.5,  "notes": "nonstop, morning departure" },
+  { "id": "f010", "origin": "HNL", "destination": "PDX", "airline": "Hawaiian", "pricePerPerson": 540, "stops": 0, "durationHours": 5.5,  "notes": "nonstop, includes meal" },
+  { "id": "f011", "origin": "HNL", "destination": "PDX", "airline": "Delta",    "pricePerPerson": 395, "stops": 1, "durationHours": 8.5,  "notes": "1 stop via SEA" },
+  { "id": "f012", "origin": "HNL", "destination": "PDX", "airline": "United",   "pricePerPerson": 360, "stops": 1, "durationHours": 10.0, "notes": "1 stop via SFO, red-eye" },
+  { "id": "f013", "origin": "HNL", "destination": "PDX", "airline": "Southwest","pricePerPerson": 325, "stops": 2, "durationHours": 13.5, "notes": "2 stops, 2 free checked bags" },
+  { "id": "f014", "origin": "HNL", "destination": "EUG", "airline": "Alaska",   "pricePerPerson": 470, "stops": 1, "durationHours": 9.0,  "notes": "1 stop via PDX, Eugene" }
 ]
