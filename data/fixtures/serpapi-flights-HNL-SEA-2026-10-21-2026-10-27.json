@@ -51,8 +51,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZFVERNMU9Sb0xDS1BoQXhBQ0dnTlZVMFE0SEhDajRRTT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkRMIiwiMzU5Il1dXQ=="
+      ]
     },
     {
       "flights": [
@@ -96,8 +95,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZFVERRME1Cb0xDS1BoQXhBQ0dnTlZVMFE0SEhDajRRTT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkRMIiwiNDQwIl1dXQ=="
+      ]
     },
     {
       "flights": [
@@ -173,8 +171,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ3hFVERReU1ueEVUREkyTkRBYUN3ang4QU1RQWhvRFZWTkVPQnh3OGZBRCIsW1siSE5MIiwiMjAyNi0xMC0yMSIsIkxBWCIsbnVsbCwiREwiLCI0MjIiXSxbIkxBWCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkRMIiwiMjY0MCJdXV0="
+      ]
     }
   ],
   "other_flights": [
@@ -253,8 +250,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZzFYVGpFNU9URjhWMDR6TkRJeUdnc0lsT3dFRUFJYUExVlRSRGdjY0pUc0JBPT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTQU4iLG51bGwsIldOIiwiMTk5MSJdLFsiU0FOIiwiMjAyNi0xMC0yMiIsIlNFQSIsbnVsbCwiV04iLCIzNDIyIl1dXQ=="
+      ]
     },
     {
       "flights": [
@@ -362,8 +358,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFaFJWUVRFeU1qRjhWVUV4TVRrMWZGVkJOVFUzT1JvTENMbUtCaEFDR2dOVlUwUTRISEM1aWdZPSIsW1siSE5MIiwiMjAyNi0xMC0yMSIsIkxBWCIsbnVsbCwiVUEiLCIxMjIxIl0sWyJMQVgiLCIyMDI2LTEwLTIxIiwiU0ZPIixudWxsLCJVQSIsIjExOTUiXSxbIlNGTyIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIlVBIiwiNTU3OSJdXV0="
+      ]
     },
     {
       "flights": [
@@ -406,8 +401,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1JCVXprd0dnc0kxS01HRUFJYUExVlRSRGdjY05TakJnPT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiOTAiXV1d"
+      ]
     },
     {
       "flights": [
@@ -449,8 +443,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpFeU1ob0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiMTIyIl1dXQ=="
+      ]
     },
     {
       "flights": [
@@ -493,8 +486,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpJMk54b0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiMjY3Il1dXQ=="
+      ]
     },
     {
       "flights": [
@@ -539,8 +531,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpneU1ob0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiODIyIl1dXQ=="
+      ]
     },
     {
       "flights": [
@@ -583,8 +574,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpZeU54b0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiNjI3Il1dXQ=="
+      ]
     },
     {
       "flights": [
@@ -629,8 +619,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpnMU5Cb0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiODU0Il1dXQ=="
+      ]
     },
     {
       "flights": [
@@ -675,8 +664,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXprd01Cb0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiOTAwIl1dXQ=="
+      ]
     },
     {
       "flights": [
@@ -753,8 +741,7 @@
       "extensions": [
         "Checked baggage for a fee",
         "Bag and fare conditions depend on the return flight"
-      ],
-      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZzFWUVRFeE56WjhWVUV4TURrM0dnc0loTEVHRUFJYUExVlRSRGdjY0lTeEJnPT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRk8iLG51bGwsIlVBIiwiMTE3NiJdLFsiU0ZPIiwiMjAyNi0xMC0yMSIsIlNFQSIsbnVsbCwiVUEiLCIxMDk3Il1dXQ=="
+      ]
     }
   ],
   "price_insights": {
