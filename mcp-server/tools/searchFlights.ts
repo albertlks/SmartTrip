@@ -35,7 +35,6 @@ export function registerSearchFlights(server: McpServer) {
       }
 
       try {
-        // Mock data has no dates, so dates are validated but only filter fixture and live results.
         const { source, results } = await findFlights(origin, destination, departDate, returnDate);
         return jsonResult({ source, count: results.length, results });
       } catch (err) {
