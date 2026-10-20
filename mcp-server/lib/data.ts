@@ -1,16 +1,42 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
-const DATA_DIR = path.resolve(import.meta.dirname, "../../data");
+export const DATA_DIR = path.resolve(import.meta.dirname, "../../data");
 
 export type Flight = {
   id: string;
   origin: string;
   destination: string;
   airline: string;
+  flightNumber?: string;
+  originAirport?: string;
+  destinationAirport?: string;
+  departTime?: string;
+  arriveTime?: string;
   pricePerPerson: number;
   stops: number;
   durationHours: number;
+  notes?: string;
+};
+
+export type Airport = {
+  code: string;
+  name: string;
+  city: string;
+  region: string;
+};
+
+export type Hotel = {
+  id: string;
+  destination: string;
+  name: string;
+  city: string;
+  area: string;
+  tier: "budget" | "mid" | "upscale" | "luxury";
+  pricePerNight: number;
+  rating: number;
+  milesToAirport: number;
+  milesToDowntown: number;
   notes: string;
 };
 
@@ -28,6 +54,8 @@ async function loadJson<T>(file: string): Promise<T> {
 }
 
 export const loadFlights = () => loadJson<Flight[]>("flights.json");
+export const loadAirports = () => loadJson<Airport[]>("airports.json");
+export const loadHotels = () => loadJson<Hotel[]>("hotels.json");
 
 export function availableRoutes(flights: Flight[]): string[] {
   return [...new Set(flights.map((f) => `${f.origin}->${f.destination}`))].sort();

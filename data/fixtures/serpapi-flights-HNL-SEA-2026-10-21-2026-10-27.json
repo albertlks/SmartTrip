@@ -1,0 +1,1072 @@
+{
+  "search_parameters": {
+    "engine": "google_flights",
+    "hl": "en",
+    "gl": "us",
+    "departure_id": "HNL",
+    "arrival_id": "SEA",
+    "outbound_date": "2026-10-21",
+    "return_date": "2026-10-27",
+    "currency": "USD"
+  },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 13:05"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-21 22:05"
+          },
+          "duration": 360,
+          "airplane": "Airbus A321neo",
+          "airline": "Delta",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+          "travel_class": "Economy",
+          "flight_number": "DL 359",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "Live TV",
+            "Carbon emissions estimate: 287 kg"
+          ]
+        }
+      ],
+      "total_duration": 360,
+      "carbon_emissions": {
+        "this_flight": 287000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -26
+      },
+      "price": 617,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZFVERNMU9Sb0xDS1BoQXhBQ0dnTlZVMFE0SEhDajRRTT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkRMIiwiMzU5Il1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 22:40"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-22 07:35"
+          },
+          "duration": 355,
+          "airplane": "Airbus A321neo",
+          "airline": "Delta",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+          "travel_class": "Economy",
+          "flight_number": "DL 440",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "Live TV",
+            "Carbon emissions estimate: 287 kg"
+          ],
+          "overnight": true
+        }
+      ],
+      "total_duration": 355,
+      "carbon_emissions": {
+        "this_flight": 287000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -26
+      },
+      "price": 617,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZFVERRME1Cb0xDS1BoQXhBQ0dnTlZVMFE0SEhDajRRTT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkRMIiwiNDQwIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 07:00"
+          },
+          "arrival_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2026-10-21 15:34"
+          },
+          "duration": 334,
+          "airplane": "Airbus A321neo",
+          "airline": "Delta",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+          "travel_class": "Economy",
+          "flight_number": "DL 422",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "Live TV",
+            "Carbon emissions estimate: 264 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2026-10-21 17:40"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-21 20:27"
+          },
+          "duration": 167,
+          "airplane": "Boeing 737",
+          "airline": "Delta",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+          "travel_class": "Economy",
+          "flight_number": "DL 2640",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "Live TV",
+            "Carbon emissions estimate: 163 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 126,
+          "name": "Los Angeles International Airport",
+          "id": "LAX"
+        }
+      ],
+      "total_duration": 627,
+      "carbon_emissions": {
+        "this_flight": 428000,
+        "typical_for_this_route": 386000,
+        "difference_percent": 11
+      },
+      "price": 637,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ3hFVERReU1ueEVUREkyTkRBYUN3ang4QU1RQWhvRFZWTkVPQnh3OGZBRCIsW1siSE5MIiwiMjAyNi0xMC0yMSIsIkxBWCIsbnVsbCwiREwiLCI0MjIiXSxbIkxBWCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkRMIiwiMjY0MCJdXV0="
+    }
+  ],
+  "other_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 21:55"
+          },
+          "arrival_airport": {
+            "name": "San Diego International Airport",
+            "id": "SAN",
+            "time": "2026-10-22 06:35"
+          },
+          "duration": 340,
+          "airplane": "Boeing 737MAX 8 Passenger",
+          "airline": "Southwest",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/WN.png",
+          "travel_class": "Economy",
+          "flight_number": "WN 1991",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat USB outlet",
+            "Stream media to your device",
+            "Carbon emissions estimate: 271 kg"
+          ],
+          "overnight": true
+        },
+        {
+          "departure_airport": {
+            "name": "San Diego International Airport",
+            "id": "SAN",
+            "time": "2026-10-22 07:25"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-22 10:30"
+          },
+          "duration": 185,
+          "airplane": "Boeing 737MAX 8 Passenger",
+          "airline": "Southwest",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/WN.png",
+          "travel_class": "Economy",
+          "flight_number": "WN 3422",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat USB outlet",
+            "Stream media to your device",
+            "Carbon emissions estimate: 148 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 50,
+          "name": "San Diego International Airport",
+          "id": "SAN"
+        }
+      ],
+      "total_duration": 575,
+      "carbon_emissions": {
+        "this_flight": 421000,
+        "typical_for_this_route": 386000,
+        "difference_percent": 9
+      },
+      "price": 794,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/WN.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZzFYVGpFNU9URjhWMDR6TkRJeUdnc0lsT3dFRUFJYUExVlRSRGdjY0pUc0JBPT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTQU4iLG51bGwsIldOIiwiMTk5MSJdLFsiU0FOIiwiMjAyNi0xMC0yMiIsIlNFQSIsbnVsbCwiV04iLCIzNDIyIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 07:00"
+          },
+          "arrival_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2026-10-21 15:34"
+          },
+          "duration": 334,
+          "airplane": "Boeing 757",
+          "airline": "United",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+          "travel_class": "Economy",
+          "flight_number": "UA 1221",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "In-seat power outlet",
+            "Stream media to your device",
+            "Carbon emissions estimate: 366 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2026-10-21 20:21"
+          },
+          "arrival_airport": {
+            "name": "San Francisco International Airport",
+            "id": "SFO",
+            "time": "2026-10-21 21:47"
+          },
+          "duration": 86,
+          "airplane": "Boeing 737",
+          "airline": "United",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+          "travel_class": "Economy",
+          "flight_number": "UA 1195",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 69 kg"
+          ],
+          "often_delayed_by_over_30_min": true
+        },
+        {
+          "departure_airport": {
+            "name": "San Francisco International Airport",
+            "id": "SFO",
+            "time": "2026-10-21 22:45"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-22 01:15"
+          },
+          "duration": 150,
+          "airplane": "Embraer 175",
+          "airline": "United",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+          "travel_class": "Economy",
+          "flight_number": "UA 5579",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power outlet",
+            "Stream media to your device",
+            "Carbon emissions estimate: 164 kg"
+          ],
+          "plane_and_crew_by": "SkyWest DBA United Express"
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 287,
+          "name": "Los Angeles International Airport",
+          "id": "LAX"
+        },
+        {
+          "duration": 58,
+          "name": "San Francisco International Airport",
+          "id": "SFO"
+        }
+      ],
+      "total_duration": 915,
+      "carbon_emissions": {
+        "this_flight": 601000,
+        "typical_for_this_route": 386000,
+        "difference_percent": 56
+      },
+      "price": 997,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFaFJWUVRFeU1qRjhWVUV4TVRrMWZGVkJOVFUzT1JvTENMbUtCaEFDR2dOVlUwUTRISEM1aWdZPSIsW1siSE5MIiwiMjAyNi0xMC0yMSIsIkxBWCIsbnVsbCwiVUEiLCIxMjIxIl0sWyJMQVgiLCIyMDI2LTEwLTIxIiwiU0ZPIixudWxsLCJVQSIsIjExOTUiXSxbIlNGTyIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIlVBIiwiNTU3OSJdXV0="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 07:00"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-21 15:55"
+          },
+          "duration": 355,
+          "airplane": "Boeing 737",
+          "airline": "Alaska",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+          "travel_class": "Economy",
+          "flight_number": "AS 90",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "Stream media to your device",
+            "Carbon emissions estimate: 331 kg"
+          ]
+        }
+      ],
+      "total_duration": 355,
+      "carbon_emissions": {
+        "this_flight": 332000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -14
+      },
+      "price": 1029,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1JCVXprd0dnc0kxS01HRUFJYUExVlRSRGdjY05TakJnPT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiOTAiXV1d"
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 09:30"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-21 18:25"
+          },
+          "duration": 355,
+          "airplane": "Boeing 787",
+          "airline": "Alaska",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+          "travel_class": "Economy",
+          "flight_number": "AS 122",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 253 kg"
+          ]
+        }
+      ],
+      "total_duration": 355,
+      "carbon_emissions": {
+        "this_flight": 254000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -34
+      },
+      "price": 1029,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpFeU1ob0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiMTIyIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 11:05"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-21 19:57"
+          },
+          "duration": 352,
+          "airplane": "Boeing 737MAX 8 Passenger",
+          "airline": "Alaska",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+          "travel_class": "Economy",
+          "flight_number": "AS 267",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "Stream media to your device",
+            "Carbon emissions estimate: 288 kg"
+          ]
+        }
+      ],
+      "total_duration": 352,
+      "carbon_emissions": {
+        "this_flight": 289000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -25
+      },
+      "price": 1029,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpJMk54b0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiMjY3Il1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 12:50"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-21 21:34"
+          },
+          "duration": 344,
+          "airplane": "Airbus A330",
+          "airline": "Alaska",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+          "travel_class": "Economy",
+          "flight_number": "AS 822",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat USB outlet",
+            "On-demand video",
+            "Carbon emissions estimate: 340 kg"
+          ],
+          "often_delayed_by_over_30_min": true,
+          "plane_and_crew_by": "Alaska as Hawaiian Airlines"
+        }
+      ],
+      "total_duration": 344,
+      "carbon_emissions": {
+        "this_flight": 341000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -12
+      },
+      "price": 1029,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpneU1ob0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiODIyIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 14:36"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-21 23:32"
+          },
+          "duration": 356,
+          "airplane": "Boeing 737",
+          "airline": "Alaska",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+          "travel_class": "Economy",
+          "flight_number": "AS 627",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "Stream media to your device",
+            "Carbon emissions estimate: 325 kg"
+          ]
+        }
+      ],
+      "total_duration": 356,
+      "carbon_emissions": {
+        "this_flight": 326000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -16
+      },
+      "price": 1029,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpZeU54b0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiNjI3Il1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 21:20"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-22 06:04"
+          },
+          "duration": 344,
+          "airplane": "Airbus A330",
+          "airline": "Alaska",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+          "travel_class": "Economy",
+          "flight_number": "AS 854",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat USB outlet",
+            "On-demand video",
+            "Carbon emissions estimate: 340 kg"
+          ],
+          "overnight": true,
+          "plane_and_crew_by": "Alaska as Hawaiian Airlines"
+        }
+      ],
+      "total_duration": 344,
+      "carbon_emissions": {
+        "this_flight": 341000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -12
+      },
+      "price": 1029,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXpnMU5Cb0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiODU0Il1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 23:30"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-22 08:13"
+          },
+          "duration": 343,
+          "airplane": "Airbus A330",
+          "airline": "Alaska",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+          "travel_class": "Economy",
+          "flight_number": "AS 900",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat USB outlet",
+            "On-demand video",
+            "Carbon emissions estimate: 340 kg"
+          ],
+          "overnight": true,
+          "plane_and_crew_by": "Alaska as Hawaiian Airlines"
+        }
+      ],
+      "total_duration": 343,
+      "carbon_emissions": {
+        "this_flight": 341000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -12
+      },
+      "price": 1029,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZ1ZCVXprd01Cb0xDTlNqQmhBQ0dnTlZVMFE0SEhEVW93WT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRUEiLG51bGwsIkFTIiwiOTAwIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Daniel K. Inouye International Airport",
+            "id": "HNL",
+            "time": "2026-10-21 09:30"
+          },
+          "arrival_airport": {
+            "name": "San Francisco International Airport",
+            "id": "SFO",
+            "time": "2026-10-21 17:45"
+          },
+          "duration": 315,
+          "airplane": "Boeing 737MAX 9 Passenger",
+          "airline": "United",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+          "travel_class": "Economy",
+          "flight_number": "UA 1176",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Wi-Fi for a fee",
+            "In-seat power outlet",
+            "Stream media to your device",
+            "Carbon emissions estimate: 254 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "San Francisco International Airport",
+            "id": "SFO",
+            "time": "2026-10-21 18:35"
+          },
+          "arrival_airport": {
+            "name": "Seattle-Tacoma International Airport",
+            "id": "SEA",
+            "time": "2026-10-21 21:01"
+          },
+          "duration": 146,
+          "airplane": "Airbus A320",
+          "airline": "United",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+          "travel_class": "Economy",
+          "flight_number": "UA 1097",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "Stream media to your device",
+            "Carbon emissions estimate: 127 kg"
+          ],
+          "often_delayed_by_over_30_min": true
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 50,
+          "name": "San Francisco International Airport",
+          "id": "SFO"
+        }
+      ],
+      "total_duration": 511,
+      "carbon_emissions": {
+        "this_flight": 381000,
+        "typical_for_this_route": 386000,
+        "difference_percent": -1
+      },
+      "price": 1046,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJTjFkTU5YbDVhVzlTWnpSQlEyNUVlVUZDUnkwdExTMHRMVzk1Y20weE55MXVNVUZCUVVGQlIzSlhOMDFqUWxNeVFVbEJFZzFWUVRFeE56WjhWVUV4TURrM0dnc0loTEVHRUFJYUExVlRSRGdjY0lTeEJnPT0iLFtbIkhOTCIsIjIwMjYtMTAtMjEiLCJTRk8iLG51bGwsIlVBIiwiMTE3NiJdLFsiU0ZPIiwiMjAyNi0xMC0yMSIsIlNFQSIsbnVsbCwiVUEiLCIxMDk3Il1dXQ=="
+    }
+  ],
+  "price_insights": {
+    "lowest_price": 617,
+    "price_level": "typical",
+    "typical_price_range": [
+      300,
+      630
+    ],
+    "price_history": [
+      [
+        1787220000,
+        290
+      ],
+      [
+        1787306400,
+        290
+      ],
+      [
+        1787392800,
+        290
+      ],
+      [
+        1787479200,
+        290
+      ],
+      [
+        1787565600,
+        290
+      ],
+      [
+        1787652000,
+        290
+      ],
+      [
+        1787738400,
+        290
+      ],
+      [
+        1787824800,
+        290
+      ],
+      [
+        1787911200,
+        290
+      ],
+      [
+        1787997600,
+        290
+      ],
+      [
+        1788084000,
+        290
+      ],
+      [
+        1788170400,
+        310
+      ],
+      [
+        1788256800,
+        310
+      ],
+      [
+        1788343200,
+        310
+      ],
+      [
+        1788429600,
+        301
+      ],
+      [
+        1788516000,
+        301
+      ],
+      [
+        1788602400,
+        301
+      ],
+      [
+        1788688800,
+        301
+      ],
+      [
+        1788775200,
+        301
+      ],
+      [
+        1788861600,
+        310
+      ],
+      [
+        1788948000,
+        310
+      ],
+      [
+        1789034400,
+        310
+      ],
+      [
+        1789120800,
+        310
+      ],
+      [
+        1789207200,
+        310
+      ],
+      [
+        1789293600,
+        316
+      ],
+      [
+        1789380000,
+        226
+      ],
+      [
+        1789466400,
+        226
+      ],
+      [
+        1789552800,
+        226
+      ],
+      [
+        1789639200,
+        226
+      ],
+      [
+        1789725600,
+        310
+      ],
+      [
+        1789812000,
+        310
+      ],
+      [
+        1789898400,
+        310
+      ],
+      [
+        1789984800,
+        310
+      ],
+      [
+        1790071200,
+        338
+      ],
+      [
+        1790157600,
+        338
+      ],
+      [
+        1790244000,
+        338
+      ],
+      [
+        1790330400,
+        338
+      ],
+      [
+        1790416800,
+        338
+      ],
+      [
+        1790503200,
+        338
+      ],
+      [
+        1790589600,
+        366
+      ],
+      [
+        1790676000,
+        386
+      ],
+      [
+        1790762400,
+        366
+      ],
+      [
+        1790848800,
+        535
+      ],
+      [
+        1790935200,
+        535
+      ],
+      [
+        1791021600,
+        535
+      ],
+      [
+        1791108000,
+        535
+      ],
+      [
+        1791194400,
+        524
+      ],
+      [
+        1791280800,
+        523
+      ],
+      [
+        1791367200,
+        523
+      ],
+      [
+        1791453600,
+        551
+      ],
+      [
+        1791540000,
+        617
+      ],
+      [
+        1791626400,
+        617
+      ],
+      [
+        1791712800,
+        617
+      ],
+      [
+        1791799200,
+        617
+      ],
+      [
+        1791885600,
+        637
+      ],
+      [
+        1791972000,
+        617
+      ],
+      [
+        1792058400,
+        617
+      ],
+      [
+        1792144800,
+        617
+      ],
+      [
+        1792231200,
+        617
+      ],
+      [
+        1792317600,
+        617
+      ],
+      [
+        1792404000,
+        617
+      ]
+    ]
+  },
+  "airports": [
+    {
+      "departure": [
+        {
+          "airport": {
+            "id": "HNL",
+            "name": "Daniel K. Inouye International Airport"
+          },
+          "city": "Honolulu",
+          "country": "United States",
+          "country_code": "US",
+          "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSsdjkWd1V3TumPvC4DhZXNikDtmINa_ghQwmbTTXIKosbStJVuAD79N2dCzkcwF4uyPvI28caHHxJ2Cw",
+          "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQIkzDTWYtL05s9fGLJkm3EL4yu-q5lAeajQQ6C19gTJ0wfvvUBxRIjX_lPje_sAjx3RJE5yilbhpAyHZu3lbBCho4QgDD1t68XC1azixs"
+        }
+      ],
+      "arrival": [
+        {
+          "airport": {
+            "id": "SEA",
+            "name": "Seattle-Tacoma International Airport"
+          },
+          "city": "Seattle",
+          "country": "United States",
+          "country_code": "US",
+          "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSSAiBpSv2yUgizRXFmwGP3MTh6M7DGi6u5WgjN5zbRJ9jD42_UzeQNdCTyuPiU5fj8jF1Podav6__a_A",
+          "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSY5I5L6loeputAIHRWtjOdGurjvRa1ioycHdq2XPS_Io8MuYXvN2ZiixmnVQBWQ_fjPP1A9o9y9-o-yeukkA0ZTCtpBvF4MXtRITUgCs8"
+        }
+      ]
+    },
+    {
+      "departure": [
+        {
+          "airport": {
+            "id": "SEA",
+            "name": "Seattle-Tacoma International Airport"
+          },
+          "city": "Seattle",
+          "country": "United States",
+          "country_code": "US",
+          "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSSAiBpSv2yUgizRXFmwGP3MTh6M7DGi6u5WgjN5zbRJ9jD42_UzeQNdCTyuPiU5fj8jF1Podav6__a_A",
+          "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSY5I5L6loeputAIHRWtjOdGurjvRa1ioycHdq2XPS_Io8MuYXvN2ZiixmnVQBWQ_fjPP1A9o9y9-o-yeukkA0ZTCtpBvF4MXtRITUgCs8"
+        }
+      ],
+      "arrival": [
+        {
+          "airport": {
+            "id": "HNL",
+            "name": "Daniel K. Inouye International Airport"
+          },
+          "city": "Honolulu",
+          "country": "United States",
+          "country_code": "US",
+          "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSsdjkWd1V3TumPvC4DhZXNikDtmINa_ghQwmbTTXIKosbStJVuAD79N2dCzkcwF4uyPvI28caHHxJ2Cw",
+          "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQIkzDTWYtL05s9fGLJkm3EL4yu-q5lAeajQQ6C19gTJ0wfvvUBxRIjX_lPje_sAjx3RJE5yilbhpAyHZu3lbBCho4QgDD1t68XC1azixs"
+        }
+      ]
+    }
+  ]
+}
