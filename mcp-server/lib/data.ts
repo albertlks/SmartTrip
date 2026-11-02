@@ -19,11 +19,17 @@ export type Flight = {
   notes?: string;
 };
 
+/** Built by scripts/build-airports.ts from OurAirports. */
 export type Airport = {
   code: string;
   name: string;
   city: string;
   region: string;
+  country: string;
+  type: "large" | "medium" | "small";
+  latitude: number;
+  longitude: number;
+  keywords?: string[];
 };
 
 export type Hotel = {
@@ -56,6 +62,12 @@ async function loadJson<T>(file: string): Promise<T> {
 export const loadFlights = () => loadJson<Flight[]>("flights.json");
 export const loadAirports = () => loadJson<Airport[]>("airports.json");
 export const loadHotels = () => loadJson<Hotel[]>("hotels.json");
+
+/** The airport with this IATA code, or undefined. For tools that need coordinates. */
+export async function getAirport(code: string): Promise<Airport | undefined> {
+  const upper = code.toUpperCase();
+  return (await loadAirports()).find((a) => a.code === upper);
+}
 
 export function availableRoutes(flights: Flight[]): string[] {
   return [...new Set(flights.map((f) => `${f.origin}->${f.destination}`))].sort();
