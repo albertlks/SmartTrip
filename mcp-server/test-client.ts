@@ -1,13 +1,16 @@
 // Run with: npx tsx mcp-server/test-client.ts
 // Never calls SerpApi: serpapi mode is only tested with the key blanked out.
 import { spawn } from "node:child_process";
-import { readdir } from "node:fs/promises";
+import { mkdtemp, readdir } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 
 const SERVER = path.join(import.meta.dirname, "server.ts");
 const FIXTURE_DIR = path.resolve(import.meta.dirname, "../data/fixtures");
+// An empty cache, so serpapi-mode checks never hit a real cached search.
+const EMPTY_CACHE = await mkdtemp(path.join(tmpdir(), "smarttrip-cache-"));
 const FLIGHT_FIELDS = ["flightNumber", "originAirport", "destinationAirport", "departTime", "arriveTime"];
 
 let failures = 0;
@@ -127,14 +130,14 @@ if (fixtures.length === 0) {
 await fixtureClient.close();
 
 // ---- SerpApi provider without a key (blank key: dotenv won't override it, so no live call) ----
-const noKey = await connect({ FLIGHT_PROVIDER: "serpapi", SERPAPI_API_KEY: "" });
+const noKey = await connect({ FLIGHT_PROVIDER: "serpapi", SERPAPI_API_KEY: "", SMARTTRIP_CACHE_DIR: EMPTY_CACHE });
 const noKeyResult = await call(noKey, "searchFlights", { origin: "HNL", destination: "SEA", departDate: "2026-11-14", returnDate: "2026-11-18" });
 check("serpapi mode without a key -> clear toolError", noKeyResult.isError && /SERPAPI_API_KEY is not set/.test(noKeyResult.text), noKeyResult.text);
 await noKey.close();
 
 // ---- stdout carries only MCP protocol messages ----
 const stdoutLines = await new Promise<string[]>((resolve) => {
-  const child = spawn("npx", ["tsx", SERVER], { env: { ...process.env, FLIGHT_PROVIDER: "serpapi", SERPAPI_API_KEY: "" } });
+  const child = spawn("npx", ["tsx", SERVER], { env: { ...process.env, FLIGHT_PROVIDER: "serpapi", SERPAPI_API_KEY: "", SMARTTRIP_CACHE_DIR: EMPTY_CACHE } });
   let out = "";
   child.stdout.on("data", (d) => (out += d));
   const send = (msg: object) => child.stdin.write(JSON.stringify(msg) + "\n");

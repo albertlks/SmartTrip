@@ -8,12 +8,12 @@ import { registerSearchHotels } from "./tools/searchHotels";
 
 /**
  * A server with every SmartTrip tool registered. Used over stdio (server.ts) and in-process by runAgent.
- * The tools don't read `ctx` yet; the SerpApi cap and presentTrips' result store will.
+ * `ctx` holds this run's state, such as its SerpApi call count.
  */
 export function createServer(ctx: RunContext) {
   const server = new McpServer({ name: "smarttrip", version: "0.2.0" }, { capabilities: { tools: {} } });
   registerLookupAirport(server);
-  registerSearchFlights(server);
+  registerSearchFlights(server, ctx);
   registerSearchHotels(server);
   registerEstimateTransport(server);
   registerCheckBudget(server);

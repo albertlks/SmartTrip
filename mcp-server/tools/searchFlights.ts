@@ -1,7 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/server";
 import * as z from "zod";
-import { FlightSearchError, findFlights } from "../lib/flightProviders";
-import { jsonResult, toolError } from "../lib/results";
+import { findFlights } from "../lib/flightProviders";
+import { jsonResult, ToolFailure, toolError } from "../lib/results";
+import type { RunContext } from "../lib/runContext";
 import { airportCode, isoDate } from "../lib/schemas";
 
 export const searchFlightsInput = z.object({
@@ -11,7 +12,7 @@ export const searchFlightsInput = z.object({
   returnDate: isoDate("returnDate").describe("Return date, YYYY-MM-DD. Must be after departDate."),
 });
 
-export function registerSearchFlights(server: McpServer) {
+export function registerSearchFlights(server: McpServer, ctx: RunContext) {
   server.registerTool(
     "searchFlights",
     {
@@ -35,10 +36,10 @@ export function registerSearchFlights(server: McpServer) {
       }
 
       try {
-        const { source, results } = await findFlights(origin, destination, departDate, returnDate);
+        const { source, results } = await findFlights(origin, destination, departDate, returnDate, ctx);
         return jsonResult({ source, count: results.length, results });
       } catch (err) {
-        if (err instanceof FlightSearchError) return toolError(err.message);
+        if (err instanceof ToolFailure) return toolError(err.message);
         throw err;
       }
     },
