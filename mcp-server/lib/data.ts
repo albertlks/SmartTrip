@@ -30,6 +30,8 @@ export type Airport = {
   latitude: number;
   longitude: number;
   keywords?: string[];
+  /** Set on a city's main airport where two large airports would otherwise tie, e.g. ORD over MDW. */
+  main?: boolean;
 };
 
 export type Hotel = {

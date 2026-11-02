@@ -59,6 +59,9 @@ const ALIASES: Record<string, string[]> = {
   ITO: ["Big Island"],
 };
 
+// Main airport of a city where two large airports would otherwise tie (alphabetical order puts MDW before ORD).
+const MAIN_AIRPORTS = new Set(["ORD", "JFK", "LHR"]);
+
 /** About 11 m of precision: plenty for distances and map pins, and keeps the file small. */
 const round4 = (n: number) => Math.round(n * 10_000) / 10_000;
 
@@ -89,6 +92,7 @@ function main() {
       latitude: round4(Number(r.latitude_deg)),
       longitude: round4(Number(r.longitude_deg)),
       ...(keywords.length ? { keywords } : {}),
+      ...(MAIN_AIRPORTS.has(code) ? { main: true } : {}),
     };
   }
 
