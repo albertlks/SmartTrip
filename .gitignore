@@ -49,3 +49,6 @@ claude.md
 
 # Saved agent runs (results and detail pages)
 /data/runs/
+
+# Raw downloads used to build data files (e.g. OurAirports CSVs)
+/data/raw/
