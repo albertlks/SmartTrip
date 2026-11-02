@@ -6,6 +6,7 @@ import path from "node:path";
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { createServer } from "./createServer";
 import { newRunContext } from "./lib/runContext";
+import { findFlights, isRedEye, mapSerpApi } from "./lib/flightProviders";
 import { cacheKey, serpapiSearch } from "./lib/serpapi";
 
 const KEY = "test-key-5f3a9c";
@@ -142,6 +143,53 @@ check(
 );
 await client.close();
 await server.close();
+
+// ---- full flight records stay on the server, with unique ids per search ----
+process.env.FLIGHT_PROVIDER = "fixture";
+const recordsCtx = newRunContext();
+const fixtureSearch = { origin: "HNL", destination: "SEA", departDate: "2026-10-21", returnDate: "2026-10-27" };
+const first8 = await findFlights(fixtureSearch.origin, fixtureSearch.destination, fixtureSearch.departDate, fixtureSearch.returnDate, recordsCtx);
+const lax = first8.results.find((r) => r.layovers.length === 1);
+check(
+  "the fixture's 1-stop option has both segments and a 126-minute LAX layover",
+  lax?.layovers[0].airport === "LAX" && lax.layovers[0].minutes === 126 && lax.segments.length === 2 &&
+    lax.segments.map((g) => `${g.from}-${g.to}`).join() === "HNL-LAX,LAX-SEA",
+  JSON.stringify(lax),
+);
+const overnight = first8.results.find((r) => r.departTime === "22:40");
+check(
+  "dates come from the segment times, and the 22:40 overnight is a red-eye landing 2026-10-22",
+  first8.results.every((r) => r.departDate === "2026-10-21") && overnight?.arriveDate === "2026-10-22" && overnight.redEye,
+  JSON.stringify(overnight),
+);
+check(
+  "a 07:00 departure landing after midnight is not a red-eye; a 04:30 one is",
+  isRedEye("07:00", "2026-10-21", "2026-10-22") === false && isRedEye("04:30", "2026-10-21", "2026-10-22"),
+);
+check("the fixture's 13 options are cut to the 8 cheapest", first8.results.length === 8);
+const again8 = mapSerpApi(fixture, fixtureSearch, "fixture");
+const other8 = mapSerpApi(fixture, { ...fixtureSearch, destination: "PDX" }, "fixture");
+check("the same search gives the same ids", again8.map((r) => r.id).join() === first8.results.map((r) => r.id).join());
+check(
+  "two different searches in one run never share an id",
+  other8.every((r) => !first8.results.some((f) => f.id === r.id)),
+  `${first8.results[0].id} vs ${other8[0].id}`,
+);
+
+const storeServer = createServer(recordsCtx);
+const [storeClientSide, storeServerSide] = InMemoryTransport.createLinkedPair();
+await storeServer.connect(storeServerSide);
+const storeClient = new Client({ name: "smarttrip-test", version: "0.2.0" });
+await storeClient.connect(storeClientSide);
+const stored = await storeClient.callTool({ name: "searchFlights", arguments: fixtureSearch });
+const storedIds = JSON.parse(text(stored)).results.map((r: { id: string }) => r.id) as string[];
+check(
+  "searchFlights saves each full record in the run context under its id",
+  storedIds.length > 0 && storedIds.every((id) => recordsCtx.results.get(id)?.kind === "flight" && "segments" in recordsCtx.results.get(id)!),
+);
+check("the model's view leaves out segments and tokens", !text(stored).includes("segments") && !text(stored).includes("departureToken"));
+await storeClient.close();
+await storeServer.close();
 
 console.log(failures ? `\n${failures} check(s) failed` : "\nAll SerpApi helper checks passed");
 process.exit(failures ? 1 : 0);
