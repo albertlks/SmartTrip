@@ -55,7 +55,7 @@ const readCsv = (file: string) => parseCsv(readFileSync(path.join(RAW_DIR, file)
 // Names people type that OurAirports' city and keywords don't cover. Keep this short and add only real gaps.
 const ALIASES: Record<string, string[]> = {
   OGG: ["Maui"],
-  KOA: ["Big Island", "Kona"],
+  KOA: ["Big Island"],
   ITO: ["Big Island"],
 };
 
