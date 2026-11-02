@@ -15,7 +15,7 @@
     "demo4": "tsx agent/planTrip.ts 1500 \"Honolulu to Los Angeles Nov 14-18, one traveler.\"",
     "demo:real": "FLIGHT_PROVIDER=fixture tsx agent/planTrip.ts 2000 \"2 of us, Honolulu to Seattle Oct 21-27. Nonstop flights only.\"",
     "demo:live": "FLIGHT_PROVIDER=serpapi tsx agent/planTrip.ts 2000 \"2 of us, Honolulu to Seattle Nov 14-18, 2026. Nonstop flights only.\"",
-    "check": "tsx mcp-server/test-client.ts"
+    "check": "tsx mcp-server/test-client.ts && tsx mcp-server/test-serpapi.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/client": "^2.3.1",

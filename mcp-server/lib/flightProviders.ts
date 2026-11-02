@@ -1,8 +1,12 @@
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { DATA_DIR, availableRoutes, loadFlights } from "./data";
+import { providerFor, type Source } from "./providers";
+import { ToolFailure } from "./results";
+import type { RunContext } from "./runContext";
+import { serpapiSearch } from "./serpapi";
 
-export type FlightSource = "mock" | "fixture" | "serpapi";
+export type FlightSource = Source;
 
 export type FlightResult = {
   id: string;
@@ -18,36 +22,25 @@ export type FlightResult = {
   notes?: string;
 };
 
-/** A failure whose message is safe and actionable to show the agent as a toolError. */
-export class FlightSearchError extends Error {}
+export class FlightSearchError extends ToolFailure {}
 
 const MAX_RESULTS = 8;
 const FIXTURE_DIR = path.join(DATA_DIR, "fixtures");
-const CACHE_DIR = path.join(DATA_DIR, "cache");
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
-const PROVIDERS: FlightSource[] = ["mock", "fixture", "serpapi"];
-
-export function flightProvider(): FlightSource {
-  const value = (process.env.FLIGHT_PROVIDER ?? "mock").trim().toLowerCase();
-  if (!PROVIDERS.includes(value as FlightSource)) {
-    throw new FlightSearchError(`FLIGHT_PROVIDER="${value}" is not valid. Use one of: ${PROVIDERS.join(", ")}.`);
-  }
-  return value as FlightSource;
-}
 
 export async function findFlights(
   origin: string,
   destination: string,
   departDate: string,
   returnDate: string,
+  ctx: RunContext,
 ): Promise<{ source: FlightSource; results: FlightResult[] }> {
-  const source = flightProvider();
+  const source = providerFor("FLIGHT");
   const results =
     source === "mock"
       ? await fromMock(origin, destination)
       : source === "fixture"
         ? mapSerpApi(await readFixture(origin, destination, departDate, returnDate))
-        : mapSerpApi(await fetchSerpApi(origin, destination, departDate, returnDate));
+        : mapSerpApi(await fetchSerpApi(origin, destination, departDate, returnDate, ctx));
   return { source, results };
 }
 
@@ -104,63 +97,21 @@ async function readFixture(origin: string, destination: string, departDate: stri
   }
 }
 
-async function fetchSerpApi(origin: string, destination: string, departDate: string, returnDate: string) {
-  const route = `${origin}->${destination} ${departDate}/${returnDate}`;
-  const apiKey = process.env.SERPAPI_API_KEY?.trim();
-  if (!apiKey) {
-    throw new FlightSearchError(
-      "FLIGHT_PROVIDER=serpapi but SERPAPI_API_KEY is not set. Add it to .env.local, or use FLIGHT_PROVIDER=fixture.",
-    );
-  }
-
-  // The free plan allows 250 searches a month, so never search the same route and dates twice within a day.
-  const cacheFile = path.join(CACHE_DIR, fixtureName(origin, destination, departDate, returnDate));
-  const cached = await readFile(cacheFile, "utf8")
-    .then((t) => JSON.parse(t) as { fetchedAt: number; response: SerpApiResponse })
-    .catch(() => null);
-  if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
-    console.error(`[serpapi] ${route}: cache hit`);
-    return cached.response;
-  }
-  console.error(`[serpapi] ${route}: cache miss, calling SerpApi`);
-
-  const url = new URL("https://serpapi.com/search");
-  url.search = new URLSearchParams({
-    engine: "google_flights",
-    departure_id: origin,
-    arrival_id: destination,
-    outbound_date: departDate,
-    return_date: returnDate,
-    type: "1", // round trip
-    adults: "1", // keeps price per person
-    currency: "USD",
-    api_key: apiKey,
-  }).toString();
-
-  // No retries and no fallback to mock data: every live call spends quota.
-  let res: Response;
-  try {
-    res = await fetch(url, { signal: AbortSignal.timeout(30_000) });
-  } catch (err) {
-    throw new FlightSearchError(
-      `Could not reach SerpApi (${err instanceof Error ? err.message : String(err)}). Check the network, or use FLIGHT_PROVIDER=fixture.`,
-    );
-  }
-  const body = (await res.json().catch(() => ({}))) as SerpApiResponse & { error?: string };
-  if (!res.ok || body.error) {
-    const detail = body.error ?? `HTTP ${res.status}`;
-    const hint =
-      res.status === 401
-        ? "SERPAPI_API_KEY looks invalid."
-        : res.status === 429
-          ? "The SerpApi search quota is used up."
-          : "SerpApi returned an error.";
-    throw new FlightSearchError(`${hint} (${detail}) Use FLIGHT_PROVIDER=fixture for the demo.`);
-  }
-
-  await mkdir(CACHE_DIR, { recursive: true });
-  await writeFile(cacheFile, JSON.stringify({ fetchedAt: Date.now(), response: body }));
-  return body;
+async function fetchSerpApi(origin: string, destination: string, departDate: string, returnDate: string, ctx: RunContext) {
+  const { response } = await serpapiSearch<SerpApiResponse>(
+    "google_flights",
+    {
+      departure_id: origin,
+      arrival_id: destination,
+      outbound_date: departDate,
+      return_date: returnDate,
+      type: "1", // round trip
+      adults: "1", // keeps price per person
+      currency: "USD",
+    },
+    ctx,
+  );
+  return response;
 }
 
 // Field names confirmed against data/fixtures/serpapi-flights-HNL-SEA-2026-10-21-2026-10-27.json.
