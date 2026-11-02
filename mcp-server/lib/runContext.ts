@@ -1,4 +1,8 @@
 import { randomUUID } from "node:crypto";
+import type { FlightRecord } from "./flightProviders";
+
+/** A full search result saved for this run. Hotels and activities join this union in later issues. */
+export type StoredResult = FlightRecord;
 
 /**
  * State shared by the tools of one agent run: one per run in the web app and CLI,
@@ -7,7 +11,7 @@ import { randomUUID } from "node:crypto";
 export type RunContext = {
   runId: string;
   /** Full tool results by id, so presentTrips can look up what this run's searches returned. */
-  results: Map<string, unknown>;
+  results: Map<string, StoredResult>;
   /** Live SerpApi calls made in this run (cache hits don't count). */
   serpapiCalls: number;
   maxSerpapiCalls: number;
