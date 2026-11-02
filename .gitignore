@@ -52,3 +52,6 @@ claude.md
 
 # Raw downloads used to build data files (e.g. OurAirports CSVs)
 /data/raw/
+docs/m2-brief.md
+docs/m2-plan.md
+docs/m2-planning-brief.md
