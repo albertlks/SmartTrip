@@ -46,3 +46,6 @@ claude.md
 
 # SerpApi response cache (live calls)
 /data/cache/
+
+# Saved agent runs (results and detail pages)
+/data/runs/
