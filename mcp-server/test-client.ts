@@ -43,6 +43,16 @@ const airport = await call(client, "lookupAirport", { query: "Seattle" });
 const sea = airport.data?.results?.[0]?.code;
 check("lookupAirport('Seattle') -> SEA first", sea === "SEA", airport.text);
 
+// Main airport first for multi-airport cities, aliases, accents, and the codes the mock data uses.
+const lookups: [string, string][] = [
+  ["Portland", "PDX"], ["New York", "JFK"], ["NYC", "JFK"], ["Chicago", "ORD"], ["Maui", "OGG"],
+  ["Honolulu", "HNL"], ["Cancun", "CUN"], ["Eugene", "EUG"], ["hnl", "HNL"],
+];
+for (const [query, code] of lookups) {
+  const r = await call(client, "lookupAirport", { query });
+  check(`lookupAirport('${query}') -> ${code} first`, r.data?.results?.[0]?.code === code, r.text.slice(0, 200));
+}
+
 const flights = await call(client, "searchFlights", {
   origin: "HNL", destination: sea, departDate: "2026-11-14", returnDate: "2026-11-18",
 });
