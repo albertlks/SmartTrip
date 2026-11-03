@@ -1,7 +1,8 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { projectRoot } from "./projectRoot";
 
-export const DATA_DIR = path.resolve(import.meta.dirname, "../../data");
+export const DATA_DIR = path.join(projectRoot(), "data");
 
 export type Flight = {
   id: string;

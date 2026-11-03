@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { projectRoot } from "../mcp-server/lib/projectRoot";
 
 export const IDEA_THEMES = ["warm", "winter", "food", "adventure", "city"] as const;
 
@@ -19,7 +20,7 @@ export type Idea = {
   prompt: string;
 };
 
-const IDEAS_FILE = path.resolve(import.meta.dirname, "../data/ideas.json");
+const IDEAS_FILE = path.join(projectRoot(), "data/ideas.json");
 
 export function loadIdeas(): Idea[] {
   return JSON.parse(readFileSync(IDEAS_FILE, "utf8")) as Idea[];
