@@ -1,26 +1,125 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens. Components use the Tailwind names below (bg-surface, text-muted, border-line, ...),
+ * which point at these variables, so switching theme only swaps the variables.
+ * Theme: the system setting by default; data-theme="light" or "dark" on <html> overrides it.
+ * scripts/check-contrast.ts reads the two :root blocks below, so keep their shape.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --canvas: #f6f7f9;
+  --surface: #ffffff;
+  --raised: #eef1f5;
+  --line: #d9dee5;
+  --ink: #111827;
+  --muted: #4b5563;
+  --accent: #1d4ed8;
+  --accent-strong: #1e3a8a;
+  --on-accent: #ffffff;
+  --accent-soft: #e8eefc;
+  --success: #166534;
+  --success-soft: #e6f4ea;
+  --warning: #92400e;
+  --warning-soft: #fdf2e0;
+  --danger: #b91c1c;
+  --danger-soft: #fdeaea;
+  --shadow-color: 17 24 39;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --canvas: #0b0f17;
+  --surface: #121826;
+  --raised: #1b2335;
+  --line: #2b3549;
+  --ink: #e7eaf0;
+  --muted: #a3acbb;
+  --accent: #7aa2ff;
+  --accent-strong: #c7d6ff;
+  --on-accent: #0b0f17;
+  --accent-soft: #1c2a4d;
+  --success: #6fdc98;
+  --success-soft: #11291b;
+  --warning: #f5c26b;
+  --warning-soft: #2c2210;
+  --danger: #ff8a8a;
+  --danger-soft: #33171a;
+  --shadow-color: 0 0 0;
 }
 
+/* The same dark values when the system is dark and no theme was chosen. */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --canvas: #0b0f17;
+    --surface: #121826;
+    --raised: #1b2335;
+    --line: #2b3549;
+    --ink: #e7eaf0;
+    --muted: #a3acbb;
+    --accent: #7aa2ff;
+    --accent-strong: #c7d6ff;
+    --on-accent: #0b0f17;
+    --accent-soft: #1c2a4d;
+    --success: #6fdc98;
+    --success-soft: #11291b;
+    --warning: #f5c26b;
+    --warning-soft: #2c2210;
+    --danger: #ff8a8a;
+    --danger-soft: #33171a;
+    --shadow-color: 0 0 0;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-on-accent: var(--on-accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
+  --shadow-card: 0 1px 2px rgb(var(--shadow-color) / 0.06), 0 1px 3px rgb(var(--shadow-color) / 0.08);
+  --shadow-raised: 0 4px 12px rgb(var(--shadow-color) / 0.1), 0 2px 4px rgb(var(--shadow-color) / 0.06);
+}
+
+@layer base {
+  body {
+    background: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+  }
+
+  /* One focus style everywhere, visible in both themes. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
