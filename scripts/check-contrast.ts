@@ -63,13 +63,5 @@ for (const [theme, selector] of [["light", ":root"], ["dark", ':root[data-theme=
   }
 }
 
-// The dark values are written twice (data-theme and the system media query); they must match.
-const media = CSS.slice(CSS.indexOf("@media (prefers-color-scheme: dark)"));
-const mediaTokens = Object.fromEntries([...media.slice(0, media.indexOf("}")).matchAll(/--([a-z-]+):\s*(#[0-9a-f]{6});/gi)].map((m) => [m[1], m[2]]));
-const darkTokens = tokens(':root[data-theme="dark"]');
-const drift = Object.keys(darkTokens).filter((k) => mediaTokens[k] !== darkTokens[k]);
-if (drift.length) failures++;
-console.log(`${drift.length ? "FAIL" : "PASS"}  system-dark tokens match data-theme="dark"${drift.length ? `: ${drift.join(", ")}` : ""}`);
-
 console.log(failures ? `\n${failures} contrast check(s) failed` : "\nAll contrast checks passed");
 process.exit(failures ? 1 : 0);

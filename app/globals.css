@@ -3,7 +3,8 @@
 /*
  * Design tokens. Components use the Tailwind names below (bg-surface, text-muted, border-line, ...),
  * which point at these variables, so switching theme only swaps the variables.
- * Theme: the system setting by default; data-theme="light" or "dark" on <html> overrides it.
+ * Theme: data-theme="light" or "dark" on <html>, set before the first paint by the script in ThemeToggle.tsx
+ * (the saved choice, or the device's preference on a first visit). Without JavaScript the page is light.
  * scripts/check-contrast.ts reads the two :root blocks below, so keep their shape.
  */
 :root {
@@ -46,30 +47,6 @@
   --danger: #ff8a8a;
   --danger-soft: #33171a;
   --shadow-color: 0 0 0;
-}
-
-/* The same dark values when the system is dark and no theme was chosen. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --canvas: #0b0f17;
-    --surface: #121826;
-    --raised: #1b2335;
-    --line: #2b3549;
-    --ink: #e7eaf0;
-    --muted: #a3acbb;
-    --accent: #7aa2ff;
-    --accent-strong: #c7d6ff;
-    --on-accent: #0b0f17;
-    --accent-soft: #1c2a4d;
-    --success: #6fdc98;
-    --success-soft: #11291b;
-    --warning: #f5c26b;
-    --warning-soft: #2c2210;
-    --danger: #ff8a8a;
-    --danger-soft: #33171a;
-    --shadow-color: 0 0 0;
-  }
 }
 
 @theme inline {
