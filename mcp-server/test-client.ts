@@ -1,5 +1,7 @@
 // Run with: npx tsx mcp-server/test-client.ts
 // Never calls SerpApi: serpapi mode is only tested with the key blanked out.
+// Tool results are parsed from untyped JSON text, so `any` is allowed here.
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { spawn } from "node:child_process";
 import { mkdtemp, readdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
