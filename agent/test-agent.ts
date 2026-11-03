@@ -102,7 +102,17 @@ async function main() {
   // ---- runAgent rules, with a scripted LLM ----
   const user: OpenAI.Chat.ChatCompletionMessageParam[] = [{ role: "user", content: "Honolulu to Seattle Dec 11-15, 2 of us" }];
   const futureRequest = { ...complete, departDate: "2027-12-11", returnDate: "2027-12-15" };
-  const budgetArgs = { budget: 1600, flightCost: 310, travelers: 2, hotelCostPerNight: 55, nights: 4, transportCost: 91 };
+  const search = { origin: "HNL", destination: "SEA", departDate: "2027-12-11", returnDate: "2027-12-15" };
+  const searchTurn: Turn = {
+    calls: [
+      { name: "searchFlights", args: search },
+      { name: "searchHotels", args: { destination: "SEA", checkIn: search.departDate, checkOut: search.returnDate } },
+    ],
+  };
+  // Mock ids: f003 is the $385 Delta 1-stop and h002 the $135 Pike Place Inn (14 mi from the airport).
+  const present = (travelers = 2): Turn => ({
+    calls: [{ name: "presentTrips", args: { budget: 1600, travelers, trips: [{ flightId: "f003", hotelId: "h002", reason: "Walkable hotel." }] } }],
+  });
 
   const question = await runAgent(user, undefined, {
     llm: fakeLlm([
@@ -126,7 +136,8 @@ async function main() {
       { calls: [{ name: "lookupAirport", args: { query: "Seattle" } }] },
       { calls: [{ name: "recordRequest", args: futureRequest }] },
       { calls: [{ name: "lookupAirport", args: { query: "Seattle" } }] },
-      { calls: [{ name: "checkBudget", args: budgetArgs }] },
+      searchTurn,
+      present(),
       { text: "Plan." },
     ]),
   });
@@ -136,36 +147,54 @@ async function main() {
     JSON.stringify(order.trace.map((t) => [t.name, t.isError])),
   );
   check("a complete run ends as done with the final text", order.status === "done" && order.answer === "Plan.");
+  const [trip] = order.trips ?? [];
+  // $385 x 2 + $135 x 4 + ($8 + $2.50 x 14) x 2 = 770 + 540 + 86
+  check(
+    "runAgent returns the server's trips: best match, totals, and sources",
+    order.trips?.length === 1 && trip.bestMatch && trip.totals.total === 1396 && trip.withinBudget &&
+      trip.flight.id === "f003" && trip.hotel.nights === 4 && trip.sources.flight === "mock",
+    JSON.stringify(trip?.totals),
+  );
 
   const nudge = await runAgent(user, undefined, {
     llm: fakeLlm([
       { text: "What's your budget?" },
       { calls: [{ name: "recordRequest", args: futureRequest }] },
-      { calls: [{ name: "checkBudget", args: budgetArgs }] },
+      searchTurn,
+      present(),
       { text: "Plan." },
     ]),
   });
   const nudgeMessage = nudge.messages.find((m) => m.role === "user" && String(m.content).startsWith("(SmartTrip)"));
   check("prose without recordRequest gets one nudge, then the run continues", Boolean(nudgeMessage) && nudge.status === "done" && nudge.request !== null);
 
-  const unchecked = await runAgent(user, undefined, {
+  const unpresented = await runAgent(user, undefined, {
     llm: fakeLlm([
       { calls: [{ name: "recordRequest", args: futureRequest }] },
-      { text: "Total $931." },
-      { calls: [{ name: "checkBudget", args: budgetArgs }] },
+      searchTurn,
+      { text: "Total $1,396." },
+      present(),
       { text: "Plan." },
     ]),
   });
-  const budgetNudge = unchecked.messages.filter((m) => m.role === "user" && String(m.content).includes("call checkBudget"));
+  const presentNudge = unpresented.messages.filter((m) => m.role === "user" && String(m.content).includes("call presentTrips"));
   check(
-    "an answer without checkBudget gets one nudge, then checkBudget runs",
-    budgetNudge.length === 1 && unchecked.trace.some((t) => t.name === "checkBudget" && !t.isError) && unchecked.answer === "Plan.",
+    "an answer without presentTrips gets one nudge, then presentTrips runs",
+    presentNudge.length === 1 && unpresented.trips?.length === 1 && unpresented.answer === "Plan.",
   );
 
   const stubborn = await runAgent(user, undefined, {
-    llm: fakeLlm([{ calls: [{ name: "recordRequest", args: futureRequest }] }, { text: "Total $931." }]),
+    llm: fakeLlm([{ calls: [{ name: "recordRequest", args: futureRequest }] }, { text: "Total $1,396." }]),
   });
-  check("the checkBudget nudge is sent only once", stubborn.status === "done" && stubborn.answer === "Total $931.");
+  check("the presentTrips nudge is sent only once", stubborn.status === "done" && stubborn.trips === null);
+
+  const mismatch = await runAgent(user, undefined, {
+    llm: fakeLlm([{ calls: [{ name: "recordRequest", args: futureRequest }] }, searchTurn, present(3), { text: "Plan." }]),
+  });
+  check(
+    "presentTrips rejects travelers that differ from the recorded request",
+    /recorded request says 2/.test(mismatch.trace.find((t) => t.name === "presentTrips")?.result ?? "") && mismatch.trips === null,
+  );
 
   const capped = await runAgent(user, undefined, { llm: fakeLlm([{ calls: [{ name: "recordRequest", args: futureRequest }] }]) });
   check("hitting the step cap ends as stopped_early", capped.status === "stopped_early" && capped.answer === null);
