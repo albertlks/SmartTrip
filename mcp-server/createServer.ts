@@ -3,6 +3,7 @@ import type { RunContext } from "./lib/runContext";
 import { registerCheckBudget } from "./tools/checkBudget";
 import { registerEstimateTransport } from "./tools/estimateTransport";
 import { registerLookupAirport } from "./tools/lookupAirport";
+import { registerPresentTrips } from "./tools/presentTrips";
 import { registerSearchFlights } from "./tools/searchFlights";
 import { registerSearchHotels } from "./tools/searchHotels";
 
@@ -14,8 +15,9 @@ export function createServer(ctx: RunContext) {
   const server = new McpServer({ name: "smarttrip", version: "0.2.0" }, { capabilities: { tools: {} } });
   registerLookupAirport(server);
   registerSearchFlights(server, ctx);
-  registerSearchHotels(server);
+  registerSearchHotels(server, ctx);
   registerEstimateTransport(server);
   registerCheckBudget(server);
+  registerPresentTrips(server, ctx);
   return server;
 }

@@ -1,7 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/server";
 import * as z from "zod";
-import { loadHotels, type Hotel } from "../lib/data";
+import { loadHotels, type Hotel, type HotelRecord } from "../lib/data";
 import { daysBetween, jsonResult, roundMoney, toolError } from "../lib/results";
+import type { RunContext } from "../lib/runContext";
 import { airportCode, isoDate } from "../lib/schemas";
 
 export const searchHotelsInput = z.object({
@@ -35,7 +36,7 @@ export function searchHotels(hotels: Hotel[], destination: string, nights: numbe
     }));
 }
 
-export function registerSearchHotels(server: McpServer) {
+export function registerSearchHotels(server: McpServer, ctx: RunContext) {
   server.registerTool(
     "searchHotels",
     {
@@ -63,6 +64,12 @@ export function registerSearchHotels(server: McpServer) {
           ? `No ${destination} hotels at or under $${maxPricePerNight}/night. Raise or drop maxPricePerNight.`
           : `No hotels in ${destination}.`;
         return toolError(`${why} Destinations with hotels: ${destinations}.`);
+      }
+      // Saved for presentTrips, which looks hotels up by id and uses this stay's nights and total.
+      for (const r of results) {
+        const hotel = hotels.find((h) => h.id === r.id)!;
+        const record: HotelRecord = { ...hotel, kind: "hotel", source: "mock", checkIn, checkOut, nights, stayTotal: r.stayTotal };
+        ctx.results.set(r.id, record);
       }
       return jsonResult({ nights, count: results.length, results });
     },
