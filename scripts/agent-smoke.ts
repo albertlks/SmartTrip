@@ -27,11 +27,15 @@ function describe(result: AgentResult): string {
       `budget=${r.budget} prefs=[${r.preferences.join(", ")}] missing=[${r.missing.join(", ")}]`
     : "(none recorded)";
   const errors = result.trace.filter((t) => t.isError).map((t) => `${t.name}: ${t.result.slice(0, 160)}`);
+  const trips = (result.trips ?? [])
+    .map((t) => `${t.tripId} ${t.destination} ${t.flight.id}+${t.hotel.id} $${t.totals.total} ${t.withinBudget ? "fits" : "over"}`)
+    .join(" | ");
   const answer = (result.answer ?? "").split("\n").filter(Boolean).slice(0, 6).join("\n    ");
   return (
     `  status: ${result.status}\n  request: ${request}\n  tools: ${tools} (${result.trace.length} calls)\n` +
     `  llm: ${result.usage.llmCalls} calls, ${result.usage.promptTokens} input + ${result.usage.completionTokens} output tokens\n` +
     (errors.length ? `  errors:\n    ${errors.join("\n    ")}\n` : "") +
+    `  trips: ${trips || "(none)"}\n` +
     `  answer:\n    ${answer}`
   );
 }

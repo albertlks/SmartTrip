@@ -3,6 +3,7 @@ import path from "node:path";
 import { createInterface } from "node:readline/promises";
 import { config } from "dotenv";
 import { describeLlmError, llmProvider } from "./llm";
+import type { Trip } from "../mcp-server/lib/trips";
 import { runAgent, type AgentEvent } from "./runAgent";
 
 const root = path.resolve(import.meta.dirname, "..");
@@ -37,6 +38,10 @@ function summarize(text: string, isError: boolean): string {
     if ("estimatedCost" in data) {
       return `~$${data.estimatedCost} ${data.method}, ${data.vehicles} vehicle(s)`;
     }
+    if (Array.isArray(data.trips)) {
+      return data.trips.map((t: { tripId: string; total: number; withinBudget: boolean }) =>
+        `${t.tripId} $${t.total} ${t.withinBudget ? "fits" : "over"}`).join(", ");
+    }
     if ("recorded" in data) {
       return data.missing.length ? `recorded, missing: ${data.missing.join(", ")}` : "recorded";
     }
@@ -50,6 +55,29 @@ function summarize(text: string, isError: boolean): string {
   } catch {
   }
   return text.slice(0, 120);
+}
+
+const money = (n: number) => `$${n.toLocaleString("en-US", { maximumFractionDigits: 2 })}`;
+
+/** The ranked trips, from presentTrips' structured data (never from the model's text). */
+function printTrips(trips: Trip[]) {
+  for (const t of trips) {
+    const { flight: f, hotel: h, totals } = t;
+    const budget = totals.difference >= 0 ? `${money(totals.difference)} under budget` : `${money(-totals.difference)} over budget`;
+    const stops = f.stops === 0 ? "nonstop" : `${f.stops} stop${f.stops > 1 ? "s" : ""}`;
+    console.log(`\n${t.rank}. ${t.bestMatch ? "Best match: " : ""}${t.destination}, ${money(totals.total)} total, ${budget}`);
+    console.log(
+      `   Flight: ${[f.airline, f.flightNumber].filter(Boolean).join(" ")}, ${stops}${f.redEye ? ", red-eye" : ""}, ` +
+        `${f.origin} ${f.departDate} ${f.departTime ?? ""} -> ${f.destination} ${f.arriveDate ?? ""} ${f.arriveTime ?? ""}, ` +
+        `${money(f.price)} per person (round trip)`,
+    );
+    console.log(`   Hotel: ${h.name}, ${h.area}, ${money(h.pricePerNight)}/night x ${h.nights} = ${money(totals.hotel)}`);
+    console.log(
+      `   Costs: flights ${money(totals.flights)} + hotel ${money(totals.hotel)} + transport ${money(totals.transport)}` +
+        (totals.activityAllowance ? ` + activities ${money(totals.activityAllowance)}` : ""),
+    );
+    console.log(`   Why: ${t.reason}`);
+  }
 }
 
 function printEvent(event: AgentEvent) {
@@ -84,6 +112,7 @@ async function main() {
       console.log(`\nSmartTrip needs one more detail: ${result.answer}`);
       process.exitCode = 2;
     } else {
+      if (result.trips) printTrips(result.trips);
       console.log(`\n${result.answer || "(no answer)"}`);
     }
   } catch (err) {
