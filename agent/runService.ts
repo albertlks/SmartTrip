@@ -11,7 +11,8 @@ export type RunEvent =
   | { type: "run"; runId: string; parentRunId?: string }
   | { type: "tool_call"; step: number; name: string }
   | { type: "tool_result"; step: number; name: string; isError: boolean; ms: number }
-  | { type: "done" | "needs_input" | "stopped_early"; runId: string }
+  | { type: "done" | "stopped_early"; runId: string }
+  | { type: "needs_input"; runId: string; question: string }
   | { type: "error"; runId: string; message: string };
 
 /** Bad input from the browser; the route answers HTTP 400 with this message. */
@@ -80,7 +81,11 @@ export function runStream({ message, parent }: PreparedRun, deps: AgentDeps = {}
           usage: result.usage,
           messages: result.messages,
         });
-        send({ type: result.status, runId });
+        send(
+          result.status === "needs_input"
+            ? { type: "needs_input", runId, question: result.answer ?? "" }
+            : { type: result.status, runId },
+        );
       } catch (err) {
         const readable = describeLlmError(err, llmProvider());
         // Unknown errors go to the server log only; the browser gets a readable message, never a stack trace.
