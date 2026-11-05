@@ -45,7 +45,7 @@ const fail = (message: string): never => {
   throw new ToolFailure(message);
 };
 
-const STALE_ID_HINT = "Use an id from a search in this turn; ids from earlier turns expire, so search again if needed.";
+const STALE_ID_HINT = "Use an id from a search in this conversation, or search again.";
 
 function lookup<K extends "flight" | "hotel">(ctx: RunContext, kind: K, id: string, n: number) {
   const record = ctx.results.get(id);
@@ -74,6 +74,22 @@ export function buildTrips(choices: TripChoice[], budget: number, travelers: num
     const n = i + 1;
     const flight = lookup(ctx, "flight", choice.flightId, n);
     const hotel = lookup(ctx, "hotel", choice.hotelId, n);
+    // Results from earlier turns stay usable, so make sure they were searched for the request's current dates.
+    const want = ctx.request;
+    if (want?.departDate && want.returnDate) {
+      if (flight.departDate !== want.departDate || (flight.returnDate && flight.returnDate !== want.returnDate)) {
+        fail(
+          `Trip ${n}: flight ${flight.id} was searched for ${flight.departDate} to ${flight.returnDate ?? "?"}, but the request is ` +
+            `${want.departDate} to ${want.returnDate}. Search flights again with the request's dates.`,
+        );
+      }
+      if (hotel.checkIn !== want.departDate || hotel.checkOut !== want.returnDate) {
+        fail(
+          `Trip ${n}: hotel ${hotel.id} was searched for ${hotel.checkIn} to ${hotel.checkOut}, but the request is ` +
+            `${want.departDate} to ${want.returnDate}. Search hotels again with the request's dates.`,
+        );
+      }
+    }
     if (flight.destination !== hotel.destination) {
       fail(`Trip ${n}: flight ${flight.id} goes to ${flight.destination} but hotel ${hotel.id} is in ${hotel.destination}. Pair them by destination.`);
     }

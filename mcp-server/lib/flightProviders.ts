@@ -37,6 +37,8 @@ export type FlightRecord = {
   destination: string;
   destinationAirport?: string;
   departDate: string;
+  /** The return date this round-trip fare was searched for. */
+  returnDate: string;
   departTime?: string;
   arriveDate?: string;
   arriveTime?: string;
@@ -146,7 +148,7 @@ async function fromMock(search: Search): Promise<FlightRecord[]> {
   const results = flights
     .filter((f) => f.origin === search.origin && f.destination === search.destination)
     .sort((a, b) => a.pricePerPerson - b.pricePerPerson)
-    .map((f) => mockRecord(f, search.departDate));
+    .map((f) => mockRecord(f, search));
   if (results.length === 0) {
     throw new FlightSearchError(
       `No flights found for ${search.origin}->${search.destination}. Routes with flights: ${availableRoutes(flights).join(", ")}.`,
@@ -156,7 +158,7 @@ async function fromMock(search: Search): Promise<FlightRecord[]> {
 }
 
 /** Mock flights have times but no dates: they leave on the searched date, and land the next day when the clock wraps. */
-function mockRecord(f: Flight, departDate: string): FlightRecord {
+function mockRecord(f: Flight, { departDate, returnDate }: Search): FlightRecord {
   const wraps = f.departTime && f.arriveTime && f.arriveTime < f.departTime ? 1 : 0;
   const arriveDate = f.arriveTime ? addDays(departDate, f.arriveDayOffset ?? wraps) : undefined;
   const departAt = f.departTime && `${departDate} ${f.departTime}`;
@@ -172,6 +174,7 @@ function mockRecord(f: Flight, departDate: string): FlightRecord {
     destination: f.destination,
     destinationAirport: f.destinationAirport,
     departDate,
+    returnDate,
     departTime: f.departTime,
     arriveDate,
     arriveTime: f.arriveTime,
@@ -302,6 +305,7 @@ export function mapSerpApi(response: SerpApiResponse, search: Search, source: Fl
         destination: last.arrival_airport?.id ?? search.destination,
         destinationAirport: last.arrival_airport?.name,
         departDate: departDate ?? search.departDate,
+        returnDate: search.returnDate,
         departTime,
         arriveDate,
         arriveTime,

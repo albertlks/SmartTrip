@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type OpenAI from "openai";
+import type { StoredResult } from "../mcp-server/lib/runContext";
 import type { Trip } from "../mcp-server/lib/trips";
 import { projectRoot } from "../mcp-server/lib/projectRoot";
 import type { TripRequest } from "./recordRequest";
@@ -22,6 +23,8 @@ export type SavedRun = {
   usage: AgentResult["usage"];
   /** The conversation without the system prompt, so a follow-up can continue it. Never sent to the browser. */
   messages: OpenAI.Chat.ChatCompletionMessageParam[];
+  /** The conversation's search results, so a follow-up can reuse their ids. Never sent to the browser. Absent in older runs. */
+  results?: StoredResult[];
   /** A readable reason when status is "error". */
   error?: string;
 };
@@ -63,11 +66,11 @@ export function clearRunMemory(): void {
 }
 
 /**
- * What the browser may see: no internal conversation, and no SerpApi departure tokens
+ * What the browser may see: no internal conversation or search results, and no SerpApi departure tokens
  * (the return-flight route reads those on the server).
  */
 export function publicRun(run: SavedRun) {
-  const { messages: _messages, ...rest } = run;
+  const { messages: _messages, results: _results, ...rest } = run;
   return {
     ...rest,
     trips:

@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { createServer } from "../mcp-server/createServer";
 import { loadAirports } from "../mcp-server/lib/data";
-import { newRunContext } from "../mcp-server/lib/runContext";
+import { newRunContext, type StoredResult } from "../mcp-server/lib/runContext";
 import type { Trip } from "../mcp-server/lib/trips";
 import { lookupAirport } from "../mcp-server/tools/lookupAirport";
 import { createLlm, llmProvider } from "./llm";
@@ -60,6 +60,8 @@ export type AgentResult = {
   usage: { llmCalls: number; promptTokens: number; completionTokens: number };
   /** The conversation without the system prompt, to pass back in with the user's next message. */
   messages: Message[];
+  /** Every search result this conversation has seen (earlier turns' and this run's), to pass back in with the next message. */
+  results: StoredResult[];
 };
 
 function maxSteps(): number {
@@ -68,7 +70,12 @@ function maxSteps(): number {
 }
 
 /** Lets tests swap in a scripted LLM so they make no API calls, and fix "today" so saved fixtures' dates still count as future. */
-export type AgentDeps = { llm?: Pick<OpenAI, "chat">; today?: string };
+export type AgentDeps = {
+  llm?: Pick<OpenAI, "chat">;
+  today?: string;
+  /** Search results from earlier turns of this conversation, so a follow-up can reuse their ids instead of searching again. */
+  priorResults?: StoredResult[];
+};
 
 /**
  * Runs the planner on a conversation (user and earlier assistant/tool messages, no system prompt).
@@ -90,6 +97,7 @@ export async function runAgent(
   let presentNudged = false;
   const usage = { llmCalls: 0, promptTokens: 0, completionTokens: 0 };
   const ctx = newRunContext();
+  for (const r of deps.priorResults ?? []) ctx.results.set(r.id, r);
   const result = (status: AgentStatus, answer: string | null): AgentResult => ({
     status,
     request,
@@ -98,6 +106,7 @@ export async function runAgent(
     trace,
     usage,
     messages: conversation.slice(1),
+    results: [...ctx.results.values()],
   });
 
   const server = createServer(ctx);
