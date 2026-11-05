@@ -17,18 +17,16 @@ const SIZES: Record<Size, string> = {
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; size?: Size };
 
-export function Button({ variant = "primary", size = "md", className, type = "button", ...props }: ButtonProps) {
-  return (
-    <button
-      type={type}
-      className={cx(
-        "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-[background-color,opacity] duration-150",
-        "disabled:cursor-not-allowed disabled:opacity-50",
-        VARIANTS[variant],
-        SIZES[size],
-        className,
-      )}
-      {...props}
-    />
+/** The button look, for links that act as buttons (e.g. "New search"). */
+export function buttonClass({ variant = "primary", size = "md" }: { variant?: Variant; size?: Size } = {}) {
+  return cx(
+    "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-[background-color,opacity] duration-150",
+    "disabled:cursor-not-allowed disabled:opacity-50",
+    VARIANTS[variant],
+    SIZES[size],
   );
+}
+
+export function Button({ variant = "primary", size = "md", className, type = "button", ...props }: ButtonProps) {
+  return <button type={type} className={cx(buttonClass({ variant, size }), className)} {...props} />;
 }
