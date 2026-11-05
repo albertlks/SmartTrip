@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { DemoModeChip } from "./DemoModeChip";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 
@@ -9,7 +11,12 @@ export function SiteHeader() {
         <Link href="/" aria-label="SmartTrip home" className="rounded-md">
           <Logo />
         </Link>
-        <ThemeToggle />
+        <div className="flex items-center gap-3">
+          <Suspense fallback={null}>
+            <DemoModeChip />
+          </Suspense>
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

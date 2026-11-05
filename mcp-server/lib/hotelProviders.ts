@@ -3,7 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { DATA_DIR, getAirport, loadHotels, type Airport, type HotelRecord } from "./data";
 import { haversineMiles } from "./geo";
-import { providerFor, type Source } from "./providers";
+import { demoOffline, providerFor, type Source } from "./providers";
 import { daysBetween, roundMoney, ToolFailure } from "./results";
 import type { RunContext } from "./runContext";
 import { serpapiSearch } from "./serpapi";
@@ -180,7 +180,15 @@ export async function findHotels(search: HotelSearch, ctx: RunContext): Promise<
   if (source === "mock") return { source, results: await fromMock(search) };
 
   const airport = await destinationAirport(search.destination);
-  if (source === "fixture") return { source, results: mapGoogleHotels(await readFixture(search), search, airport, source) };
+  if (source === "fixture") {
+    const saved = await readFixture(search).catch((err) => {
+      // The offline demo switch uses sample data when this stay has no saved search.
+      if (demoOffline()) return null;
+      throw err;
+    });
+    if (!saved) return { source: "mock", results: await fromMock(search) };
+    return { source, results: mapGoogleHotels(saved, search, airport, source) };
+  }
 
   const { response, cache, fetchedAt } = await serpapiSearch<GoogleHotelsResponse>("google_hotels", hotelParams(search, airport.city), ctx);
   const results = mapGoogleHotels(response, search, airport, source).map((r) => ({ ...r, cache, fetchedAt }));

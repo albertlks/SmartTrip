@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from "react";
 import type { ReturnFlightsResponse } from "@/agent/runReturns";
+import { SourceBadge } from "@/components/SourceBadge";
 import { Button } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { formatDay } from "@/lib/format";
+import { freshness } from "@/lib/freshness";
 import { returnPriceLabel, type ReturnMode } from "@/lib/tripDetail";
 import { flightSummary } from "@/lib/tripRow";
 
 const SHOWN = 3;
 
-type State = { kind: "idle" } | { kind: "loading" } | { kind: "done"; result: ReturnFlightsResponse };
+/** at: when the result arrived on screen, for the badge's age (the server's render time for a saved result). */
+type State = { kind: "idle" } | { kind: "loading" } | { kind: "done"; result: ReturnFlightsResponse; at: number };
 
 async function fetchReturns(runId: string, tripId: string): Promise<ReturnFlightsResponse> {
   try {
@@ -32,6 +35,7 @@ export function ReturnFlights({
   includedFare,
   mode,
   initial,
+  renderedAt,
 }: {
   runId: string;
   tripId: string;
@@ -40,19 +44,20 @@ export function ReturnFlights({
   includedFare: number;
   mode: ReturnMode;
   initial: ReturnFlightsResponse | null;
+  renderedAt: number;
 }) {
-  const [state, setState] = useState<State>(initial ? { kind: "done", result: initial } : { kind: mode === "auto" ? "loading" : "idle" });
+  const [state, setState] = useState<State>(initial ? { kind: "done", result: initial, at: renderedAt } : { kind: mode === "auto" ? "loading" : "idle" });
   const [showAll, setShowAll] = useState(false);
 
   const load = () => {
     setState({ kind: "loading" });
-    void fetchReturns(runId, tripId).then((result) => setState({ kind: "done", result }));
+    void fetchReturns(runId, tripId).then((result) => setState({ kind: "done", result, at: Date.now() }));
   };
 
   useEffect(() => {
     if (mode === "auto" && !initial) {
       let live = true;
-      void fetchReturns(runId, tripId).then((result) => live && setState({ kind: "done", result }));
+      void fetchReturns(runId, tripId).then((result) => live && setState({ kind: "done", result, at: Date.now() }));
       return () => {
         live = false;
       };
@@ -91,9 +96,12 @@ export function ReturnFlights({
   const options = showAll ? result.options : result.options.slice(0, SHOWN);
   return (
     <div>
-      <p className="text-sm text-muted">
-        {formatDay(returnDate)} · cheapest of {result.options.length} option{result.options.length === 1 ? "" : "s"}
-      </p>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm text-muted">
+          {formatDay(returnDate)} · cheapest of {result.options.length} option{result.options.length === 1 ? "" : "s"}
+        </p>
+        <SourceBadge freshness={freshness(result.source, result.cache, result.fetchedAt, state.at)} />
+      </div>
       <ul className="mt-3 divide-y divide-line rounded-lg border border-line">
         {options.map((option) => {
           const s = flightSummary(option);

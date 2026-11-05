@@ -6,6 +6,7 @@ process.env.TZ = "Pacific/Honolulu";
 import type { TripRequest } from "@/agent/recordRequest";
 import { formatDay, formatDayRange, formatDuration, formatMoney, formatTime } from "./format";
 import { editMessage, editStart, parseEdit, toChips } from "./requestChips";
+import { ago, freshness, traceSource, weatherFreshness } from "./freshness";
 import { iconFor, weatherHint, weatherView } from "./weatherView";
 import { assumptions, costLines, returnMode, returnPriceLabel, traceArgs, traceSummary } from "./tripDetail";
 import { toRowView, type PublicRun, type PublicTrip } from "./tripRow";
@@ -287,6 +288,28 @@ same(
 same("a row's weather hint is the range of highs", weatherHint(pastWeather), "55–58°F");
 same("no hint without weather", [weatherHint(null), weatherHint({ unavailable: true, reason: "x" })], [null, null]);
 same("rows say Highs before the range", toRowView({ ...redEye, weather: pastWeather }, request).weather, "Highs 55–58°F");
+
+// ---- data freshness ----
+const NOW = Date.parse("2026-11-04T12:00:00Z");
+const H = 60 * 60 * 1000;
+same("ages read naturally", [ago(20_000), ago(12 * 60_000), ago(3 * H), ago(50 * H)], ["just now", "12m ago", "3h ago", "2d ago"]);
+same("sample data says so", freshness("mock", undefined, undefined, NOW).label, "Sample data");
+same("a saved fixture is a saved search", freshness("fixture", undefined, undefined, NOW).label, "Saved search");
+same("a cache hit is never Live", freshness("serpapi", "hit", NOW - 3 * H, NOW).label, "Cached 3h ago");
+same("a cache hit from minutes ago still says cached", freshness("serpapi", "hit", NOW - 60_000, NOW).label, "Cached 1m ago");
+same("a fresh fetch is Live", freshness("serpapi", "miss", NOW - 60_000, NOW), {
+  label: "Live",
+  tone: "success",
+  title: "Fetched from Google at 2026-11-04T11:59:00.000Z.",
+});
+same("an old fetch says when, not Live", freshness("serpapi", "miss", NOW - 5 * H, NOW).label, "Fetched 5h ago");
+same("weather names Open-Meteo and the basis", [weatherFreshness("forecast").label, weatherFreshness("last year's actuals for the same dates").label], [
+  "Open-Meteo · forecast",
+  "Open-Meteo · last year",
+]);
+same("trace steps show their source", traceSource('{"source":"fixture","count":8}')?.label, "Saved search");
+same("trace steps without a source show none", traceSource('{"recorded":true}'), null);
+same("rows badge the flight and hotel", Object.values(toRowView(redEye, request, undefined, NOW).sources).map((f) => f.label), ["Sample data", "Sample data"]);
 
 console.log(failures ? `\n${failures} check(s) failed` : "\nAll results checks passed");
 process.exit(failures ? 1 : 0);

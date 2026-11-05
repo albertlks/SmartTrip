@@ -1,6 +1,7 @@
 import type { TripRequest } from "@/agent/recordRequest";
 import type { publicRun } from "@/agent/runStore";
 import { daysBetween, formatDay, formatDuration, formatMoney, formatTime, plural } from "./format";
+import { freshness, type Freshness } from "./freshness";
 import { weatherHint } from "./weatherView";
 
 // Turns saved trip fields into the text a results row shows. The row component only displays these values,
@@ -40,6 +41,8 @@ export type RowView = FlightSummary & {
   hotel: { name: string; area?: string; nightly: string; nights: string };
   /** "Highs 53–58°F", or null without weather. */
   weather: string | null;
+  /** Where the flight and the hotel came from ("Live", "Cached 3h ago", "Saved search", "Sample data"). */
+  sources: { flight: Freshness; hotel: Freshness };
   total: string;
   travelers: string;
   budget: { text: string; tone: BudgetTone };
@@ -85,7 +88,7 @@ export function budgetLabel(withinBudget: boolean, difference: number): { text: 
 }
 
 /** cityName is the destination airport's city (looked up on the server); the hotel's city is the fallback. */
-export function toRowView(trip: PublicTrip, request: TripRequest | null, cityName?: string): RowView {
+export function toRowView(trip: PublicTrip, request: TripRequest | null, cityName?: string, now = Date.now()): RowView {
   const { flight, hotel, totals } = trip;
   const returnDate = request?.returnDate ?? hotel.checkOut;
   return {
@@ -101,6 +104,10 @@ export function toRowView(trip: PublicTrip, request: TripRequest | null, cityNam
       nights: plural(hotel.nights, "night"),
     },
     weather: weatherHint(trip.weather) && `Highs ${weatherHint(trip.weather)}`,
+    sources: {
+      flight: freshness(flight.source, flight.cache, flight.fetchedAt, now),
+      hotel: freshness(hotel.source, hotel.cache, hotel.fetchedAt, now),
+    },
     total: formatMoney(totals.total),
     travelers: `total for ${plural(trip.travelers, "traveler")}`,
     budget: budgetLabel(trip.withinBudget, totals.difference),

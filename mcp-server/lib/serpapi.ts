@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { DATA_DIR } from "./data";
+import { demoOffline } from "./providers";
 import { ToolFailure } from "./results";
 import type { RunContext } from "./runContext";
 
@@ -81,6 +82,10 @@ export async function serpapiSearch<T>(
     return { response: cached.response as T, cache: "hit", fetchedAt: cached.fetchedAt };
   }
 
+  // Cache hits above are still served: they cost nothing.
+  if (demoOffline()) {
+    throw new SerpApiError("Live search is off for this demo (DEMO_FALLBACK=offline); only saved results can be shown.");
+  }
   const apiKey = process.env.SERPAPI_API_KEY?.trim();
   if (!apiKey) {
     throw new SerpApiError(

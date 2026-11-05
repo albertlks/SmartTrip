@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense, type ReactNode } from "react";
 import { getRun, publicRun } from "@/agent/runStore";
 import { getAirport } from "@/mcp-server/lib/data";
 import { FlightSegments } from "@/components/trip/FlightSegments";
 import { ReturnFlights } from "@/components/trip/ReturnFlights";
 import { WeatherStrip } from "@/components/trip/WeatherStrip";
+import { SourceBadge } from "@/components/SourceBadge";
+import { freshness, weatherFreshness, type Freshness } from "@/lib/freshness";
 import { AgentTrace, Assumptions, CostBreakdown, HotelCard } from "@/components/trip/TripSections";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -17,10 +20,13 @@ import { budgetLabel, placeName } from "@/lib/tripRow";
 
 export const metadata: Metadata = { title: "Trip details" };
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+function Section({ title, source, children }: { title: string; source?: Freshness; children: ReactNode }) {
   return (
     <Card>
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted">{title}</h2>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-muted">{title}</h2>
+        {source && <SourceBadge freshness={source} />}
+      </div>
       {children}
     </Card>
   );
@@ -29,6 +35,9 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 /** Reads the run and trip for this URL; both are only known at request time, so this streams in behind Suspense. */
 async function Trip({ params }: { params: PageProps<"/results/[runId]/[tripId]">["params"] }) {
   const { runId, tripId } = await params;
+  // Badges say how old the data is, so this renders per request.
+  await connection();
+  const now = new Date().getTime();
   const saved = await getRun(runId);
   const trip = saved?.trips?.find((t) => t.tripId === tripId);
   if (!saved || !trip || saved.status !== "done") notFound();
@@ -66,11 +75,14 @@ async function Trip({ params }: { params: PageProps<"/results/[runId]/[tripId]">
       {/* minmax(0, 1fr): the weather cards scroll inside their section instead of widening the page. */}
       <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="min-w-0 space-y-4">
-          <Section title={`Outbound · ${formatDay(shown.flight.departDate)}`}>
+          <Section
+            title={`Outbound · ${formatDay(shown.flight.departDate)}`}
+            source={freshness(shown.flight.source, shown.flight.cache, shown.flight.fetchedAt, now)}
+          >
             <FlightSegments flight={shown.flight} />
           </Section>
           {shown.weather && (
-            <Section title="Weather">
+            <Section title="Weather" source={"basis" in shown.weather ? weatherFreshness(shown.weather.basis) : undefined}>
               <WeatherStrip weather={shown.weather} />
             </Section>
           )}
@@ -82,9 +94,13 @@ async function Trip({ params }: { params: PageProps<"/results/[runId]/[tripId]">
               includedFare={shown.flight.price}
               mode={returnMode(run, shown)}
               initial={run.returns?.[shown.tripId] ?? null}
+              renderedAt={now}
             />
           </Section>
-          <Section title={`Hotel · ${plural(shown.hotel.nights, "night")}`}>
+          <Section
+            title={`Hotel · ${plural(shown.hotel.nights, "night")}`}
+            source={freshness(shown.hotel.source, shown.hotel.cache, shown.hotel.fetchedAt, now)}
+          >
             <HotelCard hotel={shown.hotel} />
           </Section>
         </div>

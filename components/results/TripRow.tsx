@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/Badge";
+import { SourceBadge } from "@/components/SourceBadge";
 import { Skeleton } from "@/components/ui/Skeleton";
 import type { RowView } from "@/lib/tripRow";
 
@@ -51,7 +52,10 @@ export function TripRow({ row, href }: { row: RowView; href: string }) {
             {row.layovers && <span className="text-muted"> · {row.layovers}</span>}
             {row.duration && <span className="text-muted"> · {row.duration} total</span>}
           </p>
-          {flightLine && <p className="text-muted">{flightLine}</p>}
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-muted">
+            {flightLine}
+            <SourceBadge freshness={row.sources.flight} />
+          </p>
           <p className="text-muted">
             Round trip{row.returnDay && ` · ${row.returnDay}, details on the trip page`}
           </p>
@@ -75,7 +79,8 @@ export function TripRow({ row, href }: { row: RowView; href: string }) {
             {" "}
             · <span className="whitespace-nowrap">{row.hotel.nightly}</span> · {row.hotel.nights}
           </span>
-          {row.weather && <span className="whitespace-nowrap text-muted"> · {row.weather}</span>}
+          {row.weather && <span className="whitespace-nowrap text-muted"> · {row.weather}</span>}{" "}
+          <SourceBadge freshness={row.sources.hotel} />
         </p>
         <p className="mt-1 text-muted">{row.reason}</p>
       </div>

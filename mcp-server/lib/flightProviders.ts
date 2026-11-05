@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { DATA_DIR, availableRoutes, loadFlights, type Flight } from "./data";
-import { providerFor, type Source } from "./providers";
+import { demoOffline, providerFor, type Source } from "./providers";
 import { addDays, ToolFailure } from "./results";
 import type { RunContext } from "./runContext";
 import { serpapiSearch } from "./serpapi";
@@ -83,13 +83,17 @@ export async function findFlights(
 ): Promise<{ source: FlightSource; results: FlightRecord[] }> {
   const search = { origin, destination, departDate, returnDate };
   const source = providerFor("FLIGHT");
-  const results =
-    source === "mock"
-      ? await fromMock(search)
-      : source === "fixture"
-        ? mapSerpApi(await readFixture(search), search, "fixture")
-        : await fromSerpApi(search, ctx);
-  return { source, results };
+  if (source === "mock") return { source, results: await fromMock(search) };
+  if (source === "fixture") {
+    const saved = await readFixture(search).catch((err) => {
+      // The offline demo switch uses sample data when this route has no saved search.
+      if (demoOffline()) return null;
+      throw err;
+    });
+    if (!saved) return { source: "mock", results: await fromMock(search) };
+    return { source, results: mapSerpApi(saved, search, "fixture") };
+  }
+  return { source, results: await fromSerpApi(search, ctx) };
 }
 
 export function toFlightResult(r: FlightRecord): FlightResult {
