@@ -69,7 +69,8 @@ export type FlightResult = Pick<
 
 export class FlightSearchError extends ToolFailure {}
 
-type Search = { origin: string; destination: string; departDate: string; returnDate: string };
+export type FlightSearch = { origin: string; destination: string; departDate: string; returnDate: string };
+type Search = FlightSearch;
 
 const MAX_RESULTS = 8;
 const FIXTURE_DIR = path.join(DATA_DIR, "fixtures");
@@ -213,20 +214,21 @@ async function readFixture(search: Search) {
   }
 }
 
+/** The google_flights parameters for a round-trip search. demo:check warms these, so they must stay the app's own. */
+export function flightParams(search: Search): Record<string, string> {
+  return {
+    departure_id: search.origin,
+    arrival_id: search.destination,
+    outbound_date: search.departDate,
+    return_date: search.returnDate,
+    type: "1", // round trip
+    adults: "1", // keeps price per person
+    currency: "USD",
+  };
+}
+
 async function fromSerpApi(search: Search, ctx: RunContext): Promise<FlightRecord[]> {
-  const { response, cache, fetchedAt } = await serpapiSearch<SerpApiResponse>(
-    "google_flights",
-    {
-      departure_id: search.origin,
-      arrival_id: search.destination,
-      outbound_date: search.departDate,
-      return_date: search.returnDate,
-      type: "1", // round trip
-      adults: "1", // keeps price per person
-      currency: "USD",
-    },
-    ctx,
-  );
+  const { response, cache, fetchedAt } = await serpapiSearch<SerpApiResponse>("google_flights", flightParams(search), ctx);
   return mapSerpApi(response, search, "serpapi").map((r) => ({ ...r, cache, fetchedAt }));
 }
 

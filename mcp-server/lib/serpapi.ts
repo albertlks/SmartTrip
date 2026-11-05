@@ -38,6 +38,15 @@ export function cacheKey(engine: string, params: Record<string, string>): string
   return createHash("sha1").update(`${engine}?${query}`).digest("hex").slice(0, 16);
 }
 
+/** When a search's cached response was fetched (ms), if it is still within the 24h window; null otherwise. Costs nothing. */
+export async function cachedAt(engine: string, params: Record<string, string>): Promise<number | null> {
+  const file = path.join(cacheDir(), `${engine}-${cacheKey(engine, params)}.json`);
+  const entry = await readFile(file, "utf8")
+    .then((t) => JSON.parse(t) as CacheEntry)
+    .catch(() => null);
+  return entry && typeof entry.fetchedAt === "number" && Date.now() - entry.fetchedAt < CACHE_TTL_MS ? entry.fetchedAt : null;
+}
+
 function age(ms: number): string {
   const minutes = Math.round(ms / 60_000);
   return minutes < 60 ? `${minutes}m` : `${Math.floor(minutes / 60)}h${String(minutes % 60).padStart(2, "0")}`;

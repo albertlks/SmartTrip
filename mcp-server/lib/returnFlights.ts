@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { DATA_DIR } from "./data";
-import { mapSerpApi, type FlightRecord } from "./flightProviders";
+import { flightParams, mapSerpApi, type FlightRecord } from "./flightProviders";
 import type { Source } from "./providers";
 import { ToolFailure } from "./results";
 import type { RunContext } from "./runContext";
@@ -55,15 +55,9 @@ export async function findReturnFlights(flight: FlightRecord, returnDate: string
   if (!flight.departureToken) throw new ReturnFlightsError("SerpApi gave no return-flight token for this option.");
   const { response, cache, fetchedAt } = await serpapiSearch<Parameters<typeof mapSerpApi>[0]>(
     "google_flights",
+    // The outbound search's parameters plus the token.
     {
-      // The outbound search's parameters (flightProviders.ts) plus the token.
-      departure_id: flight.origin,
-      arrival_id: flight.destination,
-      outbound_date: flight.departDate,
-      return_date: returnDate,
-      type: "1",
-      adults: "1",
-      currency: "USD",
+      ...flightParams({ origin: flight.origin, destination: flight.destination, departDate: flight.departDate, returnDate }),
       departure_token: flight.departureToken,
     },
     ctx,

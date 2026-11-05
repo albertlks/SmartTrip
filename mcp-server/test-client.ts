@@ -24,9 +24,13 @@ function check(name: string, ok: boolean, detail = "") {
   console.log(`${ok ? "PASS" : "FAIL"}  ${name}${detail ? `\n      ${detail}` : ""}`);
 }
 
+// The server loads .env.local, but never over variables already set: pinning these keeps every test offline even when
+// .env.local is set up for a live demo (it once wasn't, and these tests spent 6 SerpApi searches).
+const OFFLINE = { FLIGHT_PROVIDER: "mock", HOTEL_PROVIDER: "mock", SERPAPI_API_KEY: "", SMARTTRIP_WEATHER: "fixture", DEMO_FALLBACK: "" };
+
 async function connect(env: Record<string, string> = {}) {
   const client = new Client({ name: "smarttrip-test", version: "0.2.0" });
-  await client.connect(new StdioClientTransport({ command: "npx", args: ["tsx", SERVER], env }));
+  await client.connect(new StdioClientTransport({ command: "npx", args: ["tsx", SERVER], env: { ...OFFLINE, ...env } }));
   return client;
 }
 
@@ -226,7 +230,7 @@ await noKey.close();
 
 // ---- stdout carries only MCP protocol messages ----
 const stdoutLines = await new Promise<string[]>((resolve) => {
-  const child = spawn("npx", ["tsx", SERVER], { env: { ...process.env, FLIGHT_PROVIDER: "serpapi", SERPAPI_API_KEY: "", SMARTTRIP_CACHE_DIR: EMPTY_CACHE } });
+  const child = spawn("npx", ["tsx", SERVER], { env: { ...process.env, ...OFFLINE, FLIGHT_PROVIDER: "serpapi", SMARTTRIP_CACHE_DIR: EMPTY_CACHE } });
   let out = "";
   child.stdout.on("data", (d) => (out += d));
   const send = (msg: object) => child.stdin.write(JSON.stringify(msg) + "\n");
