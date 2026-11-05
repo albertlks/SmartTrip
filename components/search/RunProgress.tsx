@@ -9,7 +9,6 @@ const STEPS: { label: string; tools: string[] }[] = [
   { label: "Finding airports", tools: ["lookupAirport"] },
   { label: "Searching flights", tools: ["searchFlights"] },
   { label: "Checking hotels", tools: ["searchHotels"] },
-  { label: "Checking your budget", tools: ["estimateTransport", "checkBudget"] },
   { label: "Putting packages together", tools: ["presentTrips"] },
 ];
 

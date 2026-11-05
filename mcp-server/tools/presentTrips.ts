@@ -21,9 +21,9 @@ export const presentTripsInput = z.object({
   trips: z
     .array(
       z.object({
-        flightId: z.string().trim().min(1).describe("id of a flight from this turn's searchFlights results."),
-        hotelId: z.string().trim().min(1).describe("id of a hotel from this turn's searchHotels results, in the same destination."),
-        activityIds: z.array(z.string().trim().min(1)).optional().describe("ids of activities from this turn's results. Omit if none."),
+        flightId: z.string().trim().min(1).describe("id of a flight from this conversation's searchFlights results, searched for the request's dates."),
+        hotelId: z.string().trim().min(1).describe("id of a hotel from this conversation's searchHotels results for the request's dates, in the same destination."),
+        activityIds: z.array(z.string().trim().min(1)).optional().describe("ids of activities from this conversation's results. Omit if none."),
         reason: z
           .string()
           .trim()
@@ -31,7 +31,10 @@ export const presentTripsInput = z.object({
           .max(200, "reason must be one short sentence (200 characters at most).")
           // The cards show the server's totals next to the reason, so a price the model worked out would contradict them.
           .refine((r) => !PRICE_IN_TEXT.test(r), "reason must not contain prices; the cards show the server's totals.")
-          .describe("One short sentence on why this package, using facts from tool results. No prices: the cards show the totals."),
+          .describe(
+            'One short sentence on why this package, using facts from tool results, e.g. "Cheapest nonstop, hotel walkable to ' +
+              'downtown". No dollar amounts or prices of any kind ("$120", "120 USD", "40 dollars"): the cards show the totals.',
+          ),
       }),
     )
     .min(1, "Give at least 1 trip.")

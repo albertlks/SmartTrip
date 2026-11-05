@@ -94,12 +94,12 @@ async function main() {
 
   // ---- progress steps ----
   const call = (name: string): RunEvent => ({ type: "tool_call", step: 1, name });
-  check("before any tool: first step active", stepStatuses([]).join() === "active,waiting,waiting,waiting,waiting,waiting");
+  check("before any tool: first step active", stepStatuses([]).join() === "active,waiting,waiting,waiting,waiting");
   check(
     "a skipped step (no airport lookup) counts as done once a later step starts",
-    stepStatuses([call("recordRequest"), call("searchFlights")]).join() === "done,done,active,waiting,waiting,waiting",
+    stepStatuses([call("recordRequest"), call("searchFlights")]).join() === "done,done,active,waiting,waiting",
   );
-  check("checkBudget and estimateTransport share one step", stepStatuses([call("checkBudget")])[4] === "active");
+  check("presentTrips is the last step", stepStatuses([call("presentTrips")]).join() === "done,done,done,done,active");
 
   console.log(failures ? `\n${failures} check(s) failed` : "\nAll landing checks passed");
   process.exit(failures ? 1 : 0);

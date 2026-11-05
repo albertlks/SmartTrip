@@ -100,6 +100,25 @@ async function main() {
     "request" in recordWith({ origin: null, destinations: ["Seattle"], question: "Where are you flying from?" }),
   );
 
+  // ---- the agent gets presentTrips for totals, not checkBudget or estimateTransport ----
+  let offered: string[] = [];
+  const spy = {
+    chat: {
+      completions: {
+        create: async (params: { tools?: { function: { name: string } }[] }) => {
+          offered = (params.tools ?? []).map((t) => t.function.name);
+          return { choices: [{ message: { role: "assistant", content: "Hi." } }] };
+        },
+      },
+    },
+  };
+  await runAgent([{ role: "user", content: "hi" }], undefined, { llm: spy as never });
+  check(
+    "the agent is offered the trip tools without checkBudget and estimateTransport",
+    offered.join() === "recordRequest,lookupAirport,searchFlights,searchHotels,presentTrips",
+    offered.join(),
+  );
+
   // ---- runAgent rules, with a scripted LLM ----
   const user: OpenAI.Chat.ChatCompletionMessageParam[] = [{ role: "user", content: "Honolulu to Seattle Dec 11-15, 2 of us" }];
   const futureRequest = { ...complete, departDate: "2027-12-11", returnDate: "2027-12-15" };

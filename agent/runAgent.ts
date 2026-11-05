@@ -11,7 +11,9 @@ import { localToday, systemPrompt } from "./systemPrompt";
 
 type Message = OpenAI.Chat.ChatCompletionMessageParam;
 
-const TRIP_TOOLS = new Set(["lookupAirport", "searchFlights", "searchHotels", "estimateTransport", "checkBudget", "presentTrips"]);
+// presentTrips computes every total, so the agent doesn't get estimateTransport or checkBudget: given them, it
+// called them several times per run to redo the same arithmetic. They stay in the MCP server for the Inspector.
+const TRIP_TOOLS = new Set(["lookupAirport", "searchFlights", "searchHotels", "presentTrips"]);
 // Each step re-sends the whole conversation, so cap it to protect the budget.
 const DEFAULT_MAX_STEPS = 20;
 const RECORD_NUDGE =
