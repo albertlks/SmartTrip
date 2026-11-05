@@ -9,6 +9,9 @@ import { getReturnFlights } from "./runReturns";
 import { clearRunMemory, getRun, publicRun, saveRun, type SavedRun } from "./runStore";
 import { prepareRun, runStream } from "./runService";
 
+// Weather comes from saved Open-Meteo fixtures, so presentTrips makes no network calls.
+process.env.SMARTTRIP_WEATHER = "fixture";
+
 let failures = 0;
 function check(name: string, ok: boolean, detail = "") {
   if (!ok) failures++;

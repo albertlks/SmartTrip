@@ -9,6 +9,9 @@ import { newRunContext } from "./lib/runContext";
 import { findFlights, isRedEye, mapSerpApi } from "./lib/flightProviders";
 import { cacheKey, serpapiSearch } from "./lib/serpapi";
 
+// Weather comes from saved Open-Meteo fixtures, so presentTrips makes no network calls.
+process.env.SMARTTRIP_WEATHER = "fixture";
+
 const KEY = "test-key-5f3a9c";
 const FIXTURE = path.resolve(import.meta.dirname, "../data/fixtures/serpapi-flights-HNL-SEA-2026-10-21-2026-10-27.json");
 

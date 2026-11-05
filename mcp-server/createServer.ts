@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/server";
 import type { RunContext } from "./lib/runContext";
 import { registerCheckBudget } from "./tools/checkBudget";
 import { registerEstimateTransport } from "./tools/estimateTransport";
+import { registerGetWeather } from "./tools/getWeather";
 import { registerLookupAirport } from "./tools/lookupAirport";
 import { registerPresentTrips } from "./tools/presentTrips";
 import { registerSearchFlights } from "./tools/searchFlights";
@@ -18,6 +19,7 @@ export function createServer(ctx: RunContext) {
   registerSearchHotels(server, ctx);
   registerEstimateTransport(server);
   registerCheckBudget(server);
+  registerGetWeather(server, ctx);
   registerPresentTrips(server, ctx);
   return server;
 }
