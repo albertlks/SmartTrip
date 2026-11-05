@@ -1,0 +1,27 @@
+[
+  {
+    "id": "seattle",
+    "message": "2 of us, Honolulu to Seattle Dec 11-15, $2,000",
+    "trip": { "origin": "HNL", "destination": "SEA", "departDate": "2026-12-11", "returnDate": "2026-12-15", "travelers": 2 },
+    "expect": "3 to 5 Seattle packages within $2,000, best match first; badges Live or Cached; weather is last year's actuals for Dec 11-15. Also works offline (saved searches)."
+  },
+  {
+    "id": "vegas",
+    "message": "Just me, Honolulu to Las Vegas Dec 11-14, $900, nonstop please",
+    "trip": { "origin": "HNL", "destination": "LAS", "departDate": "2026-12-11", "returnDate": "2026-12-14", "travelers": 1 },
+    "expect": "Nonstop Las Vegas packages under $900 (a red-eye badge is likely); chips show the nonstop preference."
+  },
+  {
+    "id": "portland",
+    "message": "Honolulu to Portland Dec 11-14 for one person",
+    "answer": "$900 total",
+    "trip": { "origin": "HNL", "destination": "PDX", "departDate": "2026-12-11", "returnDate": "2026-12-14", "travelers": 1 },
+    "expect": "One question asking for the budget and no results; answering \"$900 total\" continues the same search and shows Portland packages."
+  },
+  {
+    "id": "refine",
+    "refines": "seattle",
+    "message": "cheaper hotel",
+    "expect": "From the Seattle results page: a new run linked by \"Previous results\" with cheaper hotels; flights are reused from the first search (no new flight search). The hotel search with a price cap is 1 live search, not warmed."
+  }
+]
