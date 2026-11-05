@@ -6,6 +6,7 @@ import path from "node:path";
 import { fakeLlm, type FakeTurn } from "./fakeLlm";
 import { clearRunMemory, getRun, isRunId, publicRun } from "./runStore";
 import { MAX_MESSAGE_LENGTH, prepareRun, RunInputError, runStream, type RunEvent } from "./runService";
+import { editMessage } from "../lib/requestChips";
 
 let failures = 0;
 function check(name: string, ok: boolean, detail = "") {
@@ -97,6 +98,39 @@ async function main() {
     "a follow-up continues the parent's conversation",
     userMessages?.[0] === "2 of us, Honolulu to Seattle Dec 11-15, $1,600" && userMessages?.at(-1) === "cheaper hotel please",
     JSON.stringify(userMessages),
+  );
+
+  // ---- a chip edit is a follow-up that records the changed request ----
+  const budgetEdit = editMessage({ field: "budget", value: 1200 });
+  const editedTurns = JSON.parse(JSON.stringify(planTurns).replaceAll("1600", "1200")) as FakeTurn[];
+  const edited = await readEvents(runStream(await prepareRun({ message: budgetEdit, parentRunId: runId }), { llm: fakeLlm(editedTurns) }));
+  const editedRun = await getRun((edited[0] as { runId: string }).runId);
+  check(
+    "a chip edit links to its parent and ends done",
+    editedRun?.parentRunId === runId && edited.at(-1)?.type === "done",
+    JSON.stringify(edited.at(-1)),
+  );
+  check("a chip edit saves the changed request", editedRun?.request?.budget === 1200 && editedRun.trips?.[0]?.totals.budget === 1200);
+  check(
+    "a chip edit sends the edit as the newest message",
+    editedRun?.messages.filter((m) => m.role === "user").at(-1)?.content === budgetEdit,
+  );
+
+  // ---- a refine can ask a question, and the answer continues that run ----
+  const asking: FakeTurn[] = [{ calls: [{ name: "recordRequest", args: { ...request, question: "Which neighborhood do you prefer?" } }] }];
+  const refine = await readEvents(runStream(await prepareRun({ message: "a nicer area", parentRunId: runId }), { llm: fakeLlm(asking) }));
+  const askedId = (refine[0] as { runId: string }).runId;
+  check("a refine can stop with a question", refine.at(-1)?.type === "needs_input", JSON.stringify(refine.at(-1)));
+  const answered = await readEvents(runStream(await prepareRun({ message: "Pike Place", parentRunId: askedId }), { llm: fakeLlm(planTurns) }));
+  const answeredRun = await getRun((answered[0] as { runId: string }).runId);
+  const tail = answeredRun?.messages.slice(-12).map((m) => (typeof m.content === "string" ? m.content : ""));
+  check(
+    "the answer continues the run that asked, after its question",
+    answeredRun?.parentRunId === askedId &&
+      answered.at(-1)?.type === "done" &&
+      (tail ?? []).includes("Which neighborhood do you prefer?") &&
+      (tail ?? []).indexOf("Which neighborhood do you prefer?") < (tail ?? []).indexOf("Pike Place"),
+    JSON.stringify(tail),
   );
 
   // ---- a failing LLM ends with a readable error, and the run is still saved ----
