@@ -10,11 +10,8 @@ export type PublicTrip = NonNullable<PublicRun["trips"]>[number];
 
 export type BudgetTone = "success" | "warning";
 
-export type RowView = {
-  tripId: string;
-  bestMatch: boolean;
-  /** Where the trip goes, e.g. "Las Vegas" (not the hotel's suburb, like "SeaTac"). */
-  place: string;
+/** How a flight reads on screen: shared by results rows, the trip page, and return options. */
+export type FlightSummary = {
   departDay: string;
   /** "11:10 PM – 7:05 AM", or null when the data has no times. */
   times: string | null;
@@ -30,6 +27,13 @@ export type RowView = {
   airline: string | null;
   flightNumbers: string | null;
   redEye: boolean;
+};
+
+export type RowView = FlightSummary & {
+  tripId: string;
+  bestMatch: boolean;
+  /** Where the trip goes, e.g. "Las Vegas" (not the hotel's suburb, like "SeaTac"). */
+  place: string;
   /** "Return Mon, Dec 14", or null when the return date is unknown. */
   returnDay: string | null;
   hotel: { name: string; area?: string; nightly: string; nights: string };
@@ -41,22 +45,20 @@ export type RowView = {
 
 const unique = <T>(items: T[]) => [...new Set(items)];
 
-/** cityName is the destination airport's city (looked up on the server); the hotel's city is the fallback. */
-export function toRowView(trip: PublicTrip, request: TripRequest | null, cityName?: string): RowView {
-  const { flight, hotel, totals } = trip;
+type SummaryFields = Pick<
+  PublicTrip["flight"],
+  | "departDate" | "departTime" | "arriveDate" | "arriveTime" | "origin" | "originAirport" | "destination" | "destinationAirport"
+  | "stops" | "segments" | "layovers" | "durationMinutes" | "airline" | "flightNumber" | "redEye"
+>;
+
+export function flightSummary(flight: SummaryFields): FlightSummary {
   const offset = flight.arriveDate ? daysBetween(flight.departDate, flight.arriveDate) : 0;
   const airlines = unique(flight.segments.map((s) => s.airline).filter((a): a is string => !!a));
   const numbers = unique(flight.segments.map((s) => s.flightNumber).filter((n): n is string => !!n));
   const layovers = flight.layovers
     .map((l) => (l.minutes === undefined ? `at ${l.airport}` : `${formatDuration(l.minutes)} at ${l.airport}`))
     .join(", ");
-  const returnDate = request?.returnDate ?? hotel.checkOut;
-  const gap = Math.abs(totals.difference);
-
   return {
-    tripId: trip.tripId,
-    bestMatch: trip.bestMatch,
-    place: cityName || hotel.city || flight.destinationAirport || trip.destination,
     departDay: formatDay(flight.departDate),
     times: flight.departTime && flight.arriveTime ? `${formatTime(flight.departTime)} – ${formatTime(flight.arriveTime)}` : null,
     arriveOffset: offset > 0 ? `+${offset}` : null,
@@ -68,6 +70,26 @@ export function toRowView(trip: PublicTrip, request: TripRequest | null, cityNam
     airline: airlines.length ? airlines.join(", ") : (flight.airline ?? null),
     flightNumbers: numbers.length ? numbers.join(", ") : (flight.flightNumber ?? null),
     redEye: flight.redEye,
+  };
+}
+
+/** "$529 under budget" in green, or "$120 over budget" in amber. */
+export function budgetLabel(withinBudget: boolean, difference: number): { text: string; tone: BudgetTone } {
+  const gap = Math.abs(difference);
+  return withinBudget
+    ? { text: gap === 0 ? "Exactly on budget" : `${formatMoney(gap)} under budget`, tone: "success" }
+    : { text: `${formatMoney(gap)} over budget`, tone: "warning" };
+}
+
+/** cityName is the destination airport's city (looked up on the server); the hotel's city is the fallback. */
+export function toRowView(trip: PublicTrip, request: TripRequest | null, cityName?: string): RowView {
+  const { flight, hotel, totals } = trip;
+  const returnDate = request?.returnDate ?? hotel.checkOut;
+  return {
+    ...flightSummary(flight),
+    tripId: trip.tripId,
+    bestMatch: trip.bestMatch,
+    place: placeName(trip, cityName),
     returnDay: returnDate ? `Return ${formatDay(returnDate)}` : null,
     hotel: {
       name: hotel.name,
@@ -77,9 +99,11 @@ export function toRowView(trip: PublicTrip, request: TripRequest | null, cityNam
     },
     total: formatMoney(totals.total),
     travelers: `total for ${plural(trip.travelers, "traveler")}`,
-    budget: trip.withinBudget
-      ? { text: gap === 0 ? "Exactly on budget" : `${formatMoney(gap)} under budget`, tone: "success" }
-      : { text: `${formatMoney(gap)} over budget`, tone: "warning" },
+    budget: budgetLabel(trip.withinBudget, totals.difference),
     reason: trip.reason,
   };
 }
+
+/** The destination city: the airport's city when known, else the hotel's. */
+export const placeName = (trip: PublicTrip, cityName?: string) =>
+  cityName || trip.hotel.city || trip.flight.destinationAirport || trip.destination;
