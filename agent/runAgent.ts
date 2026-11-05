@@ -1,8 +1,10 @@
 import OpenAI from "openai";
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { createServer } from "../mcp-server/createServer";
+import { loadAirports } from "../mcp-server/lib/data";
 import { newRunContext } from "../mcp-server/lib/runContext";
 import type { Trip } from "../mcp-server/lib/trips";
+import { lookupAirport } from "../mcp-server/tools/lookupAirport";
 import { createLlm, llmProvider } from "./llm";
 import { recordRequest, recordRequestTool, type TripRequest } from "./recordRequest";
 import { localToday, systemPrompt } from "./systemPrompt";
@@ -18,6 +20,12 @@ const RECORD_NUDGE =
 const PRESENT_NUDGE =
   "(SmartTrip) Before answering, call presentTrips with the packages you recommend, so the totals come from the server. " +
   "Don't add up totals yourself.";
+
+/** Resolves a place the user named ("Seattle", "SEA") to its main airport code, the way lookupAirport does. */
+async function airportOf(): Promise<(place: string) => string | undefined> {
+  const airports = await loadAirports();
+  return (place) => lookupAirport(airports, place)[0]?.code;
+}
 
 export type TraceEntry = {
   step: number;
@@ -105,7 +113,7 @@ export async function runAgent(
     question: string | null,
   ): Promise<{ text: string; isError: boolean; asked?: string | null }> {
     if (name === "recordRequest") {
-      const recorded = recordRequest(args, today);
+      const recorded = recordRequest(args, today, await airportOf());
       if ("error" in recorded) return { text: recorded.error, isError: true };
       request = recorded.request;
       const { travelers, budget, departDate, returnDate } = recorded.request;

@@ -51,8 +51,15 @@ export function missingFields(r: z.output<typeof recordRequestInput>): RequestFi
   return missing;
 }
 
-/** Validates the model's arguments. Returns the request, or an error message to send back so it can retry. */
-export function recordRequest(rawArgs: string, today: string): { request: TripRequest } | { error: string } {
+/**
+ * Validates the model's arguments. Returns the request, or an error message to send back so it can retry.
+ * airportOf resolves a place to its airport code, to catch an origin that is also a destination.
+ */
+export function recordRequest(
+  rawArgs: string,
+  today: string,
+  airportOf?: (place: string) => string | undefined,
+): { request: TripRequest } | { error: string } {
   let args: unknown;
   try {
     args = JSON.parse(rawArgs);
@@ -74,6 +81,23 @@ export function recordRequest(rawArgs: string, today: string): { request: TripRe
   }
   if (r.departDate && r.returnDate && r.returnDate <= r.departDate) {
     return { error: `returnDate (${r.returnDate}) must be after departDate (${r.departDate}).` };
+  }
+
+  // "Seattle, Dec 11-15, $1,600" names only a destination; the model once recorded it as the origin as well.
+  if (r.origin) {
+    const origin = r.origin;
+    const same = r.destinations.find((d) => {
+      if (d.trim().toLowerCase() === origin.trim().toLowerCase()) return true;
+      const code = airportOf?.(d);
+      return code !== undefined && code === airportOf?.(origin);
+    });
+    if (same) {
+      return {
+        error:
+          `origin "${origin}" and destination "${same}" are the same place. If the user named only one place, it is the ` +
+          "destination: set origin to null and use question to ask where they are flying from.",
+      };
+    }
   }
 
   const missing = missingFields(r);

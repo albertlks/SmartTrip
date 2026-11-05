@@ -3,6 +3,8 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import type OpenAI from "openai";
+import { loadAirports } from "../mcp-server/lib/data";
+import { lookupAirport } from "../mcp-server/tools/lookupAirport";
 import { IDEA_THEMES, loadIdeas } from "./ideas";
 import { recordRequest } from "./recordRequest";
 import { fakeLlm, type FakeTurn as Turn } from "./fakeLlm";
@@ -82,6 +84,21 @@ async function main() {
   check("system prompt lists every idea airport", ideas.every((i) => prompt.includes(`(${i.airport})`)));
   check("system prompt no longer forbids questions", !/never ask/i.test(prompt));
   check("localToday is YYYY-MM-DD", /^\d{4}-\d{2}-\d{2}$/.test(localToday()));
+
+  // ---- one place named: it is the destination, not both ends ----
+  const allAirports = await loadAirports();
+  const airportOf = (place: string) => lookupAirport(allAirports, place)[0]?.code;
+  const recordWith = (changes: object) => recordRequest(JSON.stringify({ ...complete, ...changes }), TODAY, airportOf);
+  check(
+    "an origin that is also a destination is refused, with what to do instead",
+    /same place.*set origin to null/.test(errorOf(recordWith({ origin: "Seattle", destinations: ["SEA"] }))),
+  );
+  check("the same name in both is refused even without airport data", /same place/.test(errorOf(record({ origin: "seattle", destinations: ["Seattle"] }))));
+  check("different places are fine", "request" in recordWith({ origin: "Honolulu", destinations: ["Seattle", "Portland"] }));
+  check(
+    "a lone destination with a question is accepted",
+    "request" in recordWith({ origin: null, destinations: ["Seattle"], question: "Where are you flying from?" }),
+  );
 
   // ---- runAgent rules, with a scripted LLM ----
   const user: OpenAI.Chat.ChatCompletionMessageParam[] = [{ role: "user", content: "Honolulu to Seattle Dec 11-15, 2 of us" }];
