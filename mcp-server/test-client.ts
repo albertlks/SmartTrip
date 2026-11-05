@@ -187,7 +187,10 @@ for (const [label, tool, args, pattern] of invalid) {
 await client.close();
 
 // ---- Fixture provider ----
-const fixtures = (await readdir(FIXTURE_DIR).catch(() => [] as string[])).filter((f) => /^serpapi-flights-.*\.json$/.test(f));
+// Outbound searches only: return-flight fixtures (serpapi-flights-return-...) are checked in agent/test-returns.ts.
+const fixtures = (await readdir(FIXTURE_DIR).catch(() => [] as string[])).filter(
+  (f) => /^serpapi-flights-.*\.json$/.test(f) && !f.startsWith("serpapi-flights-return-"),
+);
 const fixtureClient = await connect({ FLIGHT_PROVIDER: "fixture" });
 if (fixtures.length === 0) {
   const r = await call(fixtureClient, "searchFlights", { origin: "HNL", destination: "SEA", departDate: "2026-11-14", returnDate: "2026-11-18" });

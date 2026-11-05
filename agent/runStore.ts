@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type OpenAI from "openai";
+import type { ReturnFlights } from "../mcp-server/lib/returnFlights";
 import type { StoredResult } from "../mcp-server/lib/runContext";
 import type { Trip } from "../mcp-server/lib/trips";
 import { projectRoot } from "../mcp-server/lib/projectRoot";
@@ -25,6 +26,8 @@ export type SavedRun = {
   messages: OpenAI.Chat.ChatCompletionMessageParam[];
   /** The conversation's search results, so a follow-up can reuse their ids. Never sent to the browser. Absent in older runs. */
   results?: StoredResult[];
+  /** Return-flight options by tripId, saved the first time each trip's returns are fetched. */
+  returns?: Record<string, ReturnFlights>;
   /** A readable reason when status is "error". */
   error?: string;
 };

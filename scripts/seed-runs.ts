@@ -293,6 +293,52 @@ async function seeds(): Promise<Seed[]> {
       ],
     },
     {
+      id: seedId(8),
+      title: "Dec 11-15 SerpApi fixture: trip 1 has saved return flights",
+      message: "Just me, Honolulu to Seattle Dec 11-15, $1,800.",
+      flights: "fixture",
+      turns: [
+        {
+          calls: [
+            {
+              name: "recordRequest",
+              args: request({
+                origin: "Honolulu",
+                destinations: ["Seattle"],
+                departDate: "2026-12-11",
+                returnDate: "2026-12-15",
+                travelers: 1,
+                budget: 1800,
+              }),
+            },
+          ],
+        },
+        {
+          calls: [
+            { name: "searchFlights", args: { origin: "HNL", destination: "SEA", departDate: "2026-12-11", returnDate: "2026-12-15" } },
+            { name: "searchHotels", args: { destination: "SEA", checkIn: "2026-12-11", checkOut: "2026-12-15" } },
+          ],
+        },
+        {
+          calls: [
+            {
+              name: "presentTrips",
+              args: {
+                budget: 1800,
+                travelers: 1,
+                trips: [
+                  // Only the cheapest flight (rank 01) has a saved return fixture; the others show the "unavailable" message.
+                  { flightId: "f-1444-01", hotelId: "h002", reason: "Cheapest fare with a short stop in San Francisco, walkable inn." },
+                  { flightId: "f-1444-06", hotelId: "h007", reason: "Nonstop morning flight and a hotel right downtown." },
+                ],
+              },
+            },
+          ],
+        },
+        { text: "Two packages, both within budget." },
+      ],
+    },
+    {
       id: seedId(6),
       title: "Error: the LLM gateway is unreachable",
       message: "Honolulu to Los Angeles Dec 11-15, one traveler, $1,500.",
