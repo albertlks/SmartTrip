@@ -2,20 +2,21 @@ import OpenAI from "openai";
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { createServer } from "../mcp-server/createServer";
 import { newRunContext } from "../mcp-server/lib/runContext";
+import type { Trip } from "../mcp-server/lib/trips";
 import { createLlm, llmProvider } from "./llm";
 import { recordRequest, recordRequestTool, type TripRequest } from "./recordRequest";
 import { localToday, systemPrompt } from "./systemPrompt";
 
 type Message = OpenAI.Chat.ChatCompletionMessageParam;
 
-const TRIP_TOOLS = new Set(["lookupAirport", "searchFlights", "searchHotels", "estimateTransport", "checkBudget"]);
+const TRIP_TOOLS = new Set(["lookupAirport", "searchFlights", "searchHotels", "estimateTransport", "checkBudget", "presentTrips"]);
 // Each step re-sends the whole conversation, so cap it to protect the budget.
 const DEFAULT_MAX_STEPS = 20;
 const RECORD_NUDGE =
   "(SmartTrip) Before answering, call recordRequest with what you understood from my message. " +
   "If something essential is missing, put your one question in its question field.";
-const BUDGET_NUDGE =
-  "(SmartTrip) Before answering, call checkBudget for the plan you present and quote its totals. " +
+const PRESENT_NUDGE =
+  "(SmartTrip) Before answering, call presentTrips with the packages you recommend, so the totals come from the server. " +
   "Don't add up totals yourself.";
 
 export type TraceEntry = {
@@ -42,8 +43,8 @@ export type AgentResult = {
   status: AgentStatus;
   /** What the agent understood, from its last recordRequest call in this run. */
   request: TripRequest | null;
-  /** The presented trips; set once presentTrips exists. */
-  trips: null;
+  /** The trips from the last successful presentTrips call, ranked; null if none were presented. */
+  trips: Trip[] | null;
   /** The final text or the question, or null if the run stopped early. */
   answer: string | null;
   trace: TraceEntry[];
@@ -78,19 +79,20 @@ export async function runAgent(
   let request: TripRequest | null = null;
   // Each reminder is sent at most once per run.
   let recordNudged = false;
-  let budgetNudged = false;
+  let presentNudged = false;
   const usage = { llmCalls: 0, promptTokens: 0, completionTokens: 0 };
+  const ctx = newRunContext();
   const result = (status: AgentStatus, answer: string | null): AgentResult => ({
     status,
     request,
-    trips: null,
+    trips: ctx.trips ?? null,
     answer,
     trace,
     usage,
     messages: conversation.slice(1),
   });
 
-  const server = createServer(newRunContext());
+  const server = createServer(ctx);
   const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair();
   await server.connect(serverTransport);
   const mcp = new Client({ name: "smarttrip-agent", version: "0.2.0" });
@@ -106,6 +108,8 @@ export async function runAgent(
       const recorded = recordRequest(args, today);
       if ("error" in recorded) return { text: recorded.error, isError: true };
       request = recorded.request;
+      const { travelers, budget, departDate, returnDate } = recorded.request;
+      ctx.request = { travelers, budget, departDate, returnDate };
       const text = JSON.stringify({ recorded: true, missing: recorded.request.missing });
       return { text, isError: false, asked: recorded.request.question };
     }
@@ -156,11 +160,10 @@ export async function runAgent(
           conversation.push({ role: "user", content: RECORD_NUDGE });
           continue;
         }
-        // Totals must come from checkBudget, not the model's own arithmetic.
-        const budgetChecked = trace.some((t) => t.name === "checkBudget" && !t.isError);
-        if (request && !budgetChecked && !budgetNudged) {
-          budgetNudged = true;
-          conversation.push({ role: "user", content: BUDGET_NUDGE });
+        // Totals must come from presentTrips, not the model's own arithmetic.
+        if (request && !ctx.trips && !presentNudged) {
+          presentNudged = true;
+          conversation.push({ role: "user", content: PRESENT_NUDGE });
           continue;
         }
         return result("done", message.content ?? "");

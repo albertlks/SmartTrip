@@ -39,7 +39,7 @@ async function call(client: Client, name: string, args: Record<string, unknown>)
 const client = await connect();
 
 const { tools } = await client.listTools();
-check(`server lists 5 tools (${tools.map((t) => t.name).join(", ")})`, tools.length === 5);
+check(`server lists 6 tools (${tools.map((t) => t.name).join(", ")})`, tools.length === 6);
 
 // Chain: 2 travelers, HNL -> SEA, 4 nights.
 const airport = await call(client, "lookupAirport", { query: "Seattle" });
@@ -110,6 +110,63 @@ check("checkBudget doubles a per-person flight for 2 travelers (385 -> 770)", do
 
 const vehicles = await call(client, "estimateTransport", { milesToAirport: 10, travelers: 5, roundTrip: false });
 check("estimateTransport: 5 travelers -> 2 vehicles, one way", vehicles.data?.vehicles === 2 && vehicles.data?.estimatedCost === 66, vehicles.text);
+
+// ---- presentTrips: ids from this session's searches, totals and ranking by the server ----
+const presentSchema = tools.find((t) => t.name === "presentTrips")?.inputSchema as any;
+const tripFields = Object.keys(presentSchema?.properties?.trips?.items?.properties ?? {}).sort().join(",");
+check("presentTrips takes ids and a reason per trip, never a price", tripFields === "activityIds,flightId,hotelId,reason", tripFields);
+
+const byPrice = (list: any[], key: string) => [...list].sort((a, b) => a[key] - b[key]);
+const [cheapFlight] = byPrice(flights.data.results, "price");
+const dearFlight = byPrice(flights.data.results, "price").at(-1);
+const [cheapHotel] = byPrice(hotels.data.results, "pricePerNight");
+const dearHotel = byPrice(hotels.data.results, "pricePerNight").at(-1);
+// 2 travelers fit in 1 vehicle: $8 base + $2.50/mile each way.
+const tripTotal = (f: any, h: any) => f.price * 2 + h.pricePerNight * 4 + (8 + 2.5 * h.milesToAirport) * 2;
+const fitsBudget = tripTotal(cheapFlight, cheapHotel) + 1;
+const presented = await call(client, "presentTrips", {
+  budget: fitsBudget,
+  travelers: 2,
+  trips: [
+    { flightId: dearFlight.id, hotelId: dearHotel.id, reason: "Nonstop and closest to downtown." },
+    { flightId: cheapFlight.id, hotelId: cheapHotel.id, reason: "Lowest total." },
+  ],
+});
+const [t1, t2] = presented.data?.trips ?? [];
+check(
+  "presentTrips moves an over-budget trip listed first below the one that fits",
+  t1?.flightId === cheapFlight.id && t1.rank === 1 && t1.withinBudget && t2?.flightId === dearFlight.id && !t2.withinBudget,
+  presented.text,
+);
+check(
+  `presentTrips totals are computed by the server ($${tripTotal(cheapFlight, cheapHotel)} and $${tripTotal(dearFlight, dearHotel)})`,
+  t1?.total === tripTotal(cheapFlight, cheapHotel) && t2?.total === tripTotal(dearFlight, dearHotel),
+  presented.text,
+);
+
+const pdxHotel = (await call(client, "searchHotels", { destination: "PDX", checkIn: "2026-11-14", checkOut: "2026-11-18" })).data.results[0];
+const presentErrors: [string, object[], RegExp][] = [
+  ["unknown flightId", [{ flightId: "nope", hotelId: cheapHotel.id, reason: "x" }], /unknown flightId "nope"/],
+  ["unknown hotelId", [{ flightId: cheapFlight.id, hotelId: "h999", reason: "x" }], /unknown hotelId "h999"/],
+  ["flight and hotel in different cities", [{ flightId: cheapFlight.id, hotelId: pdxHotel.id, reason: "x" }], /goes to SEA but hotel .* is in PDX/],
+  [
+    "the same package twice",
+    [{ flightId: cheapFlight.id, hotelId: cheapHotel.id, reason: "x" }, { flightId: cheapFlight.id, hotelId: cheapHotel.id, reason: "y" }],
+    /repeats flight/,
+  ],
+  ["unknown activityId", [{ flightId: cheapFlight.id, hotelId: cheapHotel.id, activityIds: ["a1"], reason: "x" }], /unknown activityId "a1"/],
+  ["a price in the reason", [{ flightId: cheapFlight.id, hotelId: cheapHotel.id, reason: "Cheapest overall at under $850 total." }], /must not contain prices/],
+  ["a price in USD in the reason", [{ flightId: cheapFlight.id, hotelId: cheapHotel.id, reason: "Saves 200 USD." }], /must not contain prices/],
+  ["6 trips", Array(6).fill({ flightId: cheapFlight.id, hotelId: cheapHotel.id, reason: "x" }), /at most 5/],
+];
+const plainReason = await call(client, "presentTrips", {
+  budget: 2000, travelers: 2, trips: [{ flightId: cheapFlight.id, hotelId: cheapHotel.id, reason: "Rating 4.6, 0.3 mi from downtown, 2 free bags." }],
+});
+check("presentTrips accepts a reason with non-price numbers", !plainReason.isError, plainReason.text);
+for (const [label, trips, pattern] of presentErrors) {
+  const r = await call(client, "presentTrips", { budget: 2000, travelers: 2, trips });
+  check(`presentTrips error: ${label}`, r.isError && pattern.test(r.text), r.text);
+}
 
 // Invalid inputs: each must be a clear toolError, not a crash.
 const invalid: [string, string, Record<string, unknown>, RegExp][] = [

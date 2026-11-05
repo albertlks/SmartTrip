@@ -50,6 +50,16 @@ export type Hotel = {
   notes: string;
 };
 
+/** One hotel result for a stay, saved in the run context so presentTrips can look it up by id. */
+export type HotelRecord = Hotel & {
+  kind: "hotel";
+  source: "mock";
+  checkIn: string;
+  checkOut: string;
+  nights: number;
+  stayTotal: number;
+};
+
 // Files are read once per process; restart the server to pick up edits.
 const cache = new Map<string, Promise<unknown>>();
 

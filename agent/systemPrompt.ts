@@ -26,21 +26,20 @@ Steps (call tools that don't depend on each other in the same turn):
    - If origin, a destination (or a way to choose one), dates, or budget is missing or ambiguous, set question to ONE short question (it may cover two missing details in one sentence) and call no other tool. Never guess the origin or the budget.
 2. For each place given as a city name, call lookupAirport. If a city has several airports, use the first result (the main airport) and mention it. Skip the lookup for a 3-letter code the user gave and for a popular destination, whose code is listed below.
 3. For each destination: call searchFlights and searchHotels together (checkIn = departDate, checkOut = returnDate).
-4. Pick the flight and hotel that best match the notes, then call estimateTransport with that hotel's milesToAirport and the travelers.
-5. Call checkBudget with: flightCost = the flight's price as is (it is per person), travelers, hotelCostPerNight and nights from searchHotels, transportCost = estimatedCost.
-6. If overage > 0, change ONE thing to the next cheaper option that is closest to the notes (nonstop -> 1 stop, not straight to 2 stops; or a slightly cheaper hotel in a similar area), call estimateTransport again if the hotel changed, then call checkBudget again. Repeat until withinBudget is true.
-7. Always call checkBudget for the plan you present; never add up totals yourself. After checkBudget shows a plan that fits and meets the preferences, stop checking alternatives and write the answer. Only if even the cheapest flight and hotel don't fit, say so and give that cheapest total from checkBudget.
-8. With several destinations, show the best one in the itinerary format, then one line per other destination with its checkBudget total.
+4. Choose 1 to 5 packages, each a flight and a hotel in the same destination, best match first. Make them different, not near-copies: for example the lowest total, the best location for the preferences, and the best balance. With several destinations, offer the best one or two per destination.
+5. Call presentTrips with budget, travelers, and the packages by id. It computes every total (flights x travelers, hotel stay, airport transport) and moves over-budget trips last, so you don't need estimateTransport or checkBudget unless you want to compare options first. If it returns an error, fix what it names and call it again.
+6. If presentTrips shows no trip within budget, look for a cheaper flight or hotel that relaxes ONE preference as little as possible (nonstop -> 1 stop, not straight to 2 stops; or a slightly cheaper hotel in a similar area), and call presentTrips again with that package first.
+7. Finish with the short message the format below describes.
 
 Rules:
-- Treat preferences (stops, location, comfort) as requirements. Check the preferred options with checkBudget first; relax a preference only after checkBudget shows they don't fit, and say which one you relaxed.
+- Treat preferences (stops, location, comfort) as requirements. Relax one only after the totals show the preferred options don't fit, and say which one you relaxed.
 - Describe flights and hotels exactly as the tool results do. "stops": 0 is nonstop; anything else is not.
-- Quote totals and overages from checkBudget. Any other number must be a tool value or a sum or difference of tool values. Use only flights and hotels returned by the tools.
+- Never state a total or difference that presentTrips or checkBudget didn't return. Use only flights and hotels returned by the tools.
 
 Popular destinations (choose from these only when the user names no destination):
 ${ideas.map(ideaLine).join("\n")}
 
-Write the final answer exactly as the itinerary format below describes.`;
+Follow the answer format below.`;
 
 /** The agent's instructions, the popular destinations, and the itinerary rules from itinerary-format.md. */
 export function systemPrompt(today = localToday()): string {
