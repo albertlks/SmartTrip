@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RunClientError, startRun, type RunEvent } from "@/lib/runClient";
 
 export type RunnerPhase =
@@ -20,6 +20,19 @@ export function useRunner({ beforeNavigate }: { beforeNavigate?: (runId: string)
   const router = useRouter();
   const [phase, setPhase] = useState<RunnerPhase>({ kind: "idle" });
   const [question, setQuestion] = useState<Question | null>(null);
+  // Set when a finished search opened its results page.
+  const navigatedAway = useRef(false);
+
+  // Next.js keeps visited pages alive and restores them as they were, so a page left on "Searching…" would come
+  // back stuck there (Back button or "New search"). Hiding the page runs this cleanup; reset it then.
+  useEffect(
+    () => () => {
+      if (!navigatedAway.current) return;
+      navigatedAway.current = false;
+      setPhase({ kind: "idle" });
+    },
+    [],
+  );
 
   /** Starts a run (continuing parentRunId's conversation when given). Resolves with how it ended. */
   async function run(message: string, parentRunId: string | null): Promise<RunEvent["type"] | null> {
@@ -30,7 +43,8 @@ export function useRunner({ beforeNavigate }: { beforeNavigate?: (runId: string)
       );
       if (final.type === "done") {
         await beforeNavigate?.(final.runId);
-        // Stays "running" until the results page replaces this one.
+        // Stays "running" until the results page replaces this one; the cleanup above resets it once hidden.
+        navigatedAway.current = true;
         router.push(`/results/${final.runId}`);
       } else if (final.type === "needs_input") {
         setQuestion({ text: final.question, runId: final.runId });
