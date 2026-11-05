@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "mcp": "tsx mcp-server/server.ts",
+    "seed:runs": "tsx scripts/seed-runs.ts",
     "plan": "tsx agent/planTrip.ts",
     "demo": "tsx agent/planTrip.ts \"2 of us flying Honolulu to Seattle Dec 11-15, \\$1,600 total. We prefer nonstop and want a hotel within walking distance of downtown.\"",
     "demo2": "tsx agent/planTrip.ts \"Just me, Honolulu to Portland, Oregon, Dec 11-14. Cheapest trip possible, \\$700.\"",

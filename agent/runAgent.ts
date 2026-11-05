@@ -59,8 +59,8 @@ function maxSteps(): number {
   return Number.isInteger(n) && n > 0 ? n : DEFAULT_MAX_STEPS;
 }
 
-/** Lets tests swap in a scripted LLM so they make no API calls. */
-export type AgentDeps = { llm?: Pick<OpenAI, "chat"> };
+/** Lets tests swap in a scripted LLM so they make no API calls, and fix "today" so saved fixtures' dates still count as future. */
+export type AgentDeps = { llm?: Pick<OpenAI, "chat">; today?: string };
 
 /**
  * Runs the planner on a conversation (user and earlier assistant/tool messages, no system prompt).
@@ -73,7 +73,7 @@ export async function runAgent(
 ): Promise<AgentResult> {
   const provider = llmProvider();
   const llm = deps.llm ?? createLlm(provider);
-  const today = localToday();
+  const today = deps.today ?? localToday();
   const conversation: Message[] = [{ role: "system", content: systemPrompt(today) }, ...messages];
   const trace: TraceEntry[] = [];
   let request: TripRequest | null = null;
