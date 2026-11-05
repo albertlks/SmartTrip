@@ -62,6 +62,7 @@ const redEye: PublicTrip = {
     destination: "LAS",
     destinationAirport: "Harry Reid Intl",
     departDate: "2026-12-11",
+    returnDate: "2026-12-14",
     departTime: "23:10",
     arriveDate: "2026-12-12",
     arriveTime: "07:05",

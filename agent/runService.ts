@@ -70,7 +70,7 @@ export function runStream({ message, parent }: PreparedRun, deps: AgentDeps = {}
 
       send({ type: "run", runId, ...(parent ? { parentRunId: parent.runId } : {}) });
       try {
-        const result = await runAgent(messages, onEvent, deps);
+        const result = await runAgent(messages, onEvent, { ...deps, priorResults: parent?.results ?? [] });
         await saveRun({
           ...base,
           status: result.status,
@@ -80,6 +80,7 @@ export function runStream({ message, parent }: PreparedRun, deps: AgentDeps = {}
           trace: result.trace,
           usage: result.usage,
           messages: result.messages,
+          results: result.results,
         });
         send(
           result.status === "needs_input"
@@ -100,6 +101,8 @@ export function runStream({ message, parent }: PreparedRun, deps: AgentDeps = {}
           trace: [],
           usage: { llmCalls: 0, promptTokens: 0, completionTokens: 0 },
           messages,
+          // Kept so a retry after this failure can still reuse the earlier searches.
+          results: parent?.results ?? [],
           error,
         }).catch((saveErr) => console.error(`[run ${runId}] could not save`, saveErr));
         send({ type: "error", runId, message: error });

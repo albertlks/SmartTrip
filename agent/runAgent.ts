@@ -1,15 +1,19 @@
 import OpenAI from "openai";
 import { Client, InMemoryTransport } from "@modelcontextprotocol/client";
 import { createServer } from "../mcp-server/createServer";
-import { newRunContext } from "../mcp-server/lib/runContext";
+import { loadAirports } from "../mcp-server/lib/data";
+import { newRunContext, type StoredResult } from "../mcp-server/lib/runContext";
 import type { Trip } from "../mcp-server/lib/trips";
+import { lookupAirport } from "../mcp-server/tools/lookupAirport";
 import { createLlm, llmProvider } from "./llm";
 import { recordRequest, recordRequestTool, type TripRequest } from "./recordRequest";
 import { localToday, systemPrompt } from "./systemPrompt";
 
 type Message = OpenAI.Chat.ChatCompletionMessageParam;
 
-const TRIP_TOOLS = new Set(["lookupAirport", "searchFlights", "searchHotels", "estimateTransport", "checkBudget", "presentTrips"]);
+// presentTrips computes every total, so the agent doesn't get estimateTransport or checkBudget: given them, it
+// called them several times per run to redo the same arithmetic. They stay in the MCP server for the Inspector.
+const TRIP_TOOLS = new Set(["lookupAirport", "searchFlights", "searchHotels", "presentTrips"]);
 // Each step re-sends the whole conversation, so cap it to protect the budget.
 const DEFAULT_MAX_STEPS = 20;
 const RECORD_NUDGE =
@@ -18,6 +22,12 @@ const RECORD_NUDGE =
 const PRESENT_NUDGE =
   "(SmartTrip) Before answering, call presentTrips with the packages you recommend, so the totals come from the server. " +
   "Don't add up totals yourself.";
+
+/** Resolves a place the user named ("Seattle", "SEA") to its main airport code, the way lookupAirport does. */
+async function airportOf(): Promise<(place: string) => string | undefined> {
+  const airports = await loadAirports();
+  return (place) => lookupAirport(airports, place)[0]?.code;
+}
 
 export type TraceEntry = {
   step: number;
@@ -52,6 +62,8 @@ export type AgentResult = {
   usage: { llmCalls: number; promptTokens: number; completionTokens: number };
   /** The conversation without the system prompt, to pass back in with the user's next message. */
   messages: Message[];
+  /** Every search result this conversation has seen (earlier turns' and this run's), to pass back in with the next message. */
+  results: StoredResult[];
 };
 
 function maxSteps(): number {
@@ -60,7 +72,12 @@ function maxSteps(): number {
 }
 
 /** Lets tests swap in a scripted LLM so they make no API calls, and fix "today" so saved fixtures' dates still count as future. */
-export type AgentDeps = { llm?: Pick<OpenAI, "chat">; today?: string };
+export type AgentDeps = {
+  llm?: Pick<OpenAI, "chat">;
+  today?: string;
+  /** Search results from earlier turns of this conversation, so a follow-up can reuse their ids instead of searching again. */
+  priorResults?: StoredResult[];
+};
 
 /**
  * Runs the planner on a conversation (user and earlier assistant/tool messages, no system prompt).
@@ -82,6 +99,7 @@ export async function runAgent(
   let presentNudged = false;
   const usage = { llmCalls: 0, promptTokens: 0, completionTokens: 0 };
   const ctx = newRunContext();
+  for (const r of deps.priorResults ?? []) ctx.results.set(r.id, r);
   const result = (status: AgentStatus, answer: string | null): AgentResult => ({
     status,
     request,
@@ -90,6 +108,7 @@ export async function runAgent(
     trace,
     usage,
     messages: conversation.slice(1),
+    results: [...ctx.results.values()],
   });
 
   const server = createServer(ctx);
@@ -105,7 +124,7 @@ export async function runAgent(
     question: string | null,
   ): Promise<{ text: string; isError: boolean; asked?: string | null }> {
     if (name === "recordRequest") {
-      const recorded = recordRequest(args, today);
+      const recorded = recordRequest(args, today, await airportOf());
       if ("error" in recorded) return { text: recorded.error, isError: true };
       request = recorded.request;
       const { travelers, budget, departDate, returnDate } = recorded.request;

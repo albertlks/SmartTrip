@@ -116,6 +116,36 @@ async function main() {
     editedRun?.messages.filter((m) => m.role === "user").at(-1)?.content === budgetEdit,
   );
 
+  // ---- a follow-up reuses the earlier searches while the dates are the same ----
+  const reuseTurns: FakeTurn[] = [
+    planTurns[0],
+    { calls: [{ name: "presentTrips", args: { budget: 1600, travelers: 2, trips: [{ flightId: "f001", hotelId: "h002", reason: "Nonstop." }] } }] },
+    { text: "Here is the nonstop option." },
+  ];
+  const reused = await readEvents(runStream(await prepareRun({ message: "nonstop only", parentRunId: runId }), { llm: fakeLlm(reuseTurns) }));
+  const reusedRun = await getRun((reused[0] as { runId: string }).runId);
+  check(
+    "a follow-up can present ids from the earlier searches without searching again",
+    reusedRun?.status === "done" && reusedRun.trips?.[0]?.flight.id === "f001" && !reusedRun.trace.some((t) => t.name.startsWith("search")),
+    JSON.stringify(reusedRun?.trace.map((t) => `${t.name}${t.isError ? "!" : ""}`)),
+  );
+  check("the follow-up keeps the conversation's search results", (reusedRun?.results?.length ?? 0) >= (saved?.results?.length ?? 1));
+  check("search results never reach the browser", !("results" in publicRun(reusedRun!)));
+
+  const movedTurns: FakeTurn[] = [
+    { calls: [{ name: "recordRequest", args: { ...request, departDate: "2027-12-12", returnDate: "2027-12-16" } }] },
+    { calls: [{ name: "presentTrips", args: { budget: 1600, travelers: 2, trips: [{ flightId: "f003", hotelId: "h002", reason: "Same as before." }] } }] },
+    { text: "Done." },
+  ];
+  const moved = await readEvents(runStream(await prepareRun({ message: "a day later", parentRunId: runId }), { llm: fakeLlm(movedTurns) }));
+  const movedRun = await getRun((moved[0] as { runId: string }).runId);
+  const refused = movedRun?.trace.find((t) => t.name === "presentTrips");
+  check(
+    "after a date change, the old searches are refused with what to do",
+    refused?.isError === true && /searched for 2027-12-11 to 2027-12-15.*Search flights again/.test(refused.result),
+    refused?.result,
+  );
+
   // ---- a refine can ask a question, and the answer continues that run ----
   const asking: FakeTurn[] = [{ calls: [{ name: "recordRequest", args: { ...request, question: "Which neighborhood do you prefer?" } }] }];
   const refine = await readEvents(runStream(await prepareRun({ message: "a nicer area", parentRunId: runId }), { llm: fakeLlm(asking) }));
