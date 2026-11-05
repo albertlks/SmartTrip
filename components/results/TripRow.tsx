@@ -73,7 +73,7 @@ export function TripRow({ row, href }: { row: RowView; href: string }) {
           {row.hotel.area && <span className="text-muted">, {row.hotel.area}</span>}
           <span className="text-muted">
             {" "}
-            · {row.hotel.nightly} · {row.hotel.nights}
+            · <span className="whitespace-nowrap">{row.hotel.nightly}</span> · {row.hotel.nights}
           </span>
         </p>
         <p className="mt-1 text-muted">{row.reason}</p>

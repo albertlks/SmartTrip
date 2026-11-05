@@ -9,18 +9,8 @@ const newSearch = (
   </Link>
 );
 
-/** What the results page shows for a run without trips: a question, an empty result, or an error. */
+/** What the results page shows for a run without trips: an empty result or an error. Questions are answered in RefineControls. */
 export function RunStatusView({ run }: { run: PublicRun }) {
-  if (run.status === "needs_input") {
-    return (
-      <div className="rounded-lg border border-accent/40 bg-accent-soft px-5 py-4" role="status">
-        <p className="text-xs font-medium uppercase tracking-wide text-accent-strong">One more detail needed</p>
-        <p className="mt-1 text-base font-medium text-ink">{run.answer}</p>
-        <p className="mt-2 text-sm text-ink">This search stopped to ask a question. Start again with that detail included.</p>
-        <div className="mt-4">{newSearch}</div>
-      </div>
-    );
-  }
   if (run.status === "stopped_early") {
     return (
       <ErrorState title="The search stopped before it finished" action={newSearch}>
