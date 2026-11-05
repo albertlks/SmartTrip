@@ -75,6 +75,7 @@ export function TripRow({ row, href }: { row: RowView; href: string }) {
             {" "}
             · <span className="whitespace-nowrap">{row.hotel.nightly}</span> · {row.hotel.nights}
           </span>
+          {row.weather && <span className="whitespace-nowrap text-muted"> · {row.weather}</span>}
         </p>
         <p className="mt-1 text-muted">{row.reason}</p>
       </div>

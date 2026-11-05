@@ -6,6 +6,7 @@ process.env.TZ = "Pacific/Honolulu";
 import type { TripRequest } from "@/agent/recordRequest";
 import { formatDay, formatDayRange, formatDuration, formatMoney, formatTime } from "./format";
 import { editMessage, editStart, parseEdit, toChips } from "./requestChips";
+import { iconFor, weatherHint, weatherView } from "./weatherView";
 import { assumptions, costLines, returnMode, returnPriceLabel, traceArgs, traceSummary } from "./tripDetail";
 import { toRowView, type PublicRun, type PublicTrip } from "./tripRow";
 
@@ -245,6 +246,47 @@ same(
   returnMode(runFor({ t1: { flightId: "f022", source: "serpapi", options: [] } }), { ...redEye, flight: { ...redEye.flight, source: "serpapi" } }),
   "saved",
 );
+
+// ---- weather strip ----
+const lastYearDay = { date: "2026-12-11", basis: "last year" as const, highF: 54.6, lowF: 44.4, rainInches: 0.583, conditions: "Rain" };
+const forecastDay = { date: "2026-11-06", basis: "forecast" as const, highF: 54.2, lowF: 45.9, rainChance: 88, conditions: "Light drizzle" };
+const pastWeather = {
+  basis: "last year's actuals for the same dates" as const,
+  days: [lastYearDay, { ...lastYearDay, date: "2026-12-12", highF: 57.9, rainInches: 0, conditions: "Overcast" }],
+  summary: "Highs 55–58°F, lows 44°F; rain on 1 of 2 days last year",
+  source: "open-meteo" as const,
+  fetchedAt: 0,
+};
+const past = weatherView(pastWeather);
+check("last year's actuals are labelled, with the reason", past.kind === "days" && past.heading === "Last year's actuals for these dates" && /same dates last year/.test(past.note ?? ""));
+if (past.kind === "days") {
+  same("a last-year day shows rainfall", [past.days[0].rain, past.days[1].rain], ["0.58 in", "Dry"]);
+  same("dates and temperatures are short", [past.days[0].weekday, past.days[0].day, past.days[0].high, past.days[0].low], ["Fri", "Dec 11", "55°", "44°"]);
+  check(
+    "screen readers hear the whole day, including that it's last year's",
+    past.days[0].label === "Friday, December 11: Rain, high 55°F, low 44°F, 0.58 inches of rain, last year's actuals for this date",
+    past.days[0].label,
+  );
+  check("cards aren't tagged one by one unless the range is mixed", !past.mixed);
+}
+const soon = weatherView({ ...pastWeather, basis: "forecast", days: [forecastDay] });
+check("a forecast is labelled Forecast, with no note", soon.kind === "days" && soon.heading === "Forecast" && soon.note === null);
+same("a forecast day shows its chance of rain", soon.kind === "days" && soon.days[0].rain, "88% rain");
+const both = weatherView({ ...pastWeather, basis: "mixed", days: [forecastDay, lastYearDay] });
+check("a mixed range says so and tags each card", both.kind === "days" && both.mixed && both.days.map((d) => d.tag).join() === "Forecast,Last year");
+same("unavailable weather keeps its reason", weatherView({ unavailable: true, reason: "Open-Meteo didn't answer." }), {
+  kind: "unavailable",
+  reason: "Open-Meteo didn't answer.",
+});
+same("runs saved before weather show nothing", weatherView(null), { kind: "none" });
+same(
+  "conditions pick an icon",
+  ["Clear", "Mostly clear", "Partly cloudy", "Overcast", "Fog", "Light drizzle", "Rain showers", "Snow", "Thunderstorm", "Unknown"].map(iconFor),
+  ["sun", "sun", "partly", "cloud", "fog", "rain", "rain", "snow", "storm", "unknown"],
+);
+same("a row's weather hint is the range of highs", weatherHint(pastWeather), "55–58°F");
+same("no hint without weather", [weatherHint(null), weatherHint({ unavailable: true, reason: "x" })], [null, null]);
+same("rows say Highs before the range", toRowView({ ...redEye, weather: pastWeather }, request).weather, "Highs 55–58°F");
 
 console.log(failures ? `\n${failures} check(s) failed` : "\nAll results checks passed");
 process.exit(failures ? 1 : 0);
