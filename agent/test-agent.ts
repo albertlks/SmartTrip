@@ -5,6 +5,7 @@ import path from "node:path";
 import type OpenAI from "openai";
 import { IDEA_THEMES, loadIdeas } from "./ideas";
 import { recordRequest } from "./recordRequest";
+import { fakeLlm, type FakeTurn as Turn } from "./fakeLlm";
 import { runAgent } from "./runAgent";
 import { localToday, systemPrompt } from "./systemPrompt";
 
@@ -33,23 +34,6 @@ const complete = {
 const record = (changes: object) => recordRequest(JSON.stringify({ ...complete, ...changes }), TODAY);
 const errorOf = (r: ReturnType<typeof recordRequest>) => ("error" in r ? r.error : "");
 
-// ---- Scripted fake LLM ----
-type Call = { name: string; args: object };
-type Turn = { text?: string; calls?: Call[] };
-
-function fakeLlm(turns: Turn[]) {
-  let i = 0;
-  const create = async () => {
-    const turn = turns[Math.min(i++, turns.length - 1)];
-    const tool_calls = turn.calls?.map((c, n) => ({
-      id: `call_${i}_${n}`,
-      type: "function" as const,
-      function: { name: c.name, arguments: JSON.stringify(c.args) },
-    }));
-    return { choices: [{ message: { role: "assistant", content: turn.text ?? null, ...(tool_calls ? { tool_calls } : {}) } }] };
-  };
-  return { chat: { completions: { create } } } as unknown as Pick<OpenAI, "chat">;
-}
 
 async function main() {
   // ---- data/ideas.json ----

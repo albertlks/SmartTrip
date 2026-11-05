@@ -1,9 +1,10 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { projectRoot } from "../mcp-server/lib/projectRoot";
 import { loadIdeas, type Idea } from "./ideas";
 import { AgentError } from "./llm";
 
-const root = path.resolve(import.meta.dirname, "..");
+const root = projectRoot();
 const FORMAT_FILE = path.join(root, "mcp-server/prompts/itinerary-format.md");
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
