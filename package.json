@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "mcp": "tsx mcp-server/server.ts",
+    "seed:runs": "tsx scripts/seed-runs.ts",
     "plan": "tsx agent/planTrip.ts",
     "demo": "tsx agent/planTrip.ts \"2 of us flying Honolulu to Seattle Dec 11-15, \\$1,600 total. We prefer nonstop and want a hotel within walking distance of downtown.\"",
     "demo2": "tsx agent/planTrip.ts \"Just me, Honolulu to Portland, Oregon, Dec 11-14. Cheapest trip possible, \\$700.\"",
@@ -15,7 +16,7 @@
     "demo4": "tsx agent/planTrip.ts \"Honolulu to Los Angeles Dec 11-15, one traveler, \\$1,500.\"",
     "demo:real": "FLIGHT_PROVIDER=fixture tsx agent/planTrip.ts \"2 of us, Honolulu to Seattle Dec 11-15, \\$2,000. Nonstop flights only.\"",
     "demo:live": "FLIGHT_PROVIDER=serpapi tsx agent/planTrip.ts \"2 of us, Honolulu to Seattle Dec 11-15, 2026, \\$2,000. Nonstop flights only.\"",
-    "check": "tsx mcp-server/test-client.ts && tsx mcp-server/test-serpapi.ts && tsx agent/test-agent.ts && tsx agent/test-runs.ts && tsx lib/test-landing.ts && tsx scripts/check-contrast.ts"
+    "check": "tsx mcp-server/test-client.ts && tsx mcp-server/test-serpapi.ts && tsx agent/test-agent.ts && tsx agent/test-runs.ts && tsx lib/test-landing.ts && tsx lib/test-results.ts && tsx scripts/check-contrast.ts"
   },
   "dependencies": {
     "@modelcontextprotocol/client": "^2.3.1",
