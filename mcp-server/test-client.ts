@@ -100,7 +100,7 @@ const invalid: [string, string, Record<string, unknown>, RegExp][] = [
   ["nights without hotelCostPerNight", "checkBudget", { budget: 1000, flightCost: 300, travelers: 1, nights: 3 }, /nights was given without hotelCostPerNight/],
   ["no matching airport", "lookupAirport", { query: "Atlantis" }, /No airport found for "Atlantis"/],
   ["unknown route", "searchFlights", { origin: "SEA", destination: "LAX", departDate: "2026-11-14", returnDate: "2026-11-18" }, /Routes with flights:/],
-  ["hotel destination with no hotels", "searchHotels", { destination: "LAX", checkIn: "2026-11-14", checkOut: "2026-11-18" }, /Destinations with hotels:/],
+  ["hotel destination with no hotels", "searchHotels", { destination: "ORD", checkIn: "2026-11-14", checkOut: "2026-11-18" }, /Destinations with hotels:/],
   ["zero travelers", "estimateTransport", { milesToAirport: 5, travelers: 0 }, /travelers must be at least 1/],
 ];
 for (const [label, tool, args, pattern] of invalid) {

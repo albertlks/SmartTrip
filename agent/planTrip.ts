@@ -1,5 +1,6 @@
-// Usage: npm run plan -- <budget> "<notes>"
+// Usage: npm run plan -- "<your trip request>"
 import path from "node:path";
+import { createInterface } from "node:readline/promises";
 import { config } from "dotenv";
 import { describeLlmError, llmProvider } from "./llm";
 import { runAgent, type AgentEvent } from "./runAgent";
@@ -7,16 +8,17 @@ import { runAgent, type AgentEvent } from "./runAgent";
 const root = path.resolve(import.meta.dirname, "..");
 config({ path: [path.join(root, ".env.local"), path.join(root, ".env")], quiet: true });
 
-function parseArgs() {
-  const [budgetArg, ...noteParts] = process.argv.slice(2);
-  const budget = Number(budgetArg);
-  const notes = noteParts.join(" ").trim();
-  if (!Number.isFinite(budget) || budget <= 0 || !notes) {
-    console.error('Usage: npm run plan -- <budget> "<notes>"');
-    console.error('  e.g. npm run plan -- 1500 "2 of us, Honolulu to Seattle Nov 14-18, want to walk everywhere"');
+// How many clarifying questions the CLI answers before giving up.
+const MAX_QUESTIONS = 3;
+
+function parseArgs(): string {
+  const message = process.argv.slice(2).join(" ").trim();
+  if (!message) {
+    console.error('Usage: npm run plan -- "<your trip request>"');
+    console.error('  e.g. npm run plan -- "2 of us, Honolulu to Seattle Dec 11-15, $1,600, want to walk everywhere"');
     process.exit(1);
   }
-  return { budget, notes };
+  return message;
 }
 
 function summarize(text: string, isError: boolean): string {
@@ -34,6 +36,9 @@ function summarize(text: string, isError: boolean): string {
     }
     if ("estimatedCost" in data) {
       return `~$${data.estimatedCost} ${data.method}, ${data.vehicles} vehicle(s)`;
+    }
+    if ("recorded" in data) {
+      return data.missing.length ? `recorded, missing: ${data.missing.join(", ")}` : "recorded";
     }
     if ("withinBudget" in data) {
       const b = data.breakdown ?? {};
@@ -58,23 +63,36 @@ function printEvent(event: AgentEvent) {
 }
 
 async function main() {
-  const { budget, notes } = parseArgs();
+  const firstMessage = parseArgs();
+  // Interactive only when a person can type the answer to a question.
+  const prompt = process.stdin.isTTY ? createInterface({ input: process.stdin, output: process.stderr }) : null;
   try {
-    const result = await runAgent([{ role: "user", content: `Budget: $${budget}\nNotes: ${notes}` }], printEvent);
-    if (result.stoppedEarly) {
+    let result = await runAgent([{ role: "user", content: firstMessage }], printEvent);
+    for (let asked = 0; result.status === "needs_input" && prompt && asked < MAX_QUESTIONS; asked++) {
+      const answer = (await prompt.question(`\n${result.answer}\n> `)).trim();
+      if (!answer) break;
+      result = await runAgent([...result.messages, { role: "user", content: answer }], printEvent);
+    }
+
+    if (result.status === "stopped_early") {
       console.error(
         `\nSearch stopped early at the step limit (AGENT_MAX_STEPS) after ${result.trace.length} tool call(s), ` +
-          "without a final plan. Try clearer notes or a bigger budget.",
+          "without a final plan. Try a clearer request or a bigger budget.",
       );
       process.exitCode = 1;
-      return;
+    } else if (result.status === "needs_input") {
+      console.log(`\nSmartTrip needs one more detail: ${result.answer}`);
+      process.exitCode = 2;
+    } else {
+      console.log(`\n${result.answer || "(no answer)"}`);
     }
-    console.log(`\n${result.answer || "(no answer)"}`);
   } catch (err) {
     const message = describeLlmError(err, llmProvider());
     if (!message) throw err;
     console.error(message);
     process.exitCode = 1;
+  } finally {
+    prompt?.close();
   }
 }
 
