@@ -16,6 +16,8 @@ export type Flight = {
   pricePerPerson: number;
   stops: number;
   durationHours: number;
+  /** Days after departure that the flight lands, when the clock times alone don't show it (crossing the date line). */
+  arriveDayOffset?: number;
   notes?: string;
 };
 

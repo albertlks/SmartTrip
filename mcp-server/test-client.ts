@@ -11,7 +11,7 @@ const SERVER = path.join(import.meta.dirname, "server.ts");
 const FIXTURE_DIR = path.resolve(import.meta.dirname, "../data/fixtures");
 // An empty cache, so serpapi-mode checks never hit a real cached search.
 const EMPTY_CACHE = await mkdtemp(path.join(tmpdir(), "smarttrip-cache-"));
-const FLIGHT_FIELDS = ["flightNumber", "originAirport", "destinationAirport", "departTime", "arriveTime"];
+const FLIGHT_FIELDS = ["flightNumber", "origin", "destination", "departDate", "departTime", "arriveDate", "arriveTime"];
 
 let failures = 0;
 function check(name: string, ok: boolean, detail = "") {
@@ -64,6 +64,24 @@ check("searchFlights HNL->SEA returns results with source 'mock'", !flights.isEr
 check(
   "every flight result has the section 2 fields",
   !flights.isError && flights.data.results.every((r: any) => FLIGHT_FIELDS.every((f) => typeof r[f] === "string")),
+);
+check(
+  "searchFlights lists airport names once (HNL and SEA)",
+  typeof flights.data?.airports?.HNL === "string" && typeof flights.data?.airports?.SEA === "string",
+  JSON.stringify(flights.data?.airports),
+);
+const byId = (id: string) => flights.data?.results?.find((r: any) => r.id === id);
+check("mock flights leave on the searched date", flights.data?.results?.every((r: any) => r.departDate === "2026-11-14"));
+check(
+  "mock f002 (21:45 -> 09:15) is a red-eye landing the next day; f001 (07:30) is not flagged",
+  byId("f002")?.redEye === true && byId("f002")?.arriveDate === "2026-11-15" && !("redEye" in (byId("f001") ?? {})),
+  JSON.stringify([byId("f001"), byId("f002")]),
+);
+const tokyo = await call(client, "searchFlights", { origin: "HNL", destination: "HND", departDate: "2026-11-14", returnDate: "2026-11-21" });
+check(
+  "Tokyo flights land the next day (arriveDayOffset) without being red-eyes",
+  tokyo.data?.results?.every((r: any) => r.arriveDate === "2026-11-15" && !r.redEye),
+  tokyo.text.slice(0, 300),
 );
 
 const hotels = await call(client, "searchHotels", { destination: "SEA", checkIn: "2026-11-14", checkOut: "2026-11-18" });
@@ -125,6 +143,12 @@ if (fixtures.length === 0) {
     check(`fixture ${file}: source 'fixture' with mapped results`, !r.isError && r.data.source === "fixture" && r.data.count > 0, r.text.slice(0, 300));
     const missing = r.data?.results?.flatMap((x: any) => FLIGHT_FIELDS.filter((f) => !(f in x)).map((f) => `${x.id}.${f}`)) ?? [];
     check(`fixture ${file}: every result has the section 2 fields`, !r.isError && missing.length === 0, missing.join(", "));
+    check(`fixture ${file}: 8 results stay under 2.5 KB for the model (${r.text.length} bytes)`, r.text.length < 2500);
+    check(
+      `fixture ${file}: ids carry a search fingerprint, e.g. f-xxxx-01`,
+      r.data?.results?.every((x: any) => /^f-[0-9a-f]{4}-\d{2}$/.test(x.id)),
+      r.data?.results?.map((x: any) => x.id).join(", "),
+    );
   }
 }
 await fixtureClient.close();
