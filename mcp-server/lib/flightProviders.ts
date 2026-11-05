@@ -3,7 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { DATA_DIR, availableRoutes, loadFlights, type Flight } from "./data";
 import { providerFor, type Source } from "./providers";
-import { ToolFailure } from "./results";
+import { addDays, ToolFailure } from "./results";
 import type { RunContext } from "./runContext";
 import { serpapiSearch } from "./serpapi";
 
@@ -135,12 +135,6 @@ export function isRedEye(departTime: string | undefined, departDate: string, arr
   if (!departTime || !arriveDate || arriveDate <= departDate) return false;
   const hour = Number(departTime.slice(0, 2));
   return hour >= 21 || hour < 5;
-}
-
-function addDays(date: string, days: number): string {
-  const d = new Date(`${date}T00:00:00Z`);
-  d.setUTCDate(d.getUTCDate() + days);
-  return d.toISOString().slice(0, 10);
 }
 
 async function fromMock(search: Search): Promise<FlightRecord[]> {
