@@ -89,7 +89,7 @@ function ResultsSkeleton() {
 
 export default function ResultsPage({ params }: PageProps<"/results/[runId]">) {
   return (
-    <main className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12">
+    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">Your trips</h1>
         <Link href="/" className={buttonClass({ variant: "secondary" })}>

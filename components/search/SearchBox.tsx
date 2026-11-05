@@ -86,8 +86,9 @@ export function SearchBox() {
           className="resize-none"
         />
         <div className="flex flex-wrap items-center justify-between gap-3 px-2 pb-1">
-          <p className="text-xs text-muted">Enter to search · Shift+Enter for a new line</p>
-          <div className="flex gap-2">
+          {/* Keyboard hints mean nothing on a touch screen, so phones skip them. */}
+          <p className="hidden text-xs text-muted sm:block">Enter to search · Shift+Enter for a new line</p>
+          <div className="ml-auto flex gap-2">
             {question && !running && (
               <Button variant="quiet" onClick={startOver}>
                 Start over
