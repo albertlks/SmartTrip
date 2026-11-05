@@ -1,4 +1,5 @@
 import { getAirport } from "./data";
+import { demoOffline } from "./providers";
 import { fixtureWeatherFetch } from "./weatherFixtures";
 import { addDays, daysBetween, ToolFailure } from "./results";
 
@@ -64,8 +65,10 @@ type OpenMeteoResponse = { daily?: Daily; error?: boolean; reason?: string };
 
 export type WeatherDeps = { today: string; fetchImpl?: typeof fetch };
 
-// Tests and seed runs set SMARTTRIP_WEATHER=fixture so presentTrips never calls Open-Meteo for real. Not a product switch.
-const defaultFetch = (): typeof fetch => (process.env.SMARTTRIP_WEATHER === "fixture" ? fixtureWeatherFetch : fetch);
+// Tests and seed runs set SMARTTRIP_WEATHER=fixture so presentTrips never calls Open-Meteo for real; the offline demo
+// switch does the same (weather without a saved file shows "Weather not found").
+const defaultFetch = (): typeof fetch =>
+  process.env.SMARTTRIP_WEATHER === "fixture" || demoOffline() ? fixtureWeatherFetch : fetch;
 
 const cache = new Map<string, { at: number; body: OpenMeteoResponse }>();
 
