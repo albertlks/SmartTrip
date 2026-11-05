@@ -13,6 +13,9 @@ import { findHotels } from "../mcp-server/lib/hotelProviders";
 import { projectRoot } from "../mcp-server/lib/projectRoot";
 import { newRunContext } from "../mcp-server/lib/runContext";
 
+// Weather comes from saved Open-Meteo fixtures, so presentTrips makes no network calls.
+process.env.SMARTTRIP_WEATHER = "fixture";
+
 type Seed = {
   id: string;
   title: string;

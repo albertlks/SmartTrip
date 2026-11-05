@@ -12,6 +12,9 @@ import { haversineMiles } from "./lib/geo";
 import { findHotels, type HotelSearch } from "./lib/hotelProviders";
 import { newRunContext } from "./lib/runContext";
 
+// Weather comes from saved Open-Meteo fixtures, so presentTrips makes no network calls.
+process.env.SMARTTRIP_WEATHER = "fixture";
+
 let failures = 0;
 function check(name: string, ok: boolean, detail = "") {
   if (!ok) failures++;

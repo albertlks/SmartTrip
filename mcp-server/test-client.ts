@@ -9,6 +9,9 @@ import path from "node:path";
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 
+// Weather comes from saved Open-Meteo fixtures, so presentTrips makes no network calls.
+process.env.SMARTTRIP_WEATHER = "fixture";
+
 const SERVER = path.join(import.meta.dirname, "server.ts");
 const FIXTURE_DIR = path.resolve(import.meta.dirname, "../data/fixtures");
 // An empty cache, so serpapi-mode checks never hit a real cached search.
@@ -41,7 +44,7 @@ async function call(client: Client, name: string, args: Record<string, unknown>)
 const client = await connect();
 
 const { tools } = await client.listTools();
-check(`server lists 6 tools (${tools.map((t) => t.name).join(", ")})`, tools.length === 6);
+check(`server lists 7 tools (${tools.map((t) => t.name).join(", ")})`, tools.length === 7);
 
 // Chain: 2 travelers, HNL -> SEA, 4 nights.
 const airport = await call(client, "lookupAirport", { query: "Seattle" });

@@ -11,6 +11,9 @@ import { fakeLlm, type FakeTurn as Turn } from "./fakeLlm";
 import { runAgent } from "./runAgent";
 import { localToday, systemPrompt } from "./systemPrompt";
 
+// Weather comes from saved Open-Meteo fixtures, so presentTrips makes no network calls.
+process.env.SMARTTRIP_WEATHER = "fixture";
+
 const root = path.resolve(import.meta.dirname, "..");
 const readData = (file: string) => JSON.parse(readFileSync(path.join(root, "data", file), "utf8"));
 
@@ -115,7 +118,7 @@ async function main() {
   await runAgent([{ role: "user", content: "hi" }], undefined, { llm: spy as never });
   check(
     "the agent is offered the trip tools without checkBudget and estimateTransport",
-    offered.join() === "recordRequest,lookupAirport,searchFlights,searchHotels,presentTrips",
+    offered.join() === "recordRequest,lookupAirport,searchFlights,searchHotels,getWeather,presentTrips",
     offered.join(),
   );
 
