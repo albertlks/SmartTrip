@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { connection } from "next/server";
 import { Suspense } from "react";
 import { getRun, publicRun } from "@/agent/runStore";
 import { getAirport } from "@/mcp-server/lib/data";
@@ -17,6 +18,9 @@ export const metadata: Metadata = { title: "Your trips" };
 /** Reads the run for this URL. The run id is only known at request time, so this streams in behind Suspense. */
 async function Results({ params }: { params: PageProps<"/results/[runId]">["params"] }) {
   const { runId } = await params;
+  // Badges say how old the data is, so this renders per request.
+  await connection();
+  const now = new Date().getTime();
   const saved = await getRun(runId);
   if (!saved) notFound();
   const run = publicRun(saved);
@@ -36,7 +40,7 @@ async function Results({ params }: { params: PageProps<"/results/[runId]">["para
         <ol className="mt-3 space-y-4">
           {trips.map((trip) => (
             <li key={trip.tripId}>
-              <TripRow row={toRowView(trip, run.request, cities.get(trip.destination))} href={`/results/${run.runId}/${trip.tripId}`} />
+              <TripRow row={toRowView(trip, run.request, cities.get(trip.destination), now)} href={`/results/${run.runId}/${trip.tripId}`} />
             </li>
           ))}
         </ol>

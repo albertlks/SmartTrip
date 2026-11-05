@@ -1,4 +1,6 @@
+import { SourceBadge } from "@/components/SourceBadge";
 import { Badge } from "@/components/ui/Badge";
+import { traceSource } from "@/lib/freshness";
 import { formatMoney, plural } from "@/lib/format";
 import { assumptions, costLines, traceArgs, traceSummary } from "@/lib/tripDetail";
 import { budgetLabel, type PublicRun, type PublicTrip } from "@/lib/tripRow";
@@ -85,6 +87,7 @@ export function AgentTrace({ trace }: { trace: PublicRun["trace"] }) {
               <span className="text-xs text-muted">Step {entry.step}</span>
               <code className="font-mono text-ink">{entry.name}</code>
               {entry.isError && <Badge tone="danger">Error</Badge>}
+              {!entry.isError && traceSource(entry.result) && <SourceBadge freshness={traceSource(entry.result)!} />}
               <span className="ml-auto text-xs tabular-nums text-muted">{entry.ms} ms</span>
             </div>
             <p className="mt-1 text-muted">{traceSummary(entry)}</p>
