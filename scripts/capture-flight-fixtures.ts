@@ -1,7 +1,8 @@
-// Run with: npx tsx scripts/capture-flight-fixtures.ts --yes
-// Saves two SerpApi Google Flights responses as fixtures for the return-flight feature: an outbound search that keeps
-// each option's departure_token, and the return options for its cheapest flight. Spends up to 2 SerpApi searches
-// (none if the same searches were cached in the last 24 hours), so it does nothing without --yes.
+// Run with: npx tsx scripts/capture-flight-fixtures.ts --yes          (flights: up to 2 searches)
+//           npx tsx scripts/capture-flight-fixtures.ts --hotels --yes (hotels: 1 search)
+// Flights: saves two SerpApi Google Flights responses for the return-flight feature: an outbound search that keeps
+// each option's departure_token, and the return options for its cheapest flight. Hotels: saves one Google Hotels
+// search. Searches cached in the last 24 hours are free; without --yes the script only says what it would spend.
 // Tokens are replaced with placeholders (FIXTURE_TOKEN_<rank>) and booking tokens and metadata are dropped,
 // so nothing secret or expiring is committed.
 import { writeFile } from "node:fs/promises";
@@ -9,6 +10,7 @@ import path from "node:path";
 import { config } from "dotenv";
 import { DATA_DIR } from "../mcp-server/lib/data";
 import { mapSerpApi } from "../mcp-server/lib/flightProviders";
+import { destinationAirport, hotelFixtureName, hotelParams, type HotelSearch } from "../mcp-server/lib/hotelProviders";
 import { projectRoot } from "../mcp-server/lib/projectRoot";
 import { newRunContext } from "../mcp-server/lib/runContext";
 import { serpapiSearch } from "../mcp-server/lib/serpapi";
@@ -31,13 +33,28 @@ const FIXTURE_DIR = path.join(DATA_DIR, "fixtures");
 
 type Json = unknown;
 
-/** Drops booking tokens and metadata, and swaps each departure token for its placeholder. */
+// Booking tokens and metadata, plus hotel fields the app never reads (photos, ads, rating breakdowns), to keep fixtures small.
+const DROPPED = new Set([
+  "booking_token",
+  "search_metadata",
+  "serpapi_pagination",
+  "serpapi_property_details_link",
+  "serpapi_google_hotels_photos_link",
+  "serpapi_google_hotels_reviews_link",
+  "images",
+  "ads",
+  "brands",
+  "ratings",
+  "reviews_breakdown",
+]);
+
+/** Drops the fields above, and swaps each departure token for its placeholder. */
 function scrub(value: Json, placeholders: Map<string, string>): Json {
   if (Array.isArray(value)) return value.map((v) => scrub(v, placeholders));
   if (value && typeof value === "object") {
     const out: Record<string, Json> = {};
     for (const [key, v] of Object.entries(value)) {
-      if (key === "booking_token" || key === "search_metadata") continue;
+      if (DROPPED.has(key)) continue;
       out[key] = key === "departure_token" && typeof v === "string" ? (placeholders.get(v) ?? "FIXTURE_TOKEN_UNKNOWN") : scrub(v, placeholders);
     }
     return out;
@@ -53,7 +70,23 @@ async function save(name: string, response: Json, placeholders: Map<string, stri
   console.log(`saved data/fixtures/${name}`);
 }
 
+const HOTEL_SEARCH: HotelSearch = { destination: "SEA", checkIn: "2026-12-11", checkOut: "2026-12-15", travelers: 2, sort: "price" };
+
+async function captureHotels() {
+  const name = hotelFixtureName(HOTEL_SEARCH);
+  if (!process.argv.includes("--yes")) {
+    console.log(`This spends up to 1 SerpApi search (google_hotels for ${name}). Run again with --yes to go ahead.`);
+    return;
+  }
+  const ctx = { ...newRunContext(), maxSerpapiCalls: 1 };
+  const { city } = await destinationAirport(HOTEL_SEARCH.destination);
+  const result = await serpapiSearch("google_hotels", hotelParams(HOTEL_SEARCH, city), ctx);
+  await save(name, result.response, new Map());
+  console.log(`SerpApi calls this run: ${ctx.serpapiCalls} (${result.cache})`);
+}
+
 async function main() {
+  if (process.argv.includes("--hotels")) return captureHotels();
   if (!process.argv.includes("--yes")) {
     console.log(
       `This spends up to 2 SerpApi searches (google_flights ${base}, then the return options of its cheapest flight).\n` +

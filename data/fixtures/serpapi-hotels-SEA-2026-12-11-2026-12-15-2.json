@@ -1,0 +1,1455 @@
+{
+  "search_parameters": {
+    "engine": "google_hotels",
+    "q": "hotels in Seattle",
+    "gl": "us",
+    "hl": "en",
+    "currency": "USD",
+    "check_in_date": "2026-12-11",
+    "check_out_date": "2026-12-15",
+    "adults": 2,
+    "children": 0,
+    "sort_by": "3"
+  },
+  "search_information": {
+    "total_results": 329
+  },
+  "properties": [
+    {
+      "type": "hotel",
+      "name": "Inn at Lake Washington By OYO I-405",
+      "link": "https://www.oyorooms.com/us/259273/?utm_source=GMB&utm_medium=Organic&utm_campaign=US_NTO002",
+      "property_token": "ChkI_9TSk9vG_OkWGg0vZy8xMXQxdGNta2w4EAE",
+      "gps_coordinates": {
+        "latitude": 47.533354599999996,
+        "longitude": -122.19442000000001
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "11:00 AM",
+      "rate_per_night": {
+        "display_price": "$50",
+        "extracted_display_price": 50,
+        "lowest": "$56",
+        "extracted_lowest": 56,
+        "before_taxes_fees": "$50",
+        "extracted_before_taxes_fees": 50,
+        "after_taxes_fees": "$56",
+        "extracted_after_taxes_fees": 56
+      },
+      "total_rate": {
+        "display_price": "$201",
+        "extracted_display_price": 201,
+        "lowest": "$224",
+        "extracted_lowest": 224,
+        "before_taxes_fees": "$201",
+        "extracted_before_taxes_fees": 201,
+        "after_taxes_fees": "$224",
+        "extracted_after_taxes_fees": 224
+      },
+      "nearby_places": [
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "17 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "58 min"
+            }
+          ]
+        },
+        {
+          "name": "Dino's Pub",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "4 min"
+            }
+          ]
+        }
+      ],
+      "overall_rating": 2.7,
+      "reviews": 389,
+      "location_rating": 3.2,
+      "amenities": [
+        "Free Wi-Fi",
+        "Air conditioning",
+        "Accessible",
+        "Business center"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "FairBridge Inn Express",
+      "description": "Simple hotel with a seasonal outdoor pool, plus a free airport shuttle, a breakfast & WiFi.",
+      "property_token": "ChcIme6Qh8zk67kdGgsvZy8xdGZscnE4dhAB",
+      "gps_coordinates": {
+        "latitude": 47.4859108,
+        "longitude": -122.2691287
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "12:00 PM",
+      "rate_per_night": {
+        "display_price": "$53",
+        "extracted_display_price": 53,
+        "lowest": "$61",
+        "extracted_lowest": 61,
+        "before_taxes_fees": "$53",
+        "extracted_before_taxes_fees": 53,
+        "after_taxes_fees": "$61",
+        "extracted_after_taxes_fees": 61
+      },
+      "total_rate": {
+        "display_price": "$212",
+        "extracted_display_price": 212,
+        "lowest": "$245",
+        "extracted_lowest": 245,
+        "before_taxes_fees": "$212",
+        "extracted_before_taxes_fees": 212,
+        "after_taxes_fees": "$245",
+        "extracted_after_taxes_fees": 245
+      },
+      "nearby_places": [
+        {
+          "name": "The Museum of Flight",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "8 min"
+            }
+          ]
+        },
+        {
+          "name": "Interurban Ave S & 48th Ave S",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "5 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "13 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "46 min"
+            }
+          ]
+        },
+        {
+          "name": "Starbucks Coffee Company",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "5 min"
+            }
+          ]
+        }
+      ],
+      "hotel_class": "2-star hotel",
+      "extracted_hotel_class": 2,
+      "overall_rating": 2.6,
+      "reviews": 1899,
+      "location_rating": 3.5,
+      "amenities": [
+        "Free breakfast",
+        "Free Wi-Fi",
+        "Free parking",
+        "Pool",
+        "Hot tub",
+        "Air conditioning",
+        "Pet-friendly",
+        "Restaurant",
+        "Airport shuttle",
+        "Golf",
+        "Accessible",
+        "Business center"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "The Inn at Lake Washington - Extended Stay Apartments",
+      "link": "https://innatlakewashington.com/?utm_source=organic&utm_medium=gbp",
+      "property_token": "ChoIl4Lrm4SWz-L7ARoNL2cvMTF6MXN5cXMyORAB",
+      "gps_coordinates": {
+        "latitude": 47.5334644,
+        "longitude": -122.1948207
+      },
+      "rate_per_night": {
+        "display_price": "$52",
+        "extracted_display_price": 52,
+        "lowest": "$52",
+        "extracted_lowest": 52,
+        "before_taxes_fees": "$52",
+        "extracted_before_taxes_fees": 52,
+        "after_taxes_fees": "$52",
+        "extracted_after_taxes_fees": 52
+      },
+      "total_rate": {
+        "display_price": "$208",
+        "extracted_display_price": 208,
+        "lowest": "$208",
+        "extracted_lowest": 208,
+        "before_taxes_fees": "$208",
+        "extracted_before_taxes_fees": 208,
+        "after_taxes_fees": "$208",
+        "extracted_after_taxes_fees": 208
+      },
+      "nearby_places": [
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "17 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "58 min"
+            }
+          ]
+        },
+        {
+          "name": "Dino's Pub",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "4 min"
+            }
+          ]
+        }
+      ],
+      "overall_rating": 2,
+      "reviews": 1,
+      "location_rating": 3.2,
+      "amenities": [
+        "Free Wi-Fi",
+        "Free parking",
+        "Pool",
+        "Air conditioning",
+        "Pet-friendly",
+        "Kitchen",
+        "Accessible"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "Seattle Value Inn Near Tacoma Airport I-5",
+      "link": "https://www.oyorooms.com/us/402473/?utm_source=GMB&utm_medium=Organic&utm_campaign=US_ECWA001",
+      "property_token": "ChoIs8WYhOurnaGlARoNL2cvMTF6eTJmNGN3ZxAB",
+      "gps_coordinates": {
+        "latitude": 47.485955,
+        "longitude": -122.26934000000001
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "11:00 AM",
+      "rate_per_night": {
+        "display_price": "$57",
+        "extracted_display_price": 57,
+        "lowest": "$67",
+        "extracted_lowest": 67,
+        "before_taxes_fees": "$57",
+        "extracted_before_taxes_fees": 57,
+        "after_taxes_fees": "$67",
+        "extracted_after_taxes_fees": 67
+      },
+      "total_rate": {
+        "display_price": "$226",
+        "extracted_display_price": 226,
+        "lowest": "$269",
+        "extracted_lowest": 269,
+        "before_taxes_fees": "$226",
+        "extracted_before_taxes_fees": 226,
+        "after_taxes_fees": "$269",
+        "extracted_after_taxes_fees": 269
+      },
+      "nearby_places": [
+        {
+          "name": "The Museum of Flight",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "8 min"
+            }
+          ]
+        },
+        {
+          "name": "Interurban Ave S & 48th Ave S",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "5 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "13 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "46 min"
+            }
+          ]
+        },
+        {
+          "name": "Sunny Teriyaki",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "5 min"
+            }
+          ]
+        }
+      ],
+      "overall_rating": 5,
+      "reviews": 1,
+      "location_rating": 3,
+      "amenities": [
+        "Free Wi-Fi",
+        "Free parking",
+        "Outdoor pool",
+        "Air conditioning",
+        "Full-service laundry"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "Americas Inn and Suite",
+      "description": "Low-key lodging offering down-to-earth rooms, plus free continental breakfast, Wi-Fi & parking.",
+      "link": "https://www.americasinnandsuiteshoreline.com/",
+      "property_token": "ChoIrKa346f54YeDARoNL2cvMTFidzZxYmgyaxAB",
+      "gps_coordinates": {
+        "latitude": 47.7362871,
+        "longitude": -122.345837
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "11:00 AM",
+      "rate_per_night": {
+        "display_price": "$61",
+        "extracted_display_price": 61,
+        "lowest": "$70",
+        "extracted_lowest": 70,
+        "before_taxes_fees": "$61",
+        "extracted_before_taxes_fees": 61,
+        "after_taxes_fees": "$70",
+        "extracted_after_taxes_fees": 70
+      },
+      "total_rate": {
+        "display_price": "$246",
+        "extracted_display_price": 246,
+        "lowest": "$279",
+        "extracted_lowest": 279,
+        "before_taxes_fees": "$246",
+        "extracted_before_taxes_fees": 246,
+        "after_taxes_fees": "$279",
+        "extracted_after_taxes_fees": 279
+      },
+      "nearby_places": [
+        {
+          "name": "Aurora Ave N & N 152nd St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "4 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "31 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "1 hr 22 min"
+            }
+          ]
+        },
+        {
+          "name": "Xiaolongbao House",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "2 min"
+            }
+          ]
+        }
+      ],
+      "hotel_class": "2-star hotel",
+      "extracted_hotel_class": 2,
+      "overall_rating": 3.4,
+      "reviews": 511,
+      "location_rating": 3.8,
+      "amenities": [
+        "Free breakfast",
+        "Free Wi-Fi",
+        "Free parking",
+        "Air conditioning",
+        "Kitchen in some rooms",
+        "Accessible"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "Best Motel",
+      "link": "https://bestmotelseattle.com/",
+      "property_token": "ChoIkPflqqrv7vaKARoNL2cvMTFid3l4ZHdwZhAB",
+      "gps_coordinates": {
+        "latitude": 47.7172117,
+        "longitude": -122.34571869999999
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "11:00 AM",
+      "rate_per_night": {
+        "display_price": "$64",
+        "extracted_display_price": 64,
+        "lowest": "$74",
+        "extracted_lowest": 74,
+        "before_taxes_fees": "$64",
+        "extracted_before_taxes_fees": 64,
+        "after_taxes_fees": "$74",
+        "extracted_after_taxes_fees": 74
+      },
+      "total_rate": {
+        "display_price": "$255",
+        "extracted_display_price": 255,
+        "lowest": "$295",
+        "extracted_lowest": 295,
+        "before_taxes_fees": "$255",
+        "extracted_before_taxes_fees": 255,
+        "after_taxes_fees": "$295",
+        "extracted_after_taxes_fees": 295
+      },
+      "nearby_places": [
+        {
+          "name": "Aurora Ave N & N 125th St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "6 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "32 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "1 hr 22 min"
+            }
+          ]
+        },
+        {
+          "name": "El Camion",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "7 min"
+            }
+          ]
+        }
+      ],
+      "hotel_class": "1-star hotel",
+      "extracted_hotel_class": 1,
+      "overall_rating": 3.9,
+      "reviews": 255,
+      "location_rating": 3.4,
+      "amenities": [
+        "Free Wi-Fi",
+        "Free parking",
+        "Air conditioning"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "Columbus Motor Inn",
+      "link": "http://columbusmotorinn.net/",
+      "property_token": "ChgItry__pSNu_T-ARoLL2cvMXRsa2MxeTcQAQ",
+      "gps_coordinates": {
+        "latitude": 47.6991283,
+        "longitude": -122.3449741
+      },
+      "check_in_time": "2:00 PM",
+      "check_out_time": "11:00 AM",
+      "rate_per_night": {
+        "display_price": "$65",
+        "extracted_display_price": 65,
+        "lowest": "$75",
+        "extracted_lowest": 75,
+        "before_taxes_fees": "$65",
+        "extracted_before_taxes_fees": 65,
+        "after_taxes_fees": "$75",
+        "extracted_after_taxes_fees": 75
+      },
+      "total_rate": {
+        "display_price": "$260",
+        "extracted_display_price": 260,
+        "lowest": "$301",
+        "extracted_lowest": 301,
+        "before_taxes_fees": "$260",
+        "extracted_before_taxes_fees": 260,
+        "after_taxes_fees": "$301",
+        "extracted_after_taxes_fees": 301
+      },
+      "nearby_places": [
+        {
+          "name": "Woodland Park Zoo",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "7 min"
+            }
+          ]
+        },
+        {
+          "name": "Aurora Ave N & N 95th St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "2 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "29 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "1 hr 15 min"
+            }
+          ]
+        },
+        {
+          "name": "Restaurante El Patio",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "4 min"
+            }
+          ]
+        }
+      ],
+      "hotel_class": "2-star hotel",
+      "extracted_hotel_class": 2,
+      "overall_rating": 3.7,
+      "reviews": 333,
+      "location_rating": 4.1,
+      "amenities": [
+        "Free Wi-Fi",
+        "Free parking",
+        "Air conditioning",
+        "Golf"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "The Golden Lion Sweet Suite",
+      "property_token": "ChoIgKHh-uS1wLThARoNL2cvMTF4Y20zbjAwMxAB",
+      "gps_coordinates": {
+        "latitude": 47.6247979,
+        "longitude": -122.3139793
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "10:00 AM",
+      "rate_per_night": {
+        "display_price": "$78",
+        "extracted_display_price": 78,
+        "lowest": "$95",
+        "extracted_lowest": 95,
+        "before_taxes_fees": "$78",
+        "extracted_before_taxes_fees": 78,
+        "after_taxes_fees": "$95",
+        "extracted_after_taxes_fees": 95
+      },
+      "total_rate": {
+        "display_price": "$311",
+        "extracted_display_price": 311,
+        "lowest": "$381",
+        "extracted_lowest": 381,
+        "before_taxes_fees": "$311",
+        "extracted_before_taxes_fees": 311,
+        "after_taxes_fees": "$381",
+        "extracted_after_taxes_fees": 381
+      },
+      "nearby_places": [
+        {
+          "name": "Washington Park Arboretum",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "6 min"
+            }
+          ]
+        },
+        {
+          "name": "Broadway E & E Mercer St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "9 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "26 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "54 min"
+            }
+          ]
+        },
+        {
+          "name": "El Farol Mexican Restaurant",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "3 min"
+            }
+          ]
+        }
+      ],
+      "overall_rating": 3.3,
+      "reviews": 3,
+      "location_rating": 3.7
+    },
+    {
+      "type": "hotel",
+      "name": "Palpatine Sith Lord Suite",
+      "property_token": "ChoI54ngv8K7sKehARoNL2cvMTF5MmZiNHN3YxAB",
+      "gps_coordinates": {
+        "latitude": 47.6436673,
+        "longitude": -122.36120249999998
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "10:00 AM",
+      "rate_per_night": {
+        "display_price": "$79",
+        "extracted_display_price": 79,
+        "lowest": "$89",
+        "extracted_lowest": 89,
+        "before_taxes_fees": "$79",
+        "extracted_before_taxes_fees": 79,
+        "after_taxes_fees": "$89",
+        "extracted_after_taxes_fees": 89
+      },
+      "total_rate": {
+        "display_price": "$314",
+        "extracted_display_price": 314,
+        "lowest": "$356",
+        "extracted_lowest": 356,
+        "before_taxes_fees": "$314",
+        "extracted_before_taxes_fees": 314,
+        "after_taxes_fees": "$356",
+        "extracted_after_taxes_fees": 356
+      },
+      "nearby_places": [
+        {
+          "name": "Space Needle",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "10 min"
+            }
+          ]
+        },
+        {
+          "name": "3rd Ave W & W Armour St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "3 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "23 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "1 hr 6 min"
+            }
+          ]
+        },
+        {
+          "name": "5 Spot",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "4 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "7 min"
+            }
+          ]
+        }
+      ],
+      "overall_rating": 3.4,
+      "reviews": 5,
+      "location_rating": 3.4
+    },
+    {
+      "type": "hotel",
+      "name": "The Dylan a Baymont by Wyndham",
+      "description": "Casual rooms & suites in a low-key hotel offering free Wi-Fi, parking & coffee service in the lobby.",
+      "link": "https://kingsinnseattlecenter.com/",
+      "property_token": "ChgItb_hgIGQvf3CARoLL2cvMXRkeThzMzEQAQ",
+      "gps_coordinates": {
+        "latitude": 47.615045900000005,
+        "longitude": -122.34055219999999
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "11:00 AM",
+      "rate_per_night": {
+        "display_price": "$67",
+        "extracted_display_price": 67,
+        "lowest": "$79",
+        "extracted_lowest": 79,
+        "before_taxes_fees": "$67",
+        "extracted_before_taxes_fees": 67,
+        "after_taxes_fees": "$79",
+        "extracted_after_taxes_fees": 79
+      },
+      "total_rate": {
+        "display_price": "$268",
+        "extracted_display_price": 268,
+        "lowest": "$316",
+        "extracted_lowest": 316,
+        "before_taxes_fees": "$268",
+        "extracted_before_taxes_fees": 268,
+        "after_taxes_fees": "$316",
+        "extracted_after_taxes_fees": 316
+      },
+      "nearby_places": [
+        {
+          "name": "Pike Place Market",
+          "transportations": [
+            {
+              "type": "Public transport",
+              "duration": "9 min"
+            }
+          ]
+        },
+        {
+          "name": "Blanchard St & 6th Ave",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "2 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "22 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "45 min"
+            }
+          ]
+        },
+        {
+          "name": "Kajiken",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "2 min"
+            }
+          ]
+        }
+      ],
+      "hotel_class": "3-star hotel",
+      "extracted_hotel_class": 3,
+      "overall_rating": 3.2,
+      "reviews": 573,
+      "location_rating": 4.9,
+      "amenities": [
+        "Free breakfast",
+        "Free Wi-Fi",
+        "Free parking",
+        "Air conditioning",
+        "Smoke-free property"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "Martell's Sunspear Sweet Suite",
+      "property_token": "ChoI0M2vhsT51YKJARoNL2cvMTF4NzkxMXk3eBAB",
+      "gps_coordinates": {
+        "latitude": 47.6247979,
+        "longitude": -122.3139793
+      },
+      "check_in_time": "3:00 PM",
+      "rate_per_night": {
+        "display_price": "$93",
+        "extracted_display_price": 93,
+        "lowest": "$93",
+        "extracted_lowest": 93,
+        "before_taxes_fees": "$93",
+        "extracted_before_taxes_fees": 93,
+        "after_taxes_fees": "$93",
+        "extracted_after_taxes_fees": 93
+      },
+      "total_rate": {
+        "display_price": "$373",
+        "extracted_display_price": 373,
+        "lowest": "$373",
+        "extracted_lowest": 373,
+        "before_taxes_fees": "$373",
+        "extracted_before_taxes_fees": 373,
+        "after_taxes_fees": "$373",
+        "extracted_after_taxes_fees": 373
+      },
+      "nearby_places": [
+        {
+          "name": "Washington Park Arboretum",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "6 min"
+            }
+          ]
+        },
+        {
+          "name": "Broadway E & E Mercer St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "9 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "26 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "54 min"
+            }
+          ]
+        },
+        {
+          "name": "El Farol Mexican Restaurant",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "3 min"
+            }
+          ]
+        }
+      ],
+      "location_rating": 3.7
+    },
+    {
+      "type": "hotel",
+      "name": "The Dreadfort's Flayed Bolton's Suite",
+      "property_token": "ChoImoarx_aGjJnvARoNL2cvMTFsbjA2Ymp0ZxAB",
+      "gps_coordinates": {
+        "latitude": 47.6247979,
+        "longitude": -122.3139793
+      },
+      "check_in_time": "3:00 PM",
+      "rate_per_night": {
+        "display_price": "$93",
+        "extracted_display_price": 93,
+        "lowest": "$93",
+        "extracted_lowest": 93,
+        "before_taxes_fees": "$93",
+        "extracted_before_taxes_fees": 93,
+        "after_taxes_fees": "$93",
+        "extracted_after_taxes_fees": 93
+      },
+      "total_rate": {
+        "display_price": "$373",
+        "extracted_display_price": 373,
+        "lowest": "$373",
+        "extracted_lowest": 373,
+        "before_taxes_fees": "$373",
+        "extracted_before_taxes_fees": 373,
+        "after_taxes_fees": "$373",
+        "extracted_after_taxes_fees": 373
+      },
+      "nearby_places": [
+        {
+          "name": "Washington Park Arboretum",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "6 min"
+            }
+          ]
+        },
+        {
+          "name": "Broadway E & E Mercer St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "9 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "26 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "54 min"
+            }
+          ]
+        },
+        {
+          "name": "El Farol Mexican Restaurant",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "3 min"
+            }
+          ]
+        }
+      ],
+      "overall_rating": 3,
+      "reviews": 2,
+      "location_rating": 3.7
+    },
+    {
+      "type": "hotel",
+      "name": "Vermithor's Bronze Ember Sweet Suite",
+      "link": "https://www.tripingguide.com/us/vermithors-bronze-ember-sweet-suite-united-states",
+      "property_token": "ChkIqLuttYPgtaR7Gg0vZy8xMW50cTFxYnQ2EAE",
+      "gps_coordinates": {
+        "latitude": 47.624820299999996,
+        "longitude": -122.3139561
+      },
+      "check_in_time": "3:00 PM",
+      "rate_per_night": {
+        "display_price": "$93",
+        "extracted_display_price": 93,
+        "lowest": "$93",
+        "extracted_lowest": 93,
+        "before_taxes_fees": "$93",
+        "extracted_before_taxes_fees": 93,
+        "after_taxes_fees": "$93",
+        "extracted_after_taxes_fees": 93
+      },
+      "total_rate": {
+        "display_price": "$373",
+        "extracted_display_price": 373,
+        "lowest": "$373",
+        "extracted_lowest": 373,
+        "before_taxes_fees": "$373",
+        "extracted_before_taxes_fees": 373,
+        "after_taxes_fees": "$373",
+        "extracted_after_taxes_fees": 373
+      },
+      "nearby_places": [
+        {
+          "name": "Washington Park Arboretum",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "6 min"
+            }
+          ]
+        },
+        {
+          "name": "Broadway E & E Mercer St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "9 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "26 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "54 min"
+            }
+          ]
+        },
+        {
+          "name": "El Farol Mexican Restaurant",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "3 min"
+            }
+          ]
+        }
+      ],
+      "location_rating": 3.7
+    },
+    {
+      "type": "hotel",
+      "name": "Travelodge by Wyndham Seattle By The Space Needle",
+      "description": "Relaxed downtown lodging with a seasonal outdoor pool, plus free Wi-Fi & breakfast.",
+      "link": "https://www.wyndhamhotels.com/travelodge/seattle-washington/travelodge-seattle-by-the-space-needle/overview?CID=LC:fkqqcjhla7b6gbb:7033&iata=00093796",
+      "property_token": "ChcIo7uVhcCAhcBmGgsvZy8xdmxqZzBocBAB",
+      "gps_coordinates": {
+        "latitude": 47.620153599999995,
+        "longitude": -122.3446044
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "11:00 AM",
+      "rate_per_night": {
+        "display_price": "$69",
+        "extracted_display_price": 69,
+        "lowest": "$81",
+        "extracted_lowest": 81,
+        "before_taxes_fees": "$69",
+        "extracted_before_taxes_fees": 69,
+        "after_taxes_fees": "$81",
+        "extracted_after_taxes_fees": 81
+      },
+      "total_rate": {
+        "display_price": "$274",
+        "extracted_display_price": 274,
+        "lowest": "$324",
+        "extracted_lowest": 324,
+        "before_taxes_fees": "$274",
+        "extracted_before_taxes_fees": 274,
+        "after_taxes_fees": "$324",
+        "extracted_after_taxes_fees": 324
+      },
+      "nearby_places": [
+        {
+          "name": "Seattle Center",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "6 min"
+            }
+          ]
+        },
+        {
+          "name": "7th Ave N & Thomas St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "3 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "20 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "50 min"
+            }
+          ]
+        },
+        {
+          "name": "The 5 Point Cafe",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "7 min"
+            }
+          ]
+        }
+      ],
+      "hotel_class": "2-star hotel",
+      "extracted_hotel_class": 2,
+      "overall_rating": 3.2,
+      "reviews": 2021,
+      "location_rating": 4.7,
+      "amenities": [
+        "Free Wi-Fi",
+        "Parking ($)",
+        "Outdoor pool",
+        "Air conditioning",
+        "Fitness center",
+        "Accessible",
+        "Business center",
+        "Kid-friendly",
+        "Smoke-free property"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "Marco Polo Motel",
+      "description": "Unassuming roadside property offering simple rooms, plus complimentary parking.",
+      "link": "http://marcopolomotel.net/",
+      "property_token": "ChgIyp-DmfyI9vvbARoLL2cvMXZwNnp3cmIQAQ",
+      "gps_coordinates": {
+        "latitude": 47.657604899999995,
+        "longitude": -122.3470414
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "11:00 AM",
+      "rate_per_night": {
+        "display_price": "$70",
+        "extracted_display_price": 70,
+        "lowest": "$80",
+        "extracted_lowest": 80,
+        "before_taxes_fees": "$70",
+        "extracted_before_taxes_fees": 70,
+        "after_taxes_fees": "$80",
+        "extracted_after_taxes_fees": 80
+      },
+      "total_rate": {
+        "display_price": "$278",
+        "extracted_display_price": 278,
+        "lowest": "$322",
+        "extracted_lowest": 322,
+        "before_taxes_fees": "$278",
+        "extracted_before_taxes_fees": 278,
+        "after_taxes_fees": "$322",
+        "extracted_after_taxes_fees": 322
+      },
+      "nearby_places": [
+        {
+          "name": "Museum of Pop Culture",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "9 min"
+            }
+          ]
+        },
+        {
+          "name": "Fremont Ave N & N 41st St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "6 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "24 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "1 hr 12 min"
+            }
+          ]
+        },
+        {
+          "name": "Haerfest",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "8 min"
+            }
+          ]
+        }
+      ],
+      "hotel_class": "2-star hotel",
+      "extracted_hotel_class": 2,
+      "overall_rating": 3.7,
+      "reviews": 707,
+      "location_rating": 4.5,
+      "amenities": [
+        "Free Wi-Fi",
+        "Free parking",
+        "Air conditioning",
+        "Accessible",
+        "Smoke-free property"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "Green Tortoise Hostel Seattle",
+      "description": "Low-key hostel offering basic dorms & private rooms, plus a full communal kitchen & free Wi-Fi.",
+      "link": "http://www.greentortoise.net/",
+      "property_token": "ChcIq8OOlNypoN4SGgsvZy8xdGQ3c3gzaBAB",
+      "gps_coordinates": {
+        "latitude": 47.6088697,
+        "longitude": -122.33956019999998
+      },
+      "check_in_time": "2:00 PM",
+      "check_out_time": "11:00 AM",
+      "rate_per_night": {
+        "display_price": "$70",
+        "extracted_display_price": 70,
+        "lowest": "$77",
+        "extracted_lowest": 77,
+        "before_taxes_fees": "$70",
+        "extracted_before_taxes_fees": 70,
+        "after_taxes_fees": "$77",
+        "extracted_after_taxes_fees": 77
+      },
+      "total_rate": {
+        "display_price": "$280",
+        "extracted_display_price": 280,
+        "lowest": "$310",
+        "extracted_lowest": 310,
+        "before_taxes_fees": "$280",
+        "extracted_before_taxes_fees": 280,
+        "after_taxes_fees": "$310",
+        "extracted_after_taxes_fees": 310
+      },
+      "nearby_places": [
+        {
+          "name": "Pike Place Market",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "1 min"
+            }
+          ]
+        },
+        {
+          "name": "3rd Ave & Pike St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "4 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "23 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "41 min"
+            }
+          ]
+        },
+        {
+          "name": "Sound View Cafe",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "2 min"
+            }
+          ]
+        }
+      ],
+      "hotel_class": "2-star hotel",
+      "extracted_hotel_class": 2,
+      "overall_rating": 4.6,
+      "reviews": 2824,
+      "location_rating": 4.9,
+      "amenities": [
+        "Free breakfast",
+        "Free Wi-Fi",
+        "Parking ($)",
+        "Air conditioning",
+        "Smoke-free property"
+      ]
+    },
+    {
+      "type": "hotel",
+      "name": "Darth Vader's Death Star Suite",
+      "property_token": "ChoIken97aTqst3fARoNL2cvMTF5amdtMWpmMhAB",
+      "gps_coordinates": {
+        "latitude": 47.643621,
+        "longitude": -122.36120199999999
+      },
+      "check_in_time": "3:00 PM",
+      "check_out_time": "10:00 AM",
+      "rate_per_night": {
+        "display_price": "$85",
+        "extracted_display_price": 85,
+        "lowest": "$95",
+        "extracted_lowest": 95,
+        "before_taxes_fees": "$85",
+        "extracted_before_taxes_fees": 85,
+        "after_taxes_fees": "$95",
+        "extracted_after_taxes_fees": 95
+      },
+      "total_rate": {
+        "display_price": "$340",
+        "extracted_display_price": 340,
+        "lowest": "$379",
+        "extracted_lowest": 379,
+        "before_taxes_fees": "$340",
+        "extracted_before_taxes_fees": 340,
+        "after_taxes_fees": "$379",
+        "extracted_after_taxes_fees": 379
+      },
+      "nearby_places": [
+        {
+          "name": "Space Needle",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "9 min"
+            }
+          ]
+        },
+        {
+          "name": "3rd Ave W & W Armour St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "3 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "23 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "1 hr 6 min"
+            }
+          ]
+        },
+        {
+          "name": "5 Spot",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "4 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "7 min"
+            }
+          ]
+        }
+      ],
+      "overall_rating": 2,
+      "reviews": 2,
+      "location_rating": 3.4
+    },
+    {
+      "type": "hotel",
+      "name": "Leia's Rebel Princess Suite",
+      "property_token": "ChkIo8G3sInnl9xfGg0vZy8xMXZrNGMxNWo5EAE",
+      "gps_coordinates": {
+        "latitude": 47.6436673,
+        "longitude": -122.36120249999998
+      },
+      "check_in_time": "3:00 PM",
+      "rate_per_night": {
+        "display_price": "$86",
+        "extracted_display_price": 86,
+        "lowest": "$97",
+        "extracted_lowest": 97,
+        "before_taxes_fees": "$86",
+        "extracted_before_taxes_fees": 86,
+        "after_taxes_fees": "$97",
+        "extracted_after_taxes_fees": 97
+      },
+      "total_rate": {
+        "display_price": "$342",
+        "extracted_display_price": 342,
+        "lowest": "$389",
+        "extracted_lowest": 389,
+        "before_taxes_fees": "$342",
+        "extracted_before_taxes_fees": 342,
+        "after_taxes_fees": "$389",
+        "extracted_after_taxes_fees": 389
+      },
+      "nearby_places": [
+        {
+          "name": "Space Needle",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "9 min"
+            }
+          ]
+        },
+        {
+          "name": "3rd Ave W & W Armour St",
+          "transportations": [
+            {
+              "type": "Walking",
+              "duration": "3 min"
+            }
+          ]
+        },
+        {
+          "name": "Seattle-Tacoma International Airport",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "23 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "1 hr 6 min"
+            }
+          ]
+        },
+        {
+          "name": "5 Spot",
+          "transportations": [
+            {
+              "type": "Taxi",
+              "duration": "4 min"
+            },
+            {
+              "type": "Public transport",
+              "duration": "7 min"
+            }
+          ]
+        }
+      ],
+      "overall_rating": 5,
+      "reviews": 2,
+      "location_rating": 3.4
+    }
+  ]
+}
