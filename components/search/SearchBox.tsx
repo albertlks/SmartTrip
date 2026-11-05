@@ -1,21 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState, type FormEvent, type KeyboardEvent } from "react";
+import type { FormEvent, KeyboardEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Input";
 import { ErrorState } from "@/components/ui/States";
-import { RunClientError, startRun, type RunEvent } from "@/lib/runClient";
 import { HOME_AIRPORT_KEY, writeStored } from "@/lib/storage";
 import { RunProgress } from "./RunProgress";
 import { useSearch } from "./SearchProvider";
+import { useRunner } from "./useRunner";
 
 const MAX_LENGTH = 1000;
-
-type Phase =
-  | { kind: "idle" }
-  | { kind: "running"; events: RunEvent[]; startedAt: number }
-  | { kind: "error"; message: string };
 
 /** Saves the origin the agent understood, so idea cards can fill it in next time. */
 async function rememberOrigin(runId: string) {
@@ -28,44 +22,21 @@ async function rememberOrigin(runId: string) {
 }
 
 export function SearchBox() {
-  const router = useRouter();
   const { text, setText, textareaRef } = useSearch();
-  const [phase, setPhase] = useState<Phase>({ kind: "idle" });
-  // Set when the agent asked a question: the next submit answers it in the same conversation.
-  const [question, setQuestion] = useState<{ text: string; runId: string } | null>(null);
-  const running = phase.kind === "running";
+  const runner = useRunner({ beforeNavigate: rememberOrigin });
+  const { phase, running, question } = runner;
 
   async function submit() {
     const message = text.trim();
-    if (!message) {
-      setPhase({ kind: "error", message: "Type a trip request first: where from, where to, when, and your budget." });
-      return;
-    }
+    if (!message) return runner.fail("Type a trip request first: where from, where to, when, and your budget.");
     if (message.length > MAX_LENGTH) {
-      setPhase({ kind: "error", message: `Please keep your request under ${MAX_LENGTH} characters (it is ${message.length}).` });
-      return;
+      return runner.fail(`Please keep your request under ${MAX_LENGTH} characters (it is ${message.length}).`);
     }
-    setPhase({ kind: "running", events: [], startedAt: Date.now() });
-    try {
-      const final = await startRun(message, question?.runId ?? null, (event) =>
-        setPhase((p) => (p.kind === "running" ? { ...p, events: [...p.events, event] } : p)),
-      );
-      if (final.type === "done") {
-        await rememberOrigin(final.runId);
-        router.push(`/results/${final.runId}`);
-      } else if (final.type === "needs_input") {
-        setQuestion({ text: final.question, runId: final.runId });
-        setText("");
-        setPhase({ kind: "idle" });
-        textareaRef.current?.focus();
-      } else if (final.type === "stopped_early") {
-        setPhase({ kind: "error", message: "The search stopped before it finished. Try a simpler request, or try again." });
-      } else if (final.type === "error") {
-        setPhase({ kind: "error", message: final.message });
-      }
-    } catch (err) {
-      const message = err instanceof RunClientError ? err.message : "Something went wrong. Please try again.";
-      setPhase({ kind: "error", message });
+    // When the agent asked a question, this submit answers it in the same conversation.
+    const outcome = await runner.run(message, question?.runId ?? null);
+    if (outcome === "needs_input") {
+      setText("");
+      textareaRef.current?.focus();
     }
   }
 
@@ -83,9 +54,8 @@ export function SearchBox() {
   }
 
   function startOver() {
-    setQuestion(null);
+    runner.reset();
     setText("");
-    setPhase({ kind: "idle" });
     textareaRef.current?.focus();
   }
 

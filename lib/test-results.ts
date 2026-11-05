@@ -5,7 +5,8 @@ process.env.TZ = "Pacific/Honolulu";
 
 import type { TripRequest } from "@/agent/recordRequest";
 import { formatDay, formatDayRange, formatDuration, formatMoney, formatTime } from "./format";
-import { requestSummary, toRowView, type PublicTrip } from "./tripRow";
+import { editMessage, editStart, parseEdit, toChips } from "./requestChips";
+import { toRowView, type PublicTrip } from "./tripRow";
 
 let failures = 0;
 function check(name: string, ok: boolean, detail = "") {
@@ -112,7 +113,8 @@ same("the return day comes from the request", row.returnDay, "Return Mon, Dec 14
 same("hotel price and nights", [row.hotel.nightly, row.hotel.nights], ["$60/night", "3 nights"]);
 same("the total and who it covers", [row.total, row.travelers], ["$871", "total for 2 travelers"]);
 same("under budget is good news", row.budget, { text: "$529 under budget", tone: "success" });
-same("the place is the hotel's city", row.place, "Las Vegas");
+same("without the airport's city the place is the hotel's city", row.place, "Las Vegas");
+same("the airport's city wins over the hotel's suburb", toRowView({ ...redEye, hotel: { ...redEye.hotel, city: "Paradise" } }, request, "Las Vegas").place, "Las Vegas");
 
 const overBudget = toRowView({ ...redEye, withinBudget: false, totals: { ...redEye.totals, total: 1520, difference: -120 } }, request);
 same("over budget is a warning with the gap", overBudget.budget, { text: "$120 over budget", tone: "warning" });
@@ -143,14 +145,53 @@ same("airlines and flight numbers list each one once", [withStops.airline, withS
 same("missing times show nothing rather than a guess", [withStops.times, withStops.arriveOffset], [null, null]);
 same("without a request the return day comes from the hotel stay", withStops.returnDay, "Return Mon, Dec 14");
 
-// ---- summary line ----
-same("the summary line lists route, dates, travelers, and budget", requestSummary(request, [redEye]), [
-  "HNL → LAS",
-  "Dec 11–14",
-  "2 travelers",
-  "$1,400 budget",
-]);
-same("a run without a request or trips has no summary", requestSummary(null, []), []);
+// ---- request chips ----
+const chips = toChips({ ...request, destinationsFromIdeas: true, travelersDefaulted: true, preferences: ["nonstop"] });
+same(
+  "chips show each field with its value",
+  chips.map((c) => `${c.label}: ${c.value}`),
+  ["From: Honolulu", "To: Las Vegas", "Dates: Dec 11–14", "Travelers: 2", "Budget: $1,400", "Prefers: nonstop"],
+);
+same("destinations the agent picked are marked suggested", chips[1].kind === "field" && chips[1].note, "suggested");
+same("a default traveler count is marked assumed", chips[3].kind === "field" && chips[3].note, "assumed");
+const missing = toChips({ ...request, budget: null, departDate: null });
+same(
+  "missing fields say so and are flagged",
+  missing.filter((c) => c.kind === "field" && c.missing).map((c) => `${c.label}: ${c.value}`),
+  ["Dates: Not set", "Budget: Not set"],
+);
+same("an unset budget starts blank in the editor", editStart("budget", { ...request, budget: null }), { value: "" });
+
+same(
+  "a budget edit says what changes and keeps the rest",
+  editMessage({ field: "budget", value: 1200 }),
+  "Change the total budget to $1,200. Keep everything else the same.",
+);
+same(
+  "a dates edit gives readable and exact dates",
+  editMessage({ field: "dates", departDate: "2026-12-12", returnDate: "2026-12-16" }),
+  "Change the dates to Dec 12–16, 2026 (depart 2026-12-12, return 2026-12-16). Keep everything else the same.",
+);
+same(
+  "removing a preference names it",
+  editMessage({ field: "removePreference", value: "nonstop" }),
+  'Drop the preference "nonstop". Keep everything else the same.',
+);
+
+same("a budget can be typed with $ and commas", parseEdit("budget", { value: "$1,250" }), { edit: { field: "budget", value: 1250 } });
+check("an empty budget is refused", "error" in parseEdit("budget", { value: "" }));
+check("a zero budget is refused", "error" in parseEdit("budget", { value: "0" }));
+check("0 travelers is refused", "error" in parseEdit("travelers", { value: "0" }));
+check("a fraction of a traveler is refused", "error" in parseEdit("travelers", { value: "1.5" }));
+same("travelers parse to a number", parseEdit("travelers", { value: "3" }), { edit: { field: "travelers", value: 3 } });
+same(
+  "a return before departure is refused",
+  parseEdit("dates", { departDate: "2026-12-15", returnDate: "2026-12-11" }),
+  { error: "The return date must be after the departure date." },
+);
+check("a missing date is refused", "error" in parseEdit("dates", { departDate: "2026-12-15", returnDate: "" }));
+check("a blank destination is refused", "error" in parseEdit("destinations", { value: "   " }));
+same("text is trimmed", parseEdit("origin", { value: "  Hilo " }), { edit: { field: "origin", value: "Hilo" } });
 
 console.log(failures ? `\n${failures} check(s) failed` : "\nAll results checks passed");
 process.exit(failures ? 1 : 0);

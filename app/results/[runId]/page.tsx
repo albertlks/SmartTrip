@@ -3,12 +3,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { getRun, publicRun } from "@/agent/runStore";
+import { getAirport } from "@/mcp-server/lib/data";
+import { RefineControls } from "@/components/results/RefineControls";
 import { RunStatusView } from "@/components/results/RunStatusView";
 import { TripRow, TripRowSkeleton } from "@/components/results/TripRow";
 import { buttonClass } from "@/components/ui/Button";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { plural } from "@/lib/format";
-import { requestSummary, toRowView } from "@/lib/tripRow";
+import { toRowView } from "@/lib/tripRow";
 
 export const metadata: Metadata = { title: "Your trips" };
 
@@ -19,29 +21,49 @@ async function Results({ params }: { params: PageProps<"/results/[runId]">["para
   if (!saved) notFound();
   const run = publicRun(saved);
   const trips = run.status === "done" ? (run.trips ?? []) : [];
-  const summary = requestSummary(run.request, trips);
+  // Row headings name the destination city, not the hotel's suburb.
+  const cities = new Map(
+    await Promise.all(trips.map(async (t) => [t.destination, (await getAirport(t.destination))?.city] as const)),
+  );
+
+  const body =
+    trips.length > 0 ? (
+      <>
+        <p className="mt-6 text-sm text-muted">
+          {plural(trips.length, "package")}, best match first. Totals include round-trip flights for every traveler, the
+          hotel, and rides between the airport and the hotel.
+        </p>
+        <ol className="mt-3 space-y-4">
+          {trips.map((trip) => (
+            <li key={trip.tripId}>
+              <TripRow row={toRowView(trip, run.request, cities.get(trip.destination))} href={`/results/${run.runId}/${trip.tripId}`} />
+            </li>
+          ))}
+        </ol>
+      </>
+    ) : run.status === "needs_input" ? null : (
+      // A question is shown with the refine controls, where it can be answered.
+      <div className="mt-6">
+        <RunStatusView run={run} />
+      </div>
+    );
 
   return (
     <>
-      {summary.length > 0 && <p className="mt-2 text-sm text-muted">{summary.join(" · ")}</p>}
-      {trips.length > 0 ? (
-        <>
-          <p className="mt-6 text-sm text-muted">
-            {plural(trips.length, "package")}, best match first. Totals include round-trip flights for every traveler, the
-            hotel, and rides between the airport and the hotel.
-          </p>
-          <ol className="mt-3 space-y-4">
-            {trips.map((trip) => (
-              <li key={trip.tripId}>
-                <TripRow row={toRowView(trip, run.request)} href={`/results/${run.runId}/${trip.tripId}`} />
-              </li>
-            ))}
-          </ol>
-        </>
+      {run.parentRunId && (
+        <p className="mt-1 text-sm">
+          <Link href={`/results/${run.parentRunId}`} className="text-accent hover:underline">
+            ← Previous results
+          </Link>
+        </p>
+      )}
+      {run.request ? (
+        // Keyed by run so a refine that lands here starts with fresh controls.
+        <RefineControls key={run.runId} runId={run.runId} request={run.request} question={run.status === "needs_input" ? run.answer : null}>
+          {body}
+        </RefineControls>
       ) : (
-        <div className="mt-6">
-          <RunStatusView run={run} />
-        </div>
+        body
       )}
     </>
   );

@@ -21,6 +21,8 @@ type Seed = {
   flights?: "mock" | "fixture";
   /** "Today" for the run, so the saved fixture's dates still count as future. */
   today?: string;
+  /** The seeded run this one refines (its number), continuing that conversation. */
+  parent?: number;
 };
 
 const seedId = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, "0")}`;
@@ -244,6 +246,53 @@ async function seeds(): Promise<Seed[]> {
       ],
     },
     {
+      id: seedId(7),
+      title: "Refined from run 2: cheaper hotel",
+      message: "cheaper hotel",
+      parent: 2,
+      turns: [
+        {
+          calls: [
+            {
+              name: "recordRequest",
+              args: request({
+                origin: "Honolulu",
+                destinations: ["Seattle"],
+                departDate: "2026-12-11",
+                returnDate: "2026-12-15",
+                travelers: 2,
+                budget: 1900,
+                preferences: ["cheaper hotel"],
+              }),
+            },
+          ],
+        },
+        {
+          calls: [
+            { name: "searchFlights", args: { origin: "HNL", destination: "SEA", departDate: "2026-12-11", returnDate: "2026-12-15" } },
+            { name: "searchHotels", args: { destination: "SEA", checkIn: "2026-12-11", checkOut: "2026-12-15", maxPricePerNight: 110 } },
+          ],
+        },
+        {
+          calls: [
+            {
+              name: "presentTrips",
+              args: {
+                budget: 1900,
+                travelers: 2,
+                trips: [
+                  { flightId: "f005", hotelId: "h005", reason: "Same nonstop flight, with a cheaper hotel by the airport." },
+                  { flightId: "f007", hotelId: "h003", reason: "Cheapest overall: the hostel room and the lowest fare." },
+                  { flightId: "f001", hotelId: "h006", reason: "Daytime nonstop and a quiet motel in Lake City." },
+                ],
+              },
+            },
+          ],
+        },
+        { text: "Three packages with cheaper hotels, all within budget." },
+      ],
+    },
+    {
       id: seedId(6),
       title: "Error: the LLM gateway is unreachable",
       message: "Honolulu to Los Angeles Dec 11-15, one traveler, $1,500.",
@@ -266,7 +315,7 @@ const unreachableLlm = {
 async function seed(s: Seed): Promise<string> {
   process.env.FLIGHT_PROVIDER = s.flights ?? "mock";
   const llm = s.turns === "unreachable" ? unreachableLlm : fakeLlm(s.turns);
-  const text = await new Response(runStream(await prepareRun({ message: s.message }), { llm, today: s.today })).text();
+  const text = await new Response(runStream(await prepareRun({ message: s.message, parentRunId: s.parent ? seedId(s.parent) : undefined }), { llm, today: s.today })).text();
   const events = text.split("\n").filter(Boolean).map((line) => JSON.parse(line) as RunEvent);
   const first = events[0];
   const last = events.at(-1);

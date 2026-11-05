@@ -1,6 +1,6 @@
 import type { TripRequest } from "@/agent/recordRequest";
 import type { publicRun } from "@/agent/runStore";
-import { daysBetween, formatDay, formatDayRange, formatDuration, formatMoney, formatTime, plural } from "./format";
+import { daysBetween, formatDay, formatDuration, formatMoney, formatTime, plural } from "./format";
 
 // Turns saved trip fields into the text a results row shows. The row component only displays these values,
 // so every number on screen comes from a field of the saved run (no parsing of the agent's prose).
@@ -13,7 +13,7 @@ export type BudgetTone = "success" | "warning";
 export type RowView = {
   tripId: string;
   bestMatch: boolean;
-  /** Where the trip goes, e.g. "Las Vegas". */
+  /** Where the trip goes, e.g. "Las Vegas" (not the hotel's suburb, like "SeaTac"). */
   place: string;
   departDay: string;
   /** "11:10 PM – 7:05 AM", or null when the data has no times. */
@@ -41,7 +41,8 @@ export type RowView = {
 
 const unique = <T>(items: T[]) => [...new Set(items)];
 
-export function toRowView(trip: PublicTrip, request: TripRequest | null): RowView {
+/** cityName is the destination airport's city (looked up on the server); the hotel's city is the fallback. */
+export function toRowView(trip: PublicTrip, request: TripRequest | null, cityName?: string): RowView {
   const { flight, hotel, totals } = trip;
   const offset = flight.arriveDate ? daysBetween(flight.departDate, flight.arriveDate) : 0;
   const airlines = unique(flight.segments.map((s) => s.airline).filter((a): a is string => !!a));
@@ -55,7 +56,7 @@ export function toRowView(trip: PublicTrip, request: TripRequest | null): RowVie
   return {
     tripId: trip.tripId,
     bestMatch: trip.bestMatch,
-    place: hotel.city || flight.destinationAirport || trip.destination,
+    place: cityName || hotel.city || flight.destinationAirport || trip.destination,
     departDay: formatDay(flight.departDate),
     times: flight.departTime && flight.arriveTime ? `${formatTime(flight.departTime)} – ${formatTime(flight.arriveTime)}` : null,
     arriveOffset: offset > 0 ? `+${offset}` : null,
@@ -81,16 +82,4 @@ export function toRowView(trip: PublicTrip, request: TripRequest | null): RowVie
       : { text: `${formatMoney(gap)} over budget`, tone: "warning" },
     reason: trip.reason,
   };
-}
-
-/** The search in one line, e.g. "HNL → LAS · Dec 11–14 · 2 travelers · $1,400 budget". Parts that are unknown are left out. */
-export function requestSummary(request: TripRequest | null, trips: PublicTrip[]): string[] {
-  const origin = trips[0]?.flight.origin ?? request?.origin;
-  const places = trips.length ? unique(trips.map((t) => t.destination)) : (request?.destinations ?? []);
-  const parts: string[] = [];
-  if (origin && places.length) parts.push(`${origin} → ${places.join(", ")}`);
-  if (request?.departDate && request.returnDate) parts.push(formatDayRange(request.departDate, request.returnDate));
-  if (request) parts.push(plural(request.travelers, "traveler"));
-  if (request?.budget) parts.push(`${formatMoney(request.budget)} budget`);
-  return parts;
 }
