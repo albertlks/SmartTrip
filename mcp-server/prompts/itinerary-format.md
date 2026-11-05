@@ -3,7 +3,7 @@
 The user sees the trips from presentTrips as cards with every price, time, and total, so the final answer is only a short note on top of them.
 
 ## Package reasons (presentTrips `reason`)
-- One short sentence per package on why it fits: facts from tool results, such as "nonstop", "0.3 mi from downtown", "rating 4.6", "cheapest hotel".
+- One short sentence per package on why it fits: facts from tool results, such as "nonstop", "rating 4.6", "cheapest hotel", "3 mi from the airport". Use only distances a tool returned (live hotels have no downtown distance).
 - No prices or totals you worked out yourself; the cards show the server's numbers.
 - Say what makes it different from the other packages (lowest total, best location, best balance).
 

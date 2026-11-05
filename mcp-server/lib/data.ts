@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { projectRoot } from "./projectRoot";
+import type { Source } from "./providers";
 
 export const DATA_DIR = path.join(projectRoot(), "data");
 
@@ -51,14 +52,37 @@ export type Hotel = {
   notes: string;
 };
 
-/** One hotel result for a stay, saved in the run context so presentTrips can look it up by id. */
-export type HotelRecord = Hotel & {
+/**
+ * One hotel result for a stay, saved in the run context so presentTrips can look it up by id. Mock hotels have every
+ * field; live ones (Google Hotels) only have what the response had, and never milesToDowntown.
+ */
+export type HotelRecord = {
   kind: "hotel";
-  source: "mock";
+  id: string;
+  source: Source;
+  destination: string;
+  name: string;
+  city: string;
+  area?: string;
+  tier?: Hotel["tier"];
+  /** Per room per night, USD. */
+  pricePerNight: number;
+  rating?: number;
+  reviews?: number;
+  /** Mock: from the data file. Live: straight-line miles computed from coordinates. */
+  milesToAirport?: number;
+  milesToDowntown?: number;
+  latitude?: number;
+  longitude?: number;
+  notes?: string;
   checkIn: string;
   checkOut: string;
   nights: number;
+  /** pricePerNight x nights, the same figure presentTrips totals. */
   stayTotal: number;
+  /** For SerpApi data: whether it came from the cache, and when it was fetched (ms since epoch). */
+  cache?: "hit" | "miss";
+  fetchedAt?: number;
 };
 
 // Files are read once per process; restart the server to pick up edits.

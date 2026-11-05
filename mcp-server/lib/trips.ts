@@ -99,7 +99,9 @@ export function buildTrips(choices: TripChoice[], budget: number, travelers: num
     const unknownActivity = choice.activityIds?.find((id) => !ctx.results.has(id));
     if (unknownActivity) fail(`Trip ${n}: unknown activityId "${unknownActivity}". ${STALE_ID_HINT}`);
 
-    const transport = estimateTransport({ milesToAirport: hotel.milesToAirport, travelers, roundTrip: true }).estimatedCost;
+    // Live hotels without coordinates are dropped by the search, so this only guards against bad data.
+    if (hotel.milesToAirport === undefined) fail(`Trip ${n}: hotel ${hotel.id} has no location, so airport rides can't be estimated. Pick another hotel.`);
+    const transport = estimateTransport({ milesToAirport: hotel.milesToAirport!, travelers, roundTrip: true }).estimatedCost;
     const check = checkBudget({
       budget,
       flightCost: flight.price,

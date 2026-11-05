@@ -1,7 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/server";
 import * as z from "zod";
-import { loadHotels, type Hotel, type HotelRecord } from "../lib/data";
-import { daysBetween, jsonResult, roundMoney, toolError } from "../lib/results";
+import type { HotelRecord } from "../lib/data";
+import { findHotels } from "../lib/hotelProviders";
+import { daysBetween, jsonResult, toolError, ToolFailure } from "../lib/results";
 import type { RunContext } from "../lib/runContext";
 import { airportCode, isoDate } from "../lib/schemas";
 
@@ -14,26 +15,14 @@ export const searchHotelsInput = z.object({
     .positive("maxPricePerNight must be greater than 0 (USD).")
     .optional()
     .describe("Only return hotels at or under this nightly price in USD. Omit for no limit."),
+  travelers: z.number().int().min(1).max(9).optional().describe("Number of guests, as recorded with recordRequest. Default 1."),
+  sort: z.enum(["price", "rating"]).optional().describe('"price" (cheapest first, the default) or "rating" (best rated first).'),
 });
 
-export function searchHotels(hotels: Hotel[], destination: string, nights: number, maxPricePerNight?: number) {
-  return hotels
-    .filter((h) => h.destination === destination)
-    .filter((h) => maxPricePerNight === undefined || h.pricePerNight <= maxPricePerNight)
-    .sort((a, b) => a.pricePerNight - b.pricePerNight)
-    .map((h) => ({
-      id: h.id,
-      name: h.name,
-      city: h.city,
-      area: h.area,
-      tier: h.tier,
-      pricePerNight: h.pricePerNight,
-      stayTotal: roundMoney(h.pricePerNight * nights),
-      rating: h.rating,
-      milesToAirport: h.milesToAirport,
-      milesToDowntown: h.milesToDowntown,
-      notes: h.notes,
-    }));
+/** What the model sees: the record without bookkeeping fields (kind, dates, coordinates, cache). */
+function forModel(r: HotelRecord) {
+  const { kind: _k, checkIn: _i, checkOut: _o, nights: _n, latitude: _lat, longitude: _lon, cache: _c, fetchedAt: _f, destination: _d, ...rest } = r;
+  return rest;
 }
 
 export function registerSearchHotels(server: McpServer, ctx: RunContext) {
@@ -42,36 +31,34 @@ export function registerSearchHotels(server: McpServer, ctx: RunContext) {
     {
       title: "Search hotels",
       description:
-        "Find hotels in a destination for the given dates, cheapest first, optionally capped by nightly price. " +
-        "Returns { nights, count, results: [{ id, name, city, area, tier, pricePerNight, stayTotal, rating, milesToAirport, milesToDowntown, notes }] }. " +
-        "Pass pricePerNight to checkBudget.hotelCostPerNight, nights to checkBudget.nights, and milesToAirport to estimateTransport. " +
-        "Prices are per room per night in USD.",
+        "Find hotels in a destination for the given dates, cheapest first (or best rated with sort), optionally capped by nightly price. " +
+        "Returns { source, nights, count, results: [{ id, name, city, area?, tier?, pricePerNight, stayTotal, rating?, reviews?, milesToAirport?, milesToDowntown?, notes? }] }, at most 8. " +
+        "Prices are per room per night in USD, and rooms are not multiplied for larger groups. For live hotels milesToAirport is a " +
+        "straight-line distance computed from the hotel's location, and there is no milesToDowntown; fields a hotel doesn't have are left out. " +
+        "Live results skip listings with fewer than 10 reviews.",
       inputSchema: searchHotelsInput,
       annotations: { readOnlyHint: true },
     },
-    async ({ destination, checkIn, checkOut, maxPricePerNight }) => {
+    async ({ destination, checkIn, checkOut, maxPricePerNight, travelers, sort }) => {
       const nights = daysBetween(checkIn, checkOut);
       if (nights < 1) {
         return toolError(`checkOut (${checkOut}) must be after checkIn (${checkIn}).`);
       }
-
-      const hotels = await loadHotels();
-      // The mock data has no availability by date, so dates set nights but don't filter results.
-      const results = searchHotels(hotels, destination, nights, maxPricePerNight);
-      if (results.length === 0) {
-        const destinations = [...new Set(hotels.map((h) => h.destination))].sort().join(", ");
-        const why = hotels.some((h) => h.destination === destination)
-          ? `No ${destination} hotels at or under $${maxPricePerNight}/night. Raise or drop maxPricePerNight.`
-          : `No hotels in ${destination}.`;
-        return toolError(`${why} Destinations with hotels: ${destinations}.`);
+      try {
+        const { source, results } = await findHotels(
+          { destination, checkIn, checkOut, maxPricePerNight, travelers: travelers ?? 1, sort: sort ?? "price" },
+          ctx,
+        );
+        if (results.length === 0) {
+          return toolError(`No ${destination} hotels found for ${checkIn} to ${checkOut}${maxPricePerNight ? ` at or under $${maxPricePerNight}/night` : ""}. Raise or drop maxPricePerNight.`);
+        }
+        // Saved for presentTrips, which looks hotels up by id and uses this stay's nights and total.
+        for (const r of results) ctx.results.set(r.id, r);
+        return jsonResult({ source, nights, count: results.length, results: results.map(forModel) });
+      } catch (err) {
+        if (err instanceof ToolFailure) return toolError(err.message);
+        throw err;
       }
-      // Saved for presentTrips, which looks hotels up by id and uses this stay's nights and total.
-      for (const r of results) {
-        const hotel = hotels.find((h) => h.id === r.id)!;
-        const record: HotelRecord = { ...hotel, kind: "hotel", source: "mock", checkIn, checkOut, nights, stayTotal: r.stayTotal };
-        ctx.results.set(r.id, record);
-      }
-      return jsonResult({ nights, count: results.length, results });
     },
   );
 }
