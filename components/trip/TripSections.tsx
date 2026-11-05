@@ -34,29 +34,31 @@ export function HotelCard({ hotel }: { hotel: PublicTrip["hotel"] }) {
 export function CostBreakdown({ trip }: { trip: PublicTrip }) {
   const budget = budgetLabel(trip.withinBudget, trip.totals.difference);
   return (
-    <dl className="text-sm">
-      {costLines(trip).map((line) => (
-        <div key={line.label} className="flex items-baseline justify-between gap-4 border-b border-line py-2">
-          <dt>
-            <span className="text-ink">{line.label}</span>
-            {line.estimate && <span className="text-muted"> (estimate)</span>}
-            <span className="block text-xs text-muted">{line.detail}</span>
-          </dt>
-          <dd className="tabular-nums text-ink">{formatMoney(line.amount)}</dd>
+    <div className="text-sm">
+      <dl>
+        {costLines(trip).map((line) => (
+          <div key={line.label} className="flex items-baseline justify-between gap-4 border-b border-line py-2">
+            <dt>
+              <span className="text-ink">{line.label}</span>
+              {line.estimate && <span className="text-muted"> (estimate)</span>}
+              <span className="block text-xs text-muted">{line.detail}</span>
+            </dt>
+            <dd className="tabular-nums text-ink">{formatMoney(line.amount)}</dd>
+          </div>
+        ))}
+        <div className="flex items-baseline justify-between gap-4 py-2">
+          <dt className="font-semibold text-ink">Total for {plural(trip.travelers, "traveler")}</dt>
+          <dd className="text-lg font-semibold tabular-nums text-ink">{formatMoney(trip.totals.total)}</dd>
         </div>
-      ))}
-      <div className="flex items-baseline justify-between gap-4 py-2">
-        <dt className="font-semibold text-ink">Total for {plural(trip.travelers, "traveler")}</dt>
-        <dd className="text-lg font-semibold tabular-nums text-ink">{formatMoney(trip.totals.total)}</dd>
-      </div>
-      <div className="flex items-baseline justify-between gap-4">
-        <dt className="text-muted">Your budget</dt>
-        <dd className="tabular-nums text-muted">{formatMoney(trip.totals.budget)}</dd>
-      </div>
+        <div className="flex items-baseline justify-between gap-4">
+          <dt className="text-muted">Your budget</dt>
+          <dd className="tabular-nums text-muted">{formatMoney(trip.totals.budget)}</dd>
+        </div>
+      </dl>
       <div className="mt-2 flex justify-end">
         <Badge tone={budget.tone}>{budget.text}</Badge>
       </div>
-    </dl>
+    </div>
   );
 }
 

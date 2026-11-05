@@ -104,7 +104,7 @@ async function Trip({ params }: { params: PageProps<"/results/[runId]/[tripId]">
             <HotelCard hotel={shown.hotel} />
           </Section>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 lg:sticky lg:top-6 lg:self-start">
           <Section title="Cost">
             <CostBreakdown trip={shown} />
           </Section>
