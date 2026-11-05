@@ -34,6 +34,7 @@ export function assumptions(trip: PublicTrip, request: TripRequest | null): stri
   if (trip.sources.flight === "mock") list.push("Flights are sample data, not live prices.");
   if (trip.sources.flight === "fixture") list.push("Flights come from a saved Google Flights search, not today's prices.");
   if (trip.sources.hotel === "mock") list.push("Hotels are sample data, not live prices.");
+  if (trip.sources.hotel === "fixture") list.push("Hotels come from a saved Google Hotels search, not today's prices.");
   return list;
 }
 

@@ -7,10 +7,12 @@ import { budgetLabel, type PublicRun, type PublicTrip } from "@/lib/tripRow";
 
 export function HotelCard({ hotel }: { hotel: PublicTrip["hotel"] }) {
   const facts = [
-    hotel.area && `${hotel.area}, ${hotel.city}`,
-    hotel.rating && `${hotel.rating.toFixed(1)} rating`,
+    hotel.area ? `${hotel.area}, ${hotel.city}` : hotel.city,
+    hotel.rating && `${hotel.rating.toFixed(1)} rating${hotel.reviews ? ` (${hotel.reviews.toLocaleString("en-US")} reviews)` : ""}`,
     hotel.tier && `${hotel.tier[0].toUpperCase()}${hotel.tier.slice(1)}`,
-    hotel.milesToAirport !== undefined && `${hotel.milesToAirport} mi from the airport`,
+    // Live distances are computed from coordinates, so say how they were measured.
+    hotel.milesToAirport !== undefined &&
+      `${hotel.milesToAirport} mi from the airport${hotel.source === "mock" ? "" : " (straight line)"}`,
   ].filter(Boolean);
   return (
     <div className="text-sm">
