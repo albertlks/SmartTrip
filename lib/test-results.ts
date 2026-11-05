@@ -6,7 +6,8 @@ process.env.TZ = "Pacific/Honolulu";
 import type { TripRequest } from "@/agent/recordRequest";
 import { formatDay, formatDayRange, formatDuration, formatMoney, formatTime } from "./format";
 import { editMessage, editStart, parseEdit, toChips } from "./requestChips";
-import { toRowView, type PublicTrip } from "./tripRow";
+import { assumptions, costLines, returnMode, returnPriceLabel, traceArgs, traceSummary } from "./tripDetail";
+import { toRowView, type PublicRun, type PublicTrip } from "./tripRow";
 
 let failures = 0;
 function check(name: string, ok: boolean, detail = "") {
@@ -193,6 +194,57 @@ same(
 check("a missing date is refused", "error" in parseEdit("dates", { departDate: "2026-12-15", returnDate: "" }));
 check("a blank destination is refused", "error" in parseEdit("destinations", { value: "   " }));
 same("text is trimmed", parseEdit("origin", { value: "  Hilo " }), { edit: { field: "origin", value: "Hilo" } });
+
+// ---- trip detail ----
+const lines = costLines(redEye);
+same("cost lines are flights, hotel, and airport rides", lines.map((l) => l.label), ["Flights", "Hotel", "Airport rides"]);
+same("the cost lines add up to the saved total", lines.reduce((sum, l) => sum + l.amount, 0), redEye.totals.total);
+same("flights show fare times travelers", lines[0].detail, "$330 round trip × 2 travelers");
+check("airport rides are marked as an estimate", lines[2].estimate === true);
+same(
+  "an activity allowance appears only when there is one",
+  costLines({ ...redEye, totals: { ...redEye.totals, activityAllowance: 80, total: 951 } }).map((l) => l.label).at(-1),
+  "Activities",
+);
+
+const always = assumptions(redEye, request);
+check("assumptions always explain the fare and the ride estimate", always.some((a) => /round-trip fares per person/.test(a)) && always.some((a) => /rideshare/.test(a)));
+check("sample data is called sample data", always.some((a) => /Flights are sample data/.test(a)));
+check("no traveler assumption when the user said how many", !always.some((a) => /assumes 1 traveler/.test(a)));
+const assumedAll = assumptions(
+  { ...redEye, travelers: 3, sources: { flight: "fixture", hotel: "mock" } },
+  { ...request, travelersDefaulted: true, destinationsFromIdeas: true },
+);
+check("a default traveler count is stated", assumedAll.some((a) => /assumes 1 traveler/.test(a)));
+check("3+ travelers get the one-room caveat", assumedAll.some((a) => /one room; a group of 3/.test(a)));
+check("suggested destinations are stated", assumedAll.some((a) => /suggested this destination/.test(a)));
+check("fixture flights are called a saved search", assumedAll.some((a) => /saved Google Flights search/.test(a)));
+
+const entry = (name: string, result: string, isError = false) => ({ step: 1, name, args: "{}", isError, result, ms: 3 });
+same("a flight search reads as a count", traceSummary(entry("searchFlights", JSON.stringify({ count: 8, results: [] }))), "8 flights found");
+same("one hotel is singular", traceSummary(entry("searchHotels", JSON.stringify({ count: 1, results: [{}] }))), "1 hotel found");
+same("presentTrips counts trips", traceSummary(entry("presentTrips", JSON.stringify({ trips: [{}, {}] }))), "2 trips ranked and totaled");
+same("a recorded request names what's missing", traceSummary(entry("recordRequest", '{"recorded":true,"missing":["budget"]}')), "Recorded the request; missing budget");
+same("an error shows its first line", traceSummary(entry("searchFlights", "No flights.\nTry again.", true)), "No flights.");
+same("arguments are pretty-printed", traceArgs({ ...entry("x", ""), args: '{"a":1}' }), '{\n  "a": 1\n}');
+same("invalid arguments are shown as sent", traceArgs({ ...entry("x", ""), args: "{oops" }), "{oops");
+
+same("the return at the included fare is included", returnPriceLabel({ price: 421 }, 421), { text: "Included in your total", included: true });
+same("a dearer return shows the extra per person", returnPriceLabel({ price: 472 }, 421), { text: "+$51 per person", included: false });
+same("a cheaper return says so", returnPriceLabel({ price: 400 }, 421), { text: "$21 less per person", included: false });
+
+const runFor = (returns: PublicRun["returns"]) => ({ returns }) as PublicRun;
+same("sample and fixture flights load their returns on open", returnMode(runFor(undefined), redEye), "auto");
+same(
+  "a live flight waits for a click",
+  returnMode(runFor(undefined), { ...redEye, flight: { ...redEye.flight, source: "serpapi" } }),
+  "click",
+);
+same(
+  "saved returns are shown straight away",
+  returnMode(runFor({ t1: { flightId: "f022", source: "serpapi", options: [] } }), { ...redEye, flight: { ...redEye.flight, source: "serpapi" } }),
+  "saved",
+);
 
 console.log(failures ? `\n${failures} check(s) failed` : "\nAll results checks passed");
 process.exit(failures ? 1 : 0);
