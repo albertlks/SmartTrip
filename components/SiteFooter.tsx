@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-5xl flex-col gap-2 px-4 py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p>SmartTrip: plan trips that fit your budget.</p>
         <p>
-          Flight data from Google Flights via{" "}
+          Flight and hotel data from Google Flights and Google Hotels via{" "}
           <a className={linkClass} href="https://serpapi.com" target="_blank" rel="noopener noreferrer">
             SerpApi
           </a>

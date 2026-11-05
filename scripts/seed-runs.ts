@@ -9,6 +9,7 @@ import { fakeLlm, type FakeTurn } from "../agent/fakeLlm";
 import { getRun, saveRun } from "../agent/runStore";
 import { prepareRun, runStream, type RunEvent } from "../agent/runService";
 import { findFlights } from "../mcp-server/lib/flightProviders";
+import { findHotels } from "../mcp-server/lib/hotelProviders";
 import { projectRoot } from "../mcp-server/lib/projectRoot";
 import { newRunContext } from "../mcp-server/lib/runContext";
 
@@ -17,8 +18,9 @@ type Seed = {
   title: string;
   message: string;
   turns: FakeTurn[] | "unreachable";
-  /** Data source for searchFlights in this run. */
+  /** Data sources for searchFlights and searchHotels in this run. */
   flights?: "mock" | "fixture";
+  hotels?: "mock" | "fixture";
   /** "Today" for the run, so the saved fixture's dates still count as future. */
   today?: string;
   /** The seeded run this one refines (its number), continuing that conversation. */
@@ -47,8 +49,16 @@ async function fixtureFlightIds(): Promise<{ nonstop: string; oneStop: string; t
   return { nonstop: pick(0), oneStop: pick(1), twoStop: pick(2) };
 }
 
+/** The ids the saved Google Hotels search gives (Seattle, Dec 11-15, 2 guests), cheapest first. */
+async function fixtureHotelIds(): Promise<string[]> {
+  process.env.HOTEL_PROVIDER = "fixture";
+  const search = { destination: "SEA", checkIn: "2026-12-11", checkOut: "2026-12-15", travelers: 2, sort: "price" as const };
+  return (await findHotels(search, newRunContext())).results.map((h) => h.id);
+}
+
 async function seeds(): Promise<Seed[]> {
   const fixture = await fixtureFlightIds();
+  const liveHotels = await fixtureHotelIds();
   return [
     {
       id: seedId(1),
@@ -294,9 +304,10 @@ async function seeds(): Promise<Seed[]> {
     },
     {
       id: seedId(8),
-      title: "Dec 11-15 SerpApi fixture: trip 1 has saved return flights",
-      message: "Just me, Honolulu to Seattle Dec 11-15, $1,800.",
+      title: "Dec 11-15 SerpApi fixtures (flights and hotels): trip 1 has saved return flights",
+      message: "2 of us, Honolulu to Seattle Dec 11-15, $2,000.",
       flights: "fixture",
+      hotels: "fixture",
       turns: [
         {
           calls: [
@@ -307,8 +318,8 @@ async function seeds(): Promise<Seed[]> {
                 destinations: ["Seattle"],
                 departDate: "2026-12-11",
                 returnDate: "2026-12-15",
-                travelers: 1,
-                budget: 1800,
+                travelers: 2,
+                budget: 2000,
               }),
             },
           ],
@@ -316,7 +327,7 @@ async function seeds(): Promise<Seed[]> {
         {
           calls: [
             { name: "searchFlights", args: { origin: "HNL", destination: "SEA", departDate: "2026-12-11", returnDate: "2026-12-15" } },
-            { name: "searchHotels", args: { destination: "SEA", checkIn: "2026-12-11", checkOut: "2026-12-15" } },
+            { name: "searchHotels", args: { destination: "SEA", checkIn: "2026-12-11", checkOut: "2026-12-15", travelers: 2 } },
           ],
         },
         {
@@ -324,12 +335,12 @@ async function seeds(): Promise<Seed[]> {
             {
               name: "presentTrips",
               args: {
-                budget: 1800,
-                travelers: 1,
+                budget: 2000,
+                travelers: 2,
                 trips: [
                   // Only the cheapest flight (rank 01) has a saved return fixture; the others show the "unavailable" message.
-                  { flightId: "f-1444-01", hotelId: "h002", reason: "Cheapest fare with a short stop in San Francisco, walkable inn." },
-                  { flightId: "f-1444-06", hotelId: "h007", reason: "Nonstop morning flight and a hotel right downtown." },
+                  { flightId: "f-1444-01", hotelId: liveHotels[0], reason: "Cheapest fare with a short stop in San Francisco, cheapest hotel." },
+                  { flightId: "f-1444-06", hotelId: liveHotels[liveHotels.length - 1], reason: "Nonstop morning flight and a better rated hotel." },
                 ],
               },
             },
@@ -360,6 +371,7 @@ const unreachableLlm = {
 
 async function seed(s: Seed): Promise<string> {
   process.env.FLIGHT_PROVIDER = s.flights ?? "mock";
+  process.env.HOTEL_PROVIDER = s.hotels ?? "mock";
   const llm = s.turns === "unreachable" ? unreachableLlm : fakeLlm(s.turns);
   const text = await new Response(runStream(await prepareRun({ message: s.message, parentRunId: s.parent ? seedId(s.parent) : undefined }), { llm, today: s.today })).text();
   const events = text.split("\n").filter(Boolean).map((line) => JSON.parse(line) as RunEvent);
