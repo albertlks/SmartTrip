@@ -6,6 +6,7 @@ import { getRun, publicRun } from "@/agent/runStore";
 import { getAirport } from "@/mcp-server/lib/data";
 import { FlightSegments } from "@/components/trip/FlightSegments";
 import { ReturnFlights } from "@/components/trip/ReturnFlights";
+import { WeatherStrip } from "@/components/trip/WeatherStrip";
 import { AgentTrace, Assumptions, CostBreakdown, HotelCard } from "@/components/trip/TripSections";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -62,11 +63,17 @@ async function Trip({ params }: { params: PageProps<"/results/[runId]/[tripId]">
       </div>
       <p className="mt-3 text-sm text-ink">{shown.reason}</p>
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-[1fr_20rem]">
-        <div className="space-y-4">
+      {/* minmax(0, 1fr): the weather cards scroll inside their section instead of widening the page. */}
+      <div className="mt-6 grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="min-w-0 space-y-4">
           <Section title={`Outbound · ${formatDay(shown.flight.departDate)}`}>
             <FlightSegments flight={shown.flight} />
           </Section>
+          {shown.weather && (
+            <Section title="Weather">
+              <WeatherStrip weather={shown.weather} />
+            </Section>
+          )}
           <Section title="Return">
             <ReturnFlights
               runId={run.runId}
