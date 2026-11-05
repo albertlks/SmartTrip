@@ -1,6 +1,7 @@
 import type { TripRequest } from "@/agent/recordRequest";
 import type { publicRun } from "@/agent/runStore";
 import { daysBetween, formatDay, formatDuration, formatMoney, formatTime, plural } from "./format";
+import { weatherHint } from "./weatherView";
 
 // Turns saved trip fields into the text a results row shows. The row component only displays these values,
 // so every number on screen comes from a field of the saved run (no parsing of the agent's prose).
@@ -37,6 +38,8 @@ export type RowView = FlightSummary & {
   /** "Return Mon, Dec 14", or null when the return date is unknown. */
   returnDay: string | null;
   hotel: { name: string; area?: string; nightly: string; nights: string };
+  /** "Highs 53–58°F", or null without weather. */
+  weather: string | null;
   total: string;
   travelers: string;
   budget: { text: string; tone: BudgetTone };
@@ -97,6 +100,7 @@ export function toRowView(trip: PublicTrip, request: TripRequest | null, cityNam
       nightly: `${formatMoney(hotel.pricePerNight)}/night`,
       nights: plural(hotel.nights, "night"),
     },
+    weather: weatherHint(trip.weather) && `Highs ${weatherHint(trip.weather)}`,
     total: formatMoney(totals.total),
     travelers: `total for ${plural(trip.travelers, "traveler")}`,
     budget: budgetLabel(trip.withinBudget, totals.difference),
