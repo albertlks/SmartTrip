@@ -13,7 +13,7 @@ type Message = OpenAI.Chat.ChatCompletionMessageParam;
 
 // presentTrips computes every total, so the agent doesn't get estimateTransport or checkBudget: given them, it
 // called them several times per run to redo the same arithmetic. They stay in the MCP server for the Inspector.
-const TRIP_TOOLS = new Set(["lookupAirport", "searchFlights", "searchHotels", "presentTrips"]);
+const TRIP_TOOLS = new Set(["lookupAirport", "searchFlights", "searchHotels", "getWeather", "presentTrips"]);
 // Each step re-sends the whole conversation, so cap it to protect the budget.
 const DEFAULT_MAX_STEPS = 20;
 const RECORD_NUDGE =
@@ -100,6 +100,7 @@ export async function runAgent(
   const usage = { llmCalls: 0, promptTokens: 0, completionTokens: 0 };
   const ctx = newRunContext();
   for (const r of deps.priorResults ?? []) ctx.results.set(r.id, r);
+  ctx.today = today;
   const result = (status: AgentStatus, answer: string | null): AgentResult => ({
     status,
     request,

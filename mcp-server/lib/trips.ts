@@ -5,6 +5,7 @@ import type { FlightRecord } from "./flightProviders";
 import type { Source } from "./providers";
 import { ToolFailure } from "./results";
 import type { RunContext } from "./runContext";
+import type { WeatherResult, WeatherUnavailable } from "./weather";
 
 /** One package the agent proposes: ids from this run's searches, and why it fits. */
 export type TripChoice = { flightId: string; hotelId: string; activityIds?: string[]; reason: string };
@@ -34,8 +35,8 @@ export type Trip = {
   hotel: HotelRecord;
   /** Filled in once searchActivities exists. */
   activities: [];
-  /** Filled in once getWeather exists. */
-  weather: null;
+  /** Weather for the stay, or why there is none; null in runs saved before weather existed. */
+  weather: WeatherResult | WeatherUnavailable | null;
   totals: TripTotals;
   withinBudget: boolean;
   sources: { flight: Source; hotel: Source };

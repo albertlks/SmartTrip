@@ -21,6 +21,8 @@ export type RunContext = {
   /** Live SerpApi calls made in this run (cache hits don't count). */
   serpapiCalls: number;
   maxSerpapiCalls: number;
+  /** "Today" (YYYY-MM-DD, local) for weather's forecast/last-year split; set by runAgent. Defaults to the real date. */
+  today?: string;
 };
 
 const DEFAULT_MAX_SERPAPI_CALLS = 12;
